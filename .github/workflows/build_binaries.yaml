@@ -10,6 +10,7 @@ jobs:
     name: 'QMK Userspace Build'
     uses: drashna/qmk_userspace/.github/workflows/qmk_userspace_build.yml@master
     with:
+      qmk_repo: drashna/qmk_firmware
       qmk_ref: ${{ github.ref_name }}
 
   publish:
