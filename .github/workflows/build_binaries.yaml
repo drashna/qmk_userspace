@@ -8,13 +8,14 @@ permissions:
 jobs:
   build:
     name: "QMK Userspace Build"
-    uses: drashna/qmk_userspace/.github/workflows/qmk_userspace_build.yml@master
+    uses: drashna/qmk_userspace/.github/workflows/qmk_userspace_build.yml@custom_drashna
     with:
+      qmk_repo: drashna/qmk_firmware
       qmk_ref: ${{ github.ref_name }}
 
   publish:
     name: "QMK Userspace Publish"
-    uses: drashna/qmk_userspace/.github/workflows/qmk_userspace_publish.yml@master
+    uses: drashna/qmk_userspace/.github/workflows/qmk_userspace_publish.yml@custom_drashna
     if: always() && !cancelled()
     needs: [build]
     # with:
