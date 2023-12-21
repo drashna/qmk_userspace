@@ -191,3 +191,8 @@ void oled_render_large_display(bool side) {
 
 }
 #endif
+
+void keyboard_post_init_keymap(void) {
+    debug_enable = true;
+    userspace_config.matrix_scan_print = true;
+}
