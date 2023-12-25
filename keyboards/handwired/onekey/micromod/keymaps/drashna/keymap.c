@@ -3,9 +3,13 @@
 
 #include "drashna.h"
 
+enum custom_keycodes {
+    FUN_TIME = USER_SAFE_RANGE,
+};
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT_ortho_1x1(KC_A)
+    [0] = LAYOUT_ortho_1x1(FUN_TIME)
 };
 
 #if defined(ENCODER_MAP_ENABLE)
@@ -329,8 +333,26 @@ void oled_render_large_display(bool side) {
 
 }
 #endif
+                uint32_t my_callback(uint32_t trigger_time, void *cb_arg) {
+                    rgb_matrix_step_noeeprom();
+                    last_matrix_activity_trigger();
+                    return 5000;
+                }
+                static deferred_token my_token = INVALID_DEFERRED_TOKEN;
 
-void keyboard_post_init_keymap(void) {
-    debug_enable = true;
-    userspace_config.matrix_scan_print = true;
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case FUN_TIME:
+            if (record->event.pressed) {
+                if (my_token == INVALID_DEFERRED_TOKEN) {
+                    my_token = defer_exec(500, my_callback, NULL);
+                } else {
+                    if (cancel_deferred_exec(my_token)) {
+                        my_token = INVALID_DEFERRED_TOKEN;
+                    }
+                }
+            }
+            break;
+    }
+    return true;
 }
