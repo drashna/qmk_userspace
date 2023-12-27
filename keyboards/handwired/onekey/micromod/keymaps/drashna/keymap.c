@@ -335,6 +335,7 @@ void oled_render_large_display(bool side) {
 #endif
                 uint32_t my_callback(uint32_t trigger_time, void *cb_arg) {
                     rgb_matrix_step_noeeprom();
+                    void last_matrix_activity_trigger(void);
                     last_matrix_activity_trigger();
                     return 5000;
                 }
