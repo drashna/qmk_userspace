@@ -57,10 +57,10 @@ ifeq ($(strip $(HARDWARE_DEBUG_ENABLE)), yes)
     LTO_ENABLE := no
     OPT := 0
     OPT_DEFS += -g
+    SEGGER_RTT_DRIVER_REQUIRED = yes
 endif
 
 SENDCHAR_DRIVER = custom
-SEGGER_RTT_DRIVER_REQUIRED = yes
 SRC += $(USER_PATH)/sendchar.c
 
 ifeq ($(strip $(DEBUG_MATRIX_SCAN_RATE_ENABLE)), yes)
