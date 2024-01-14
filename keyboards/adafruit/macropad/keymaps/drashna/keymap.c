@@ -35,6 +35,7 @@ void render_oled_title(bool side) {
     oled_write_P(PSTR("   Macropad  "), true);
 }
 
+#ifndef OLED_DISPLAY_128X128
 void render_rgb_mode(uint8_t col, uint8_t line);
 
 void l_render_keylock_status(led_t led_usb_state, uint8_t col, uint8_t line) {
@@ -109,3 +110,4 @@ bool oled_task_keymap(void) {
 
     return false;
 }
+#endif
