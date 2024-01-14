@@ -1,0 +1,24 @@
+ifeq ($(strip $(KEYBOARD)), handwired/onekey/micromod/stm32f405)
+    BOOTLOADER = tinyuf2
+endif
+AUDIO_ENABLE = no
+OLED_ENABLE = no
+HAPTIC_ENABLE = no
+HAPTIC_DRIVER = drv2605l
+RGB_MATRIX_ENABLE = no
+RGB_MATRIX_DRIVER = is31fl3741
+ENCODER_ENABLE = yes
+ENCODER_MAP_ENABLE = yes
+RTC_ENABLE = yes
+RTC_DRIVER = vendor
+WPM_ENABLE = yes
+CONSOLE_ENABLE = yes
+BLUETOOTH_DRIVER = bluefruit_le
+
+BACKLIGHT_ENABLE                 = yes
+QUANTUM_PAINTER_ENABLE           = yes
+QUANTUM_PAINTER_DRIVERS          = ili9341_spi
+CUSTOM_QUANTUM_PAINTER_ENABLE    = yes
+DISPLAY_KEYLOGGER_ENABLE         = yes
+
+I2C_DRIVER_REQUIRED = yes
