@@ -333,17 +333,17 @@ void oled_render_large_display(bool side) {
 
 }
 #endif
-                uint32_t my_callback(uint32_t trigger_time, void *cb_arg) {
-                    rgb_matrix_step_noeeprom();
-                    void last_matrix_activity_trigger(void);
-                    last_matrix_activity_trigger();
-                    return 5000;
-                }
-                static deferred_token my_token = INVALID_DEFERRED_TOKEN;
 
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case FUN_TIME:
+        case FUN_TIME: {
+            uint32_t my_callback(uint32_t trigger_time, void *cb_arg) {
+                rgb_matrix_step_noeeprom();
+                void last_matrix_activity_trigger(void);
+                last_matrix_activity_trigger();
+                return 5000;
+            }
+            static deferred_token my_token = INVALID_DEFERRED_TOKEN;
             if (record->event.pressed) {
                 if (my_token == INVALID_DEFERRED_TOKEN) {
                     my_token = defer_exec(500, my_callback, NULL);
@@ -354,6 +354,7 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             break;
+        }
     }
     return true;
 }
