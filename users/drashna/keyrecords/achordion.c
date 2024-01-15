@@ -61,11 +61,11 @@ static uint8_t achordion_state = STATE_RELEASED;
 // Calls `process_record()` with state set to RECURSING.
 static void recursively_process_record(keyrecord_t* record, uint8_t state) {
     achordion_state = STATE_RECURSING;
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+#if defined(POINTING_DEVICE_AUTO_MOUSE_ENABLE) && defined(ACHORDION_AUTO_MOUSE_FIX)
     int8_t mouse_key_tracker = get_auto_mouse_key_tracker();
 #endif
     process_record(record);
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+#if defined(POINTING_DEVICE_AUTO_MOUSE_ENABLE) && defined(ACHORDION_AUTO_MOUSE_FIX)
     set_auto_mouse_key_tracker(mouse_key_tracker);
 #endif
     achordion_state = state;
