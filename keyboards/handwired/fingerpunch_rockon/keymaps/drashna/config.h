@@ -3,4 +3,4 @@
 
 #pragma once
 
-#define OLED_KEYLOGGER_LENGTH 9
+#define OLED_KEYLOGGER_LENGTH 14
