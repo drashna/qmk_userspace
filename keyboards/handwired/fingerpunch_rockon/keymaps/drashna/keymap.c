@@ -145,7 +145,7 @@ bool oled_task_keymap(void) {
     render_rgb_hsv(1, 12);
     render_rgb_mode(1, 13);
 
-    render_keylogger_status(1, 14);
+    render_os(1, 14);
 
     for (uint8_t i = 1; i < 15; i++) {
         oled_set_cursor(0, i);
@@ -155,7 +155,10 @@ bool oled_task_keymap(void) {
     }
 
     oled_set_cursor(0, 15);
-    oled_write_raw_P(footer_image, sizeof(footer_image));
+    oled_write_raw_P(footer_image2, sizeof(footer_image2));
+
+    oled_set_cursor(4, 15);
+    oled_write(oled_keylog_str, true);
 
     return false;
 }
