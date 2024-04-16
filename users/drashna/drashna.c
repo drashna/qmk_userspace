@@ -249,14 +249,12 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
 #    endif // UNICODE_COMMON_ENABLE
                 xprintf("Windows Detected\n");
                 break;
-#    if 0
             case OS_WINDOWS_UNSURE:
 #        ifdef UNICODE_COMMON_ENABLE
                 set_unicode_input_mode_soft(UNICODE_MODE_WINCOMPOSE);
 #        endif // UNICODE_COMMON_ENABLE
                 xprintf("Windows? Detected\n");
                 break;
-#    endif
             case OS_MACOS:
 #    ifdef UNICODE_COMMON_ENABLE
                 set_unicode_input_mode_soft(UNICODE_MODE_MACOS);
@@ -269,7 +267,6 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
 #    endif // UNICODE_COMMON_ENABLE
                 xprintf("iOS Detected\n");
                 break;
-#    if 0
             case OS_PS5:
 #        ifdef UNICODE_COMMON_ENABLE
                 set_unicode_input_mode_soft(UNICODE_MODE_LINUX);
@@ -282,7 +279,6 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
 #        endif // UNICODE_COMMON_ENABLE
                 xprintf("Nintend Switch/Quest 2 Detected\n");
                 break;
-#    endif
             default:
                 xprintf("Unknown OS Detected\n");
                 break;
