@@ -352,20 +352,16 @@ const char *os_variant_to_string(os_variant_t os_detected) {
     switch (os_detected) {
         case OS_WINDOWS:
             return "Windows";
-#    if 0
         case OS_WINDOWS_UNSURE:
             return "Windows?";
-#    endif
         case OS_MACOS:
             return "MacOS";
         case OS_IOS:
             return "iOS";
-#    if 0
         case OS_PS5:
             return "PS5";
         case OS_HANDHELD:
             return "Handheld";
-#    endif
         case OS_LINUX:
             return "Linux";
         default:
