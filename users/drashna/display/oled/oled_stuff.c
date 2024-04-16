@@ -944,7 +944,6 @@ void render_os(uint8_t col, uint8_t line) {
         case OS_IOS:
             oled_write_ln_P(PSTR("iOS"), false);
             break;
-#    if 0
         case OS_WINDOWS_UNSURE:
             oled_write_ln_P(PSTR("Windows?"), false);
             break;
@@ -954,7 +953,6 @@ void render_os(uint8_t col, uint8_t line) {
         case OS_HANDHELD:
             oled_write_ln_P(PSTR("Handheld"), false);
             break;
-#    endif
         case OS_UNSURE:
             oled_write_ln_P(PSTR("Unsure"), false);
             break;

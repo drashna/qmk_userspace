@@ -74,11 +74,9 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
             case OS_WINDOWS:
                 xprintf("Windows Detected\n");
                 break;
-#    if 0
             case OS_WINDOWS_UNSURE:
                 xprintf("Windows? Detected\n");
                 break;
-#    endif
             case OS_MACOS:
                 xprintf("MacOS Detected\n");
                 os_detection_config = (os_detection_config_t){
@@ -99,7 +97,6 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
                 };
                 userspace_config.pointing.accel.enabled = false;
                 break;
-#    if 0
             case OS_PS5:
                 xprintf("PlayStation 5 Detected\n");
 #        ifdef UNICODE_COMMON_ENABLE
@@ -112,7 +109,6 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
                 os_detection_config.unicode_input_mode = UNICODE_MODE_LINUX;
 #        endif
                 break;
-#    endif
             default:
                 xprintf("Unknown OS Detected\n");
                 break;
