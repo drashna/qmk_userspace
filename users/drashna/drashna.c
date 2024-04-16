@@ -232,25 +232,21 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
             case OS_WINDOWS:
                 xprintf("Windows Detected\n");
                 break;
-#    if 0
             case OS_WINDOWS_UNSURE:
                 xprintf("Windows? Detected\n");
                 break;
-#    endif
             case OS_MACOS:
                 xprintf("MacOS Detected\n");
                 break;
             case OS_IOS:
                 xprintf("iOS Detected\n");
                 break;
-#    if 0
             case OS_PS5:
                 xprintf("PlayStation 5 Detected\n");
                 break;
             case OS_HANDHELD:
                 xprintf("Nintend Switch/Quest 2 Detected\n");
                 break;
-#    endif
             default:
                 xprintf("Unknown OS Detected\n");
                 break;
