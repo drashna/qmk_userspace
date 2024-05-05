@@ -254,10 +254,15 @@ NOTE: These are all the same length.  If you do a search/replace
 #define _________________RAISE_R3__________________       _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 
 
-
-#define _________________ADJUST_L1_________________       RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, RGB_TOG
+#ifdef RGB_MATRIX_ENABLE
+#define _________________ADJUST_L1_________________       RM_NEXT, RM_HUEU, RM_SATU, RM_VALU, RM_TOGG
 #define _________________ADJUST_L2_________________       MU_TOGG, CK_TOGG, AU_ON,   AU_OFF,  CG_NORM
-#define _________________ADJUST_L3_________________       RGB_RMOD,RGB_HUD,RGB_SAD, RGB_VAD, KC_RGB_T
+#define _________________ADJUST_L3_________________       RM_PREV, RM_HUED, RM_SATD, RM_VALD, KC_RGB_T
+#else
+#define _________________ADJUST_L1_________________       UG_TOGG, UG_HUEU, UG_SATU, UG_VALU, UG_TOGG
+#define _________________ADJUST_L2_________________       MU_TOGG, CK_TOGG, AU_ON,   AU_OFF,  CG_NORM
+#define _________________ADJUST_L3_________________       UG_PREV, UG_HUED, UG_SATD, UG_VALD, KC_RGB_T
+#endif
 
 #define _________________ADJUST_R1_________________       KC_SEC1, KC_SEC2, KC_SEC3, KC_SEC4, KC_SEC5
 #define _________________ADJUST_R2_________________       CG_SWAP, QWERTY,  CLMKDH,  COLEMAK, DVORAK
