@@ -13,8 +13,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include QMK_KEYBOARD_H
 
+#include QMK_KEYBOARD_H
 
 enum layers {
     QWERTY = 0,
@@ -28,12 +28,16 @@ enum layers {
     AU,
     MORTAL,
     RAISE,
-    ADJUST
+    ADJUST,
 };
 
-
-bool is_fire_toggled = false;
 uint16_t repeat_press_timer;
+bool     is_fire_toggled = false;
+
+volatile uint16_t layer_map[MATRIX_ROWS][MATRIX_COLS] = {0};
+static bool       layer_map_set                       = false;
+
+extern bool peek_matrix(uint8_t row_index, uint8_t col_index, bool read_raw);
 
 enum custom_keycodes {
     MACRO_W_T = SAFE_RANGE,
@@ -45,98 +49,7 @@ enum custom_keycodes {
     KEEP_FIRING,
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case MACRO_W_T:
-            if (record->event.pressed) {
-                 register_code(KC_W);
-                 register_code(KC_T);
-            } else {
-                 unregister_code(KC_T);
-                 unregister_code(KC_W);
-            }
-            break;
-        case MACRO_LMB_RMB:
-            if (record->event.pressed) {
-                 register_code(KC_BTN2);
-                 register_code(KC_BTN1);
-            } else {
-                 unregister_code(KC_BTN1);
-                 unregister_code(KC_BTN2);
-            }
-            break;
-        case MACRO_CD:
-            if (record->event.pressed) {
-                 register_code(KC_LCTL);
-                 register_code(KC_D);
-            } else {
-                 unregister_code(KC_LCTL);
-                 unregister_code(KC_D);
-            }
-            break;
-        case MACRO_S_T:
-            if (record->event.pressed) {
-                 register_code(KC_S);
-                 register_code(KC_T);
-            } else {
-                 unregister_code(KC_T);
-                 unregister_code(KC_S);
-            }
-            break;
-        case MACRO_B_T:
-            if (record->event.pressed) {
-                 register_code(KC_B);
-                 wait_ms(10);
-                 register_code(KC_T);
-            } else {
-                 unregister_code(KC_B);
-                 unregister_code(KC_T);
-            }
-            break;
-        case KC_ESC:
-            if (record->event.pressed && (get_mods() & MOD_MASK_CTRL) && layer_state_is(HZD)) {
-                process_record_user(HOLD_LCTL, record);
-            }
-            break;
-        case HOLD_LCTL: {
-            static bool is_key_held;
-            if (record->event.pressed) {
-                is_key_held ^= true;
-                is_key_held ? register_code(KC_LCTL) : unregister_code(KC_LCTL);
-            }
-            break;
-            }
-        case KEEP_FIRING:
-        {
-            static uint16_t tap_hold_timer;
-            if (record->event.pressed) {
-                tap_hold_timer = timer_read();
-                register_code(KC_LSFT);
-            } else {
-                unregister_code(KC_LSFT);
-                // if held for less than 300ms (0.3 seconds)
-                // then toggle auto fire.
-                if (timer_elapsed(tap_hold_timer) < 300) {
-                    is_fire_toggled ^= true; // toggles state
-                    repeat_press_timer = timer_read() + rand() * 30;
-                } else {
-                    is_fire_toggled = false;
-                }
-            }
-            break;
-        }
-    }
-    return true;
-}
-
-void matrix_scan_user(void) {
-    if (is_fire_toggled && timer_elapsed(repeat_press_timer) > 500) {
-        repeat_press_timer = timer_read() + rand() * 30;
-        tap_code(KC_LSFT);
-    }
-};
-
-
+// clang-format off
 #ifdef KEYBOARD_splitkb_kyria_rev3
 #define LAYOUT_one_hand( \
     L00, L01, L02, L03, L04, L05,            \
@@ -245,25 +158,159 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //                                  _______, _______, _______, _______, _______,
 //     ),
 };
+// clang-format on
 
 
-// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//     switch (keycode) {
-//         case MyCustomKeycode:
-//             if (record->event.pressed) {
-//                 // What to do if the button was pressed
-//             } else {
-//                 // What to do if the button was released
-//             }
-//             break;
-//     }
-//     return true;
-// }
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case MACRO_W_T:
+            if (record->event.pressed) {
+                 register_code(KC_W);
+                 register_code(KC_T);
+            } else {
+                 unregister_code(KC_T);
+                 unregister_code(KC_W);
+            }
+            break;
+        case MACRO_LMB_RMB:
+            if (record->event.pressed) {
+                 register_code(KC_BTN2);
+                 register_code(KC_BTN1);
+            } else {
+                 unregister_code(KC_BTN1);
+                 unregister_code(KC_BTN2);
+            }
+            break;
+        case MACRO_CD:
+            if (record->event.pressed) {
+                 register_code(KC_LCTL);
+                 register_code(KC_D);
+            } else {
+                 unregister_code(KC_LCTL);
+                 unregister_code(KC_D);
+            }
+            break;
+        case MACRO_S_T:
+            if (record->event.pressed) {
+                 register_code(KC_S);
+                 register_code(KC_T);
+            } else {
+                 unregister_code(KC_T);
+                 unregister_code(KC_S);
+            }
+            break;
+        case MACRO_B_T:
+            if (record->event.pressed) {
+                 register_code(KC_B);
+                 wait_ms(10);
+                 register_code(KC_T);
+            } else {
+                 unregister_code(KC_B);
+                 unregister_code(KC_T);
+            }
+            break;
+        case KC_ESC:
+            if (record->event.pressed && (get_mods() & MOD_MASK_CTRL) && layer_state_is(HZD)) {
+                process_record_user(HOLD_LCTL, record);
+            }
+            break;
+        case HOLD_LCTL: {
+            static bool is_key_held;
+            if (record->event.pressed) {
+                is_key_held ^= true;
+                is_key_held ? register_code(KC_LCTL) : unregister_code(KC_LCTL);
+            }
+            break;
+            }
+        case KEEP_FIRING:
+        {
+            static uint16_t tap_hold_timer;
+            if (record->event.pressed) {
+                tap_hold_timer = timer_read();
+                register_code(KC_LSFT);
+            } else {
+                unregister_code(KC_LSFT);
+                // if held for less than 300ms (0.3 seconds)
+                // then toggle auto fire.
+                if (timer_elapsed(tap_hold_timer) < 300) {
+                    is_fire_toggled ^= true; // toggles state
+                    repeat_press_timer = timer_read() + rand() * 30;
+                } else {
+                    is_fire_toggled = false;
+                }
+            }
+            break;
+        }
+    }
+    return true;
+}
+
+/**
+ * @brief This populates the layer_map array with the topmost keycode of each key on the keyboard.
+ *
+ + This checks each matrix position, and the keycode for the highest active layer in each position,
+ * accounting for transparency.
+ */
+void populate_layer_map(void) {
+    for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
+        for (uint8_t j = 0; j < MATRIX_COLS; j++) {
+            keypos_t key    = {j, i};
+            layer_map[i][j] = keymap_key_to_keycode(layer_switch_get_layer(key), key);
+        }
+    }
+}
+
+void housekeeping_task_user(void) {
+    if (is_fire_toggled && timer_elapsed(repeat_press_timer) > 500) {
+        repeat_press_timer = timer_read() + rand() * 30;
+        tap_code(KC_LSFT);
+    }
+
+    // layer state was changeg
+    if (layer_map_set) {
+        populate_layer_map();
+        layer_map_set = false;
+    }
+
+};
+
+// we want to update the keymap array on every layer change,
+// but it's not properly set until after this function returns.
+// So we queue it up for the next loop.
+layer_state_t layer_state_set_user(layer_state_t state) {
+    layer_map_set = true;
+    return state;
+}
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+    layer_map_set = true;
+    return state;
+}
 
 #ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_180;
 }
+
+
+static const char PROGMEM code_to_name[256] = {
+//   0    1    2    3    4    5    6    7    8    9    A    B    c    D    E    F
+    ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  // 0x
+    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2',  // 1x
+    '3', '4', '5', '6', '7', '8', '9', '0',  20,  19,  27,  26,  22, '-', '=', '[',  // 2x
+    ']','\\', '#', ';','\'', '`', ',', '.', '/', 128,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,  // 3x
+   0xDB,0xDC,0xDD,0xDE,0XDF,0xFB, 'P', 'S',  19, ' ',  17,  30,  16,  16,  31,  26,  // 4x
+     27,  25,  24, 'N', '/', '*', '-', '+',  23, '1', '2', '3', '4', '5', '6', '7',  // 5x
+    '8', '9', '0', '.','\\', 'A',   0, '=', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 6x
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 7x
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 8x
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 9x
+    ' ', ' ', ' ', ' ', ' ',   0, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // Ax
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // Bx
+    ' ',0x9E,0x9E, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',0x80,0x80,0x80,0x80,  // Cx
+   0x80,0x81,0x82,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,  // Dx
+    'C', 'S', 'A', 'G', 'C', 'S', 'A', 'G', ' ', ' ', ' ', ' ', ' ',  24,  26,  24,  // Ex
+     25, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  24,  25,  27,  26, ' ', ' ', ' '   // Fx
+};
 
 
 // WPM-responsive animation stuff here
@@ -699,12 +746,7 @@ static void render_status(void) {
     render_tessachka_logo();
     render_anim();
     oled_set_cursor(6,3);
-    oled_write_P(PSTR("Kyria rev1"), false);
-
-    oled_set_cursor(6,4);
-    // Host Keyboard Layer Status
     oled_write_P(PSTR("Layer: "), false);
-    oled_set_cursor(7,5);
     switch (get_highest_layer(layer_state)) {
         case QWERTY:
             oled_write_ln_P(PSTR("Default"), false);
@@ -746,12 +788,40 @@ static void render_status(void) {
             oled_write_ln_P(PSTR("Undef"), false);
     }
 
-    // Host Keyboard LED Status
-    oled_set_cursor(6,6);
-    led_t led_usb_state = host_keyboard_led_state();
-    oled_write_P(led_usb_state.num_lock    ? PSTR("NUMLCK ") : PSTR("       "), false);
-    oled_write_P(led_usb_state.caps_lock   ? PSTR("CAPLCK ") : PSTR("       "), false);
-    oled_write_P(led_usb_state.scroll_lock ? PSTR("SCRLCK ") : PSTR("       "), false);
+
+        for (uint8_t x = 0; x < MATRIX_ROWS; x++) {
+            oled_set_cursor(6, x + 4);
+            for (uint8_t y = (MATRIX_COLS - 1); y > 0; y--) {
+                uint8_t i = x, j = y;
+                uint16_t keycode = layer_map[i][j];
+                if (IS_QK_MOD_TAP(keycode)) {
+                    keycode = keycode_config(QK_MOD_TAP_GET_TAP_KEYCODE(keycode));
+                } else if (IS_QK_LAYER_TAP(keycode)) {
+                    keycode = keycode_config(QK_LAYER_TAP_GET_TAP_KEYCODE(keycode));
+                } else if (IS_QK_MODS(keycode)) {
+                    keycode = keycode_config(QK_MODS_GET_BASIC_KEYCODE(keycode));
+                } else if (IS_QK_ONE_SHOT_MOD(keycode)) {
+                    keycode = keycode_config(0xE0 + biton(QK_ONE_SHOT_MOD_GET_MODS(keycode) & 0xF) +
+                                             biton(QK_ONE_SHOT_MOD_GET_MODS(keycode) & 0x10));
+                } else if (IS_QK_BASIC(keycode)) {
+                    keycode = keycode_config(keycode);
+                }
+
+                char code = 0;
+                if (keycode > 0xFF) {
+                    keycode = 0;
+                }
+                if (keycode < ARRAY_SIZE(code_to_name)) {
+                    code = pgm_read_byte(&code_to_name[keycode]);
+                }
+
+                oled_write_char(code, peek_matrix(x, y, false));
+            }
+        }
+
+    oled_set_cursor(0, 8);
+    oled_write_P(PSTR("                     "), true);
+
 }
 
 bool oled_task_user(void) {

@@ -17,7 +17,12 @@
 #pragma once
 
 #ifdef OLED_ENABLE
-#    define OLED_DISPLAY_128X64
+#    undef OLED_DISPLAY_128X64
+#    define OLED_DISPLAY_128X128
+#    define OLED_PRE_CHARGE_PERIOD 0x22
+#    define OLED_VCOM_DETECT       0x35
+#    define OLED_FONT_H   "oled_font.h"
+#    define OLED_FONT_END 255
 #endif
 
 #ifdef RGBLIGHT_ENABLE
@@ -49,12 +54,12 @@
 
 #    ifdef RGBLIGHT_ENABLE
 #        undef RGBLED_SPLIT
-#        undef RGBLED_NUM
+#        undef RGBLIGHT_LED_COUNT
 
 #        ifdef KEYBOARD_splitkb_kyria_rev3
-#            define RGBLED_NUM 31
+#            define RGBLIGHT_LED_COUNT 31
 #        else
-#            define RGBLED_NUM 10
+#            define RGBLIGHT_LED_COUNT 10
 #        endif
 #    endif
 #endif
