@@ -2,6 +2,7 @@
     "userspace_version": "1.0",
     "build_targets": [
         ["splitkb/kyria/rev1", "tessachka"],
-        ["splitkb/kyria/rev2", "tessachka"]
+        ["splitkb/kyria/rev2", "tessachka"],
+        ["splitkb/kyria/rev3", "tessachka"]
     ]
 }

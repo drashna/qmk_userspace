@@ -35,11 +35,7 @@ uint16_t repeat_press_timer;
 bool     is_fire_toggled = false;
 
 #define LAYER_MAP_ROWS 5
-#ifdef KEYBOARD_splitkb_kyria_rev3
-#    define LAYER_MAP_COLS 8
-#else
-#    define LAYER_MAP_COLS 7
-#endif
+#define LAYER_MAP_COLS 8
 
 volatile uint16_t layer_map[LAYER_MAP_ROWS][LAYER_MAP_COLS] = {0};
 static bool       layer_map_set                             = false;
@@ -82,7 +78,7 @@ enum custom_keycodes {
     { KC_NO, KC_NO, L0C,   L0D,   L0E,   L0F,   L0G,   L0H   }, \
     { KC_NO, KC_NO, L1C,   L1D,   L1E,   L1F,   L1G,   L1H   }, \
     { L2A,   L2B,   L2C,   L2D,   L2E,   L2F,   L2G,   L2H   }, \
-    { L3A,   L3B,   L4C,   L3D,   L3E,   KC_NO, KC_NO, KC_NO } \
+    { L3A,   L3B,   L3C,   L3D,   L3E,   KC_NO, KC_NO, KC_NO } \
 }
 #endif
 

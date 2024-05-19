@@ -2,5 +2,6 @@ OLED_ENABLE = yes
 MOUSEKEY_ENABLE = yes
 NKRO_ENABLE = yes
 WPM_ENABLE = yes
+LTO_ENABLE = no
 
 CONVERT_TO = elite_pi
