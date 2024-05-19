@@ -34,8 +34,16 @@ enum layers {
 uint16_t repeat_press_timer;
 bool     is_fire_toggled = false;
 
-volatile uint16_t layer_map[MATRIX_ROWS][MATRIX_COLS] = {0};
-static bool       layer_map_set                       = false;
+#define LAYER_MAP_ROWS 5
+#ifdef KEYBOARD_splitkb_kyria_rev3
+#    define LAYER_MAP_COLS 8
+#else
+#    define LAYER_MAP_COLS 7
+#endif
+
+volatile uint16_t layer_map[LAYER_MAP_ROWS][LAYER_MAP_COLS] = {0};
+static bool       layer_map_set                             = false;
+keypos_t          layer_remap[LAYER_MAP_ROWS][LAYER_MAP_COLS];
 
 extern bool peek_matrix(uint8_t row_index, uint8_t col_index, bool read_raw);
 
@@ -52,29 +60,29 @@ enum custom_keycodes {
 // clang-format off
 #ifdef KEYBOARD_splitkb_kyria_rev3
 #define LAYOUT_one_hand( \
-    L00, L01, L02, L03, L04, L05,            \
-    L10, L11, L12, L13, L14, L15,            \
-    L20, L21, L22, L23, L24, L25, L26, L27,  \
-                   L33, L34, L35, L36, L37   \
+    L06, L05, L04, L03, L02, L01,            \
+    L16, L15, L14, L13, L12, L11,            \
+    L26, L25, L24, L23, L22, L21, L33, L20,  \
+                   L34, L32, L31, L35, L30   \
 ) \
 { \
-	 {KC_NO, L05, L04, L03, L02, L01, L00}, \
-	 {KC_NO, L15, L14, L13, L12, L11, L10}, \
-	 {  L26, L24, L24, L23, L22, L21, L20}, \
-	 {  L37, L35, L34, L27, L33, L26, KC_NO} \
+	 {KC_NO, L01, L02, L03, L04, L05, L06}, \
+	 {KC_NO, L11, L12, L13, L14, L15, L16}, \
+	 {  L20, L21, L22, L23, L24, L25, L26}, \
+	 {  L30, L31, L32, L33, L34, L35, KC_NO} \
 }
 #else
 #define LAYOUT_one_hand( \
-    L00, L01, L02, L03, L04, L05,           \
-    L12, L13, L14, L15, L16, L17,           \
-    L24, L25, L26, L27, L28, L29, L30, L31, \
-                   L40, L41, L42, L43, L44  \
+    L0H, L0G, L0F, L0E, L0D, L0C,           \
+    L1H, L1G, L1F, L1E, L1D, L1C,           \
+    L2H, L2G, L2F, L2E, L2D, L2C, L2B, L2A, \
+                   L3E, L3D, L3C, L3B, L3A  \
 ) \
 { \
-    { KC_NO, KC_NO, L05,   L04,   L03,   L02,   L01,   L00   }, \
-    { KC_NO, KC_NO, L17,   L16,   L15,   L14,   L13,   L12   }, \
-    { L31,   L30,   L29,   L28,   L27,   L26,   L25,   L24   }, \
-    { L44,   L43,   L42,   L41,   L40,   KC_NO, KC_NO, KC_NO } \
+    { KC_NO, KC_NO, L0C,   L0D,   L0E,   L0F,   L0G,   L0H   }, \
+    { KC_NO, KC_NO, L1C,   L1D,   L1E,   L1F,   L1G,   L1H   }, \
+    { L2A,   L2B,   L2C,   L2D,   L2E,   L2F,   L2G,   L2H   }, \
+    { L3A,   L3B,   L4C,   L3D,   L3E,   KC_NO, KC_NO, KC_NO } \
 }
 #endif
 
@@ -158,55 +166,71 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //                                  _______, _______, _______, _______, _______,
 //     ),
 };
-// clang-format on
 
+#ifdef ENCODER_MAP_ENABLE
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
+    [QWERTY]  = { ENCODER_CCW_CW( KC_WH_D, KC_WH_U ), ENCODER_CCW_CW( KC_WH_D, KC_WH_U ) },
+    [TESSWIN] = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [QMACROS] = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [LOWER]   = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [GDFL]    = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [GNS]     = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [HZD]     = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [EDIT]    = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [AU]      = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [MORTAL]  = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [RAISE]   = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+    [ADJUST]  = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
+};
+#endif
+// clang-format on
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MACRO_W_T:
             if (record->event.pressed) {
-                 register_code(KC_W);
-                 register_code(KC_T);
+                register_code(KC_W);
+                register_code(KC_T);
             } else {
-                 unregister_code(KC_T);
-                 unregister_code(KC_W);
+                unregister_code(KC_T);
+                unregister_code(KC_W);
             }
             break;
         case MACRO_LMB_RMB:
             if (record->event.pressed) {
-                 register_code(KC_BTN2);
-                 register_code(KC_BTN1);
+                register_code(KC_BTN2);
+                register_code(KC_BTN1);
             } else {
-                 unregister_code(KC_BTN1);
-                 unregister_code(KC_BTN2);
+                unregister_code(KC_BTN1);
+                unregister_code(KC_BTN2);
             }
             break;
         case MACRO_CD:
             if (record->event.pressed) {
-                 register_code(KC_LCTL);
-                 register_code(KC_D);
+                register_code(KC_LCTL);
+                register_code(KC_D);
             } else {
-                 unregister_code(KC_LCTL);
-                 unregister_code(KC_D);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_D);
             }
             break;
         case MACRO_S_T:
             if (record->event.pressed) {
-                 register_code(KC_S);
-                 register_code(KC_T);
+                register_code(KC_S);
+                register_code(KC_T);
             } else {
-                 unregister_code(KC_T);
-                 unregister_code(KC_S);
+                unregister_code(KC_T);
+                unregister_code(KC_S);
             }
             break;
         case MACRO_B_T:
             if (record->event.pressed) {
-                 register_code(KC_B);
-                 wait_ms(10);
-                 register_code(KC_T);
+                register_code(KC_B);
+                wait_ms(10);
+                register_code(KC_T);
             } else {
-                 unregister_code(KC_B);
-                 unregister_code(KC_T);
+                unregister_code(KC_B);
+                unregister_code(KC_T);
             }
             break;
         case KC_ESC:
@@ -221,9 +245,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 is_key_held ? register_code(KC_LCTL) : unregister_code(KC_LCTL);
             }
             break;
-            }
-        case KEEP_FIRING:
-        {
+        }
+        case KEEP_FIRING: {
             static uint16_t tap_hold_timer;
             if (record->event.pressed) {
                 tap_hold_timer = timer_read();
@@ -252,12 +275,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
  * accounting for transparency.
  */
 void populate_layer_map(void) {
-    for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
-        for (uint8_t j = 0; j < MATRIX_COLS; j++) {
-            keypos_t key    = {j, i};
+    for (uint8_t i = 0; i < LAYER_MAP_ROWS; i++) {
+        for (uint8_t j = 0; j < LAYER_MAP_COLS; j++) {
+            keypos_t key    = layer_remap[i][j];
             layer_map[i][j] = keymap_key_to_keycode(layer_switch_get_layer(key), key);
         }
     }
+}
+
+bool peek_matrix_layer_map(uint8_t row, uint8_t col) {
+    if (layer_remap[row][col].row >= KEYLOC_DIP_SWITCH_OFF) {
+        return false;
+    }
+    return peek_matrix(layer_remap[row][col].row, layer_remap[row][col].col, false);
 }
 
 void housekeeping_task_user(void) {
@@ -265,14 +295,26 @@ void housekeeping_task_user(void) {
         repeat_press_timer = timer_read() + rand() * 30;
         tap_code(KC_LSFT);
     }
-
     // layer state was changeg
     if (layer_map_set) {
         populate_layer_map();
         layer_map_set = false;
     }
-
 };
+
+#ifdef VIA_ENABLE
+#    include "via.h"
+bool via_command_kb(uint8_t *data, uint8_t length) {
+    switch (data[0]) {
+        case id_dynamic_keymap_set_keycode:
+        case id_dynamic_keymap_reset:
+        case id_dynamic_keymap_set_buffer:
+        case id_dynamic_keymap_set_encoder:
+            layer_map_set = true;
+    }
+    return false;
+}
+#endif
 
 // we want to update the keymap array on every layer change,
 // but it's not properly set until after this function returns.
@@ -288,58 +330,63 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 
 #ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+#ifdef OLED_DISPLAY_128X128
+    return OLED_ROTATION_0;
+#else
     return OLED_ROTATION_180;
+#endif
 }
 
-
+// clang-format off
 static const char PROGMEM code_to_name[256] = {
-//   0    1    2    3    4    5    6    7    8    9    A    B    c    D    E    F
-    ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  // 0x
-    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2',  // 1x
-    '3', '4', '5', '6', '7', '8', '9', '0',  20,  19,  27,  26,  22, '-', '=', '[',  // 2x
-    ']','\\', '#', ';','\'', '`', ',', '.', '/', 128,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,  // 3x
-   0xDB,0xDC,0xDD,0xDE,0XDF,0xFB, 'P', 'S',  19, ' ',  17,  30,  16,  16,  31,  26,  // 4x
-     27,  25,  24, 'N', '/', '*', '-', '+',  23, '1', '2', '3', '4', '5', '6', '7',  // 5x
-    '8', '9', '0', '.','\\', 'A',   0, '=', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 6x
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 7x
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 8x
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 9x
-    ' ', ' ', ' ', ' ', ' ',   0, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // Ax
-    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // Bx
-    ' ',0x9E,0x9E, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',0x80,0x80,0x80,0x80,  // Cx
-   0x80,0x81,0x82,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,  // Dx
-    'C', 'S', 'A', 'G', 'C', 'S', 'A', 'G', ' ', ' ', ' ', ' ', ' ',  24,  26,  24,  // Ex
-     25, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  24,  25,  27,  26, ' ', ' ', ' '   // Fx
+    //   0    1    2    3    4    5    6    7    8    9    A    B    c    D    E    F
+    ' ',  ' ',  ' ',  ' ',  'a',  'b',  'c',  'd',  'e',  'f',  'g',  'h',  'i',  'j',  'k',  'l',  // 0x
+    'm',  'n',  'o',  'p',  'q',  'r',  's',  't',  'u',  'v',  'w',  'x',  'y',  'z',  '1',  '2',  // 1x
+    '3',  '4',  '5',  '6',  '7',  '8',  '9',  '0',  20,   19,   27,   26,   22,   '-',  '=',  '[',  // 2x
+    ']',  '\\', '#',  ';',  '\'', '`',  ',',  '.',  '/',  128,  0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, // 3x
+    0xDB, 0xDC, 0xDD, 0xDE, 0XDF, 0xFB, 'P',  'S',  19,   ' ',  17,   30,   16,   16,   31,   26,   // 4x
+    27,   25,   24,   'N',  '/',  '*',  '-',  '+',  23,   '1',  '2',  '3',  '4',  '5',  '6',  '7',  // 5x
+    '8',  '9',  '0',  '.',  '\\', 'A',  0,    '=',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  // 6x
+    ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  // 7x
+    ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  // 8x
+    ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  // 9x
+    ' ',  ' ',  ' ',  ' ',  ' ',  0,    ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  // Ax
+    ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  // Bx
+    ' ',  0x9E, 0x9E, ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  0x80, 0x80, 0x80, 0x80, // Cx
+    0x80, 0x81, 0x82, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, // Dx
+    'C',  'S',  'A',  'G',  'C',  'S',  'A',  'G',  ' ',  ' ',  ' ',  ' ',  ' ',  24,   26,   24,   // Ex
+    25,   ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  24,   25,   27,   26,   ' ',  ' ',  ' '   // Fx
 };
-
+// clang-format on
 
 // WPM-responsive animation stuff here
-#define SLEEP_FRAMES 2
-#define SLEEP_SPEED 10 // below this wpm value your animation will idle
+#    define SLEEP_FRAMES 2
+#    define SLEEP_SPEED 10 // below this wpm value your animation will idle
 
-#define WAKE_FRAMES 2 // uncomment if >1
+#    define WAKE_FRAMES 2 // uncomment if >1
 
-#define KAKI_FRAMES 3
-#define KAKI_SPEED 40 // above this wpm value typing animation to triggere
+#    define KAKI_FRAMES 3
+#    define KAKI_SPEED 40 // above this wpm value typing animation to triggere
 
-#define RTOGI_FRAMES 2
-//#define LTOGI_FRAMES 2
+#    define RTOGI_FRAMES 2
+// #define LTOGI_FRAMES 2
 
-//#define ANIM_FRAME_DURATION 500 // how long each frame lasts in ms
-// #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
-#define ANIM_SIZE 512 // number of bytes in array, minimize for adequate firmware size, max is 1024
+// #define ANIM_FRAME_DURATION 500 // how long each frame lasts in ms
+//  #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
+#    define ANIM_SIZE 512 // number of bytes in array, minimize for adequate firmware size, max is 1024
 
-uint32_t anim_timer = 0;
-uint32_t anim_sleep = 0;
+uint32_t anim_timer          = 0;
+uint32_t anim_sleep          = 0;
 uint32_t anim_frame_duration = 500;
-uint8_t current_sleep_frame = 0;
-uint8_t current_wake_frame = 0; // uncomment if WAKE_FRAMES >1
-uint8_t current_kaki_frame = 0;
-uint8_t current_rtogi_frame = 0;
-//uint8_t current_ltogi_frame = 0;
+uint8_t  current_sleep_frame = 0;
+uint8_t  current_wake_frame  = 0; // uncomment if WAKE_FRAMES >1
+uint8_t  current_kaki_frame  = 0;
+uint8_t  current_rtogi_frame = 0;
+// uint8_t current_ltogi_frame = 0;
 
 // Images credit j-inc(/James Incandenza) and pixelbenny. Credit to obosob for initial animation approach.
 static void render_anim(void) {
+    // clang-format off
     static const char PROGMEM sleep[SLEEP_FRAMES][ANIM_SIZE] = {
         {
 // 'sleep1', 128x32px
@@ -658,48 +705,49 @@ static void render_anim(void) {
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     }
     };
+    // clang-format on
 
-    oled_set_cursor(0,3);
-    //assumes 1 frame prep stage
+    oled_set_cursor(0, 3);
+    // assumes 1 frame prep stage
     void animation_phase(void) {
-    if(is_fire_toggled){
-        anim_frame_duration = 300;
+        if (is_fire_toggled) {
+            anim_frame_duration = 300;
             current_rtogi_frame = (current_rtogi_frame + 1) % RTOGI_FRAMES;
-            oled_write_raw_P(rtogi[abs((RTOGI_FRAMES-1)-current_rtogi_frame)], ANIM_SIZE);
-    } else {
-            if(get_current_wpm() <=SLEEP_SPEED){
-            anim_frame_duration = 500;
+            oled_write_raw_P(rtogi[abs((RTOGI_FRAMES - 1) - current_rtogi_frame)], ANIM_SIZE);
+        } else {
+            if (get_current_wpm() <= SLEEP_SPEED) {
+                anim_frame_duration = 500;
                 current_sleep_frame = (current_sleep_frame + 1) % SLEEP_FRAMES;
-                oled_write_raw_P(sleep[abs((SLEEP_FRAMES-1)-current_sleep_frame)], ANIM_SIZE);
+                oled_write_raw_P(sleep[abs((SLEEP_FRAMES - 1) - current_sleep_frame)], ANIM_SIZE);
             }
-            //if(get_current_wpm() >IDLE_SPEED && get_current_wpm() <TAP_SPEED){
-            if(get_current_wpm() >SLEEP_SPEED){
-            anim_frame_duration = 800;
-                current_wake_frame = (current_wake_frame + 1) % WAKE_FRAMES;
-                oled_write_raw_P(wake[abs((WAKE_FRAMES-1)-current_wake_frame)], ANIM_SIZE);
-                //oled_write_raw_P(wake[0], ANIM_SIZE);  // remove if IDLE_FRAMES >1
+            // if(get_current_wpm() >IDLE_SPEED && get_current_wpm() <TAP_SPEED){
+            if (get_current_wpm() > SLEEP_SPEED) {
+                anim_frame_duration = 800;
+                current_wake_frame  = (current_wake_frame + 1) % WAKE_FRAMES;
+                oled_write_raw_P(wake[abs((WAKE_FRAMES - 1) - current_wake_frame)], ANIM_SIZE);
+                // oled_write_raw_P(wake[0], ANIM_SIZE);  // remove if IDLE_FRAMES >1
             }
-            if(get_current_wpm() >=KAKI_SPEED){
-            anim_frame_duration = 500;
-                current_kaki_frame = (current_kaki_frame + 1) % KAKI_FRAMES;
-                oled_write_raw_P(kaki[abs((KAKI_FRAMES-1)-current_kaki_frame)], ANIM_SIZE);
+            if (get_current_wpm() >= KAKI_SPEED) {
+                anim_frame_duration = 500;
+                current_kaki_frame  = (current_kaki_frame + 1) % KAKI_FRAMES;
+                oled_write_raw_P(kaki[abs((KAKI_FRAMES - 1) - current_kaki_frame)], ANIM_SIZE);
             }
+        }
     }
-    }
-    if(get_current_wpm() != 000) {
+    if (get_current_wpm() != 000) {
         oled_on(); // not essential but turns on animation OLED with any alpha keypress
-        //if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-        if(timer_elapsed32(anim_timer) > anim_frame_duration) {
+        // if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
+        if (timer_elapsed32(anim_timer) > anim_frame_duration) {
             anim_timer = timer_read32();
             animation_phase();
         }
         anim_sleep = timer_read32();
     } else {
-        if(timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
+        if (timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
             oled_off();
         } else {
-            //if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-            if(timer_elapsed32(anim_timer) > anim_frame_duration) {
+            // if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
+            if (timer_elapsed32(anim_timer) > anim_frame_duration) {
                 anim_timer = timer_read32();
                 animation_phase();
             }
@@ -707,8 +755,8 @@ static void render_anim(void) {
     }
 }
 
-
 static void render_tessachka_logo(void) {
+    // clang-format off
     static const char PROGMEM Tessachka_OLED_Logo_Inverted[] =
         {
               0,   0,   0,   0,   0,   0,   0,   0,   0, 128, 192, 192, 192, 192, 192, 192, 192,
@@ -735,6 +783,7 @@ static void render_tessachka_logo(void) {
               0,   0,   0,   0,   1,   3,   3,   1,   0,   3,   3,   3,   3,   3,   3,   1,   0,
               0,   1,   3,   3,   0,   0,   0,   0,   0,   0
         };
+    // clang-format on
     oled_write_raw_P(Tessachka_OLED_Logo_Inverted, sizeof(Tessachka_OLED_Logo_Inverted));
     oled_advance_page(false);
     oled_advance_page(false);
@@ -745,8 +794,18 @@ static void render_status(void) {
     // Logo and version information
     render_tessachka_logo();
     render_anim();
-    oled_set_cursor(6,3);
+    oled_set_cursor(6, 3);
+    oled_write_P(PSTR("Kyria "), false);
+#    if defined(KEYBOARD_splitkb_kyria_rev1)
+    oled_write_P(PSTR("Rev1 "), false);
+#    elif defined(KEYBOARD_splitkb_kyria_rev3)
+    oled_write_P(PSTR("Rev3 "), false);
+#    endif
+
+    oled_set_cursor(6, 4);
+    // Host Keyboard Layer Status
     oled_write_P(PSTR("Layer: "), false);
+    oled_set_cursor(7, 5);
     switch (get_highest_layer(layer_state)) {
         case QWERTY:
             oled_write_ln_P(PSTR("Default"), false);
@@ -787,49 +846,74 @@ static void render_status(void) {
         default:
             oled_write_ln_P(PSTR("Undef"), false);
     }
+    led_t led_usb_state = host_keyboard_led_state();
+    oled_set_cursor(6,6);
+    oled_write_P(PSTR("NUML"), led_usb_state.num_lock);
+    oled_write_P(PSTR(" "), false);
+    oled_write_P(PSTR("CAPS"), led_usb_state.caps_lock);
+    oled_write_P(PSTR(" "), false);
+    oled_write_P(PSTR("SCRL"), led_usb_state.scroll_lock);
+    oled_set_cursor(1, 7);
 
-
-        for (uint8_t x = 0; x < MATRIX_ROWS; x++) {
-            oled_set_cursor(6, x + 4);
-            for (uint8_t y = (MATRIX_COLS - 1); y > 0; y--) {
-                uint8_t i = x, j = y;
-                uint16_t keycode = layer_map[i][j];
-                if (IS_QK_MOD_TAP(keycode)) {
-                    keycode = keycode_config(QK_MOD_TAP_GET_TAP_KEYCODE(keycode));
-                } else if (IS_QK_LAYER_TAP(keycode)) {
-                    keycode = keycode_config(QK_LAYER_TAP_GET_TAP_KEYCODE(keycode));
-                } else if (IS_QK_MODS(keycode)) {
-                    keycode = keycode_config(QK_MODS_GET_BASIC_KEYCODE(keycode));
-                } else if (IS_QK_ONE_SHOT_MOD(keycode)) {
-                    keycode = keycode_config(0xE0 + biton(QK_ONE_SHOT_MOD_GET_MODS(keycode) & 0xF) +
-                                             biton(QK_ONE_SHOT_MOD_GET_MODS(keycode) & 0x10));
-                } else if (IS_QK_BASIC(keycode)) {
-                    keycode = keycode_config(keycode);
-                }
-
-                char code = 0;
-                if (keycode > 0xFF) {
-                    keycode = 0;
-                }
-                if (keycode < ARRAY_SIZE(code_to_name)) {
-                    code = pgm_read_byte(&code_to_name[keycode]);
-                }
-
-                oled_write_char(code, peek_matrix(x, y, false));
+    for (uint8_t i = 0; i < LAYER_MAP_ROWS; i++) {
+        oled_set_cursor(3 + 1, 8 + i);
+        for (uint8_t j = 0; j < LAYER_MAP_COLS; j++) {
+            uint16_t keycode = layer_map[i][j];
+            if (IS_QK_MOD_TAP(keycode)) {
+                keycode = keycode_config(QK_MOD_TAP_GET_TAP_KEYCODE(keycode));
+            } else if (IS_QK_LAYER_TAP(keycode)) {
+                keycode = keycode_config(QK_LAYER_TAP_GET_TAP_KEYCODE(keycode));
+            } else if (IS_QK_MODS(keycode)) {
+                keycode = keycode_config(QK_MODS_GET_BASIC_KEYCODE(keycode));
+            } else if (IS_QK_ONE_SHOT_MOD(keycode)) {
+                keycode = keycode_config(0xE0 + biton(QK_ONE_SHOT_MOD_GET_MODS(keycode) & 0xF) + biton(QK_ONE_SHOT_MOD_GET_MODS(keycode) & 0x10));
+            } else if (IS_QK_BASIC(keycode)) {
+                keycode = keycode_config(keycode);
             }
+
+            char code = 0;
+            if (keycode > 0xFF) {
+                // // if you need/want custom keycode suport define the 'code' here. For example:
+                // if (keycode == macro) {
+                //     code = 0xFD
+                // } else
+                keycode = 0;
+            }
+            if (keycode < ARRAY_SIZE(code_to_name)) {
+                code = pgm_read_byte(&code_to_name[keycode]);
+            }
+
+            oled_write_char(code, peek_matrix_layer_map(i, j));
         }
-
-    oled_set_cursor(0, 8);
-    oled_write_P(PSTR("                     "), true);
-
+    }
 }
 
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         render_status(); // Renders the current keyboard state (layer, lock, caps, scroll, etc)
-    // } else {
-    //     render_kyria_logo();
+    } else {
+        // render_kyria_logo();
     }
     return false;
 }
 #endif
+
+// clang-format off
+#ifdef KEYBOARD_splitkb_kyria_rev3
+keypos_t layer_remap[LAYER_MAP_ROWS][LAYER_MAP_COLS] = {
+    { {   6,   0 }, {   5,   0 }, {   4,   0 }, {   3,   0 }, {   2,   0 }, {   1,   0 }, { 255, 255 }, { 255, 255 } },
+    { {   6,   1 }, {   5,   1 }, {   4,   1 }, {   3,   1 }, {   2,   1 }, {   1,   1 }, { 255, 255 }, { 255, 255 } },
+    { {   6,   2 }, {   5,   2 }, {   4,   2 }, {   3,   2 }, {   2,   2 }, {   1,   2 }, {   3,   3 }, {   0,   2 } },
+    { { 255, 255 }, { 255, 255 }, { 255, 255 }, {   4,   3 }, {   2,   3 }, {   1,   3 }, {   5,   3 }, {   0,   3 } },
+    { { 255, 255 }, { 255, 255 }, {   0, 252 }, { 255, 255 }, {   0, 253 }, { 255, 255 }, { 255, 255 }, { 255, 255 } }
+};
+#else
+keypos_t layer_remap[LAYER_MAP_ROWS][LAYER_MAP_COLS] = {
+    { {   7,   0 }, {   6,   0 }, {   5,   0 }, {   4,   0 }, {   3,   0 }, {   2,   0 }, { 255, 255 }, { 255, 255 } },
+    { {   7,   1 }, {   6,   1 }, {   5,   1 }, {   4,   1 }, {   3,   0 }, {   2,   1 }, { 255, 255 }, { 255, 255 } },
+    { {   7,   2 }, {   6,   2 }, {   5,   2 }, {   4,   2 }, {   3,   0 }, {   2,   2 }, {   1,   2 }, {   0,   2 } },
+    { { 255, 255 }, { 255, 255 }, { 255, 255 }, {   4,   3 }, {   3,   0 }, {   2,   3 }, {   1,   3 }, {   0,   3 } },
+    { { 255, 255 }, { 255, 255 }, {   0, 252 }, { 255, 255 }, {   0, 253 }, { 255, 255 }, { 255, 255 }, { 255, 255 } },
+};
+#endif
+// clang-format on
