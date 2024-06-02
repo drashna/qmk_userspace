@@ -17,5 +17,5 @@ jobs:
     uses: drashna/qmk_userspace/.github/workflows/qmk_userspace_publish.yml@master
     if: always() && !cancelled()
     needs: [build]
-    with:
-      qmk_ref: ${{ github.ref_name }}
+    # with:
+      # release_name: 'latest_${{ github.ref_name }}'

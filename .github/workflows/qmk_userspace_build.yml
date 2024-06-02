@@ -13,6 +13,11 @@ on:
         default: "master"
         required: false
         type: string
+      preparation_command:
+        description: "command to execute before `qmk userspace-compile`"
+        default: ""
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -60,6 +65,11 @@ jobs:
       - name: Validate userspace
         run: |
           qmk userspace-doctor
+
+      - name: Preparation command
+        if: inputs.preparation_command != ''
+        run: |
+          ${{ inputs.preparation_command }}
 
       - name: Build
         run: |
