@@ -337,6 +337,7 @@ void oled_render_large_display(bool side) {
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case FUN_TIME: {
+#ifdef RGB_MATRIX_ENABLE
             uint32_t my_callback(uint32_t trigger_time, void *cb_arg) {
                 rgb_matrix_step_noeeprom();
                 void last_matrix_activity_trigger(void);
@@ -353,6 +354,7 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
                     }
                 }
             }
+#endif
             break;
         }
     }
