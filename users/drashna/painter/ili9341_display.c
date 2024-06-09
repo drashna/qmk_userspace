@@ -42,12 +42,13 @@ static bool klog_redraw                  = false;
 void init_and_clear(painter_device_t device, painter_rotation_t rotation) {
     uint16_t width;
     uint16_t height;
-    qp_get_geometry(device, &width, &height, NULL, NULL, NULL);
 
     qp_init(device, rotation);
-    qp_comms_start(device);
-    qp_comms_command(device, 0x21);
-    qp_comms_stop(device);
+    // if needs inversion
+    // qp_comms_start(device);
+    // qp_comms_command(device, ILI9XXX_CMD_INVERT_ON);
+    // qp_comms_stop(device);
+    qp_get_geometry(device, &width, &height, NULL, NULL, NULL);
     qp_rect(device, 0, 0, width - 1, height - 1, 0, 0, 0, true);
 }
 
