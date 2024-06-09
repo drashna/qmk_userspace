@@ -193,6 +193,7 @@ bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
     for (uint8_t i = 0; i < RGBLIGHT_LED_COUNT; i++) {
         RGB_MATRIX_INDICATOR_SET_COLOR(led_mapping[i], led_array[i].r, led_array[i].g, led_array[i].b);
     }
+    return false;
 #    endif
     return true;
 }

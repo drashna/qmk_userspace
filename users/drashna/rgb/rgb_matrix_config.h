@@ -56,7 +56,7 @@
 
 #define ENABLE_RGB_MATRIX_TYPING_HEATMAP
 #define ENABLE_RGB_MATRIX_CYCLE_OUT_IN_DUAL
-#if !defined(SPLIT_KEYBOARD) && !defined(KEYBOARD_ergodox_ez) && !defined(KEYBOARD_moonlander)
+#if !defined(SPLIT_KEYBOARD) && !defined(KEYBOARD_ergodox_ez) && !defined(KEYBOARD_zsa)
 #    define ENABLE_RGB_MATRIX_CYCLE_OUT_IN
 #endif
 #if defined(__arm__) || defined(__AVR_AT90USB1286__) || defined(KEYBOARD_launchpad)

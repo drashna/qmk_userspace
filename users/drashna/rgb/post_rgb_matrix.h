@@ -4,7 +4,7 @@
 #pragma once
 
 #ifndef RGB_MATRIX_REST_MODE
-#    if defined(SPLIT_KEYBOARD) || defined(KEYBOARD_ergodox_ez) || defined(KEYBOARD_moonlander)
+#    if defined(SPLIT_KEYBOARD) || defined(KEYBOARD_ergodox_ez) || defined(KEYBOARD_zsa)
 #        define RGB_MATRIX_REST_MODE RGB_MATRIX_CYCLE_OUT_IN_DUAL
 #    else
 #        define RGB_MATRIX_REST_MODE RGB_MATRIX_CYCLE_OUT_IN
