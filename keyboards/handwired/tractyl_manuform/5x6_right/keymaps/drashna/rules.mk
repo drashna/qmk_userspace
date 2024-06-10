@@ -41,7 +41,8 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f411)
     RTC_DRIVER                       = ds3231
     WATCHDOG_ENABLE                  = yes
 endif
-ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405)
+ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405_coreboard)
+    BOOTLOADER                       = tinyuf2
     AUTOCORRECT_ENABLE               = yes
     LTO_SUPPORTED                    = no
     OVERLOAD_FEATURES                = yes
