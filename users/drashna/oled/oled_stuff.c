@@ -921,6 +921,20 @@ void render_arasaka_logo(uint8_t col, uint8_t line) {
     }
 }
 
+void render_train_animation(uint8_t col, uint8_t line) {
+    static uint16_t timer = 0;
+    static uint8_t  frame = 0;
+    if (timer_elapsed(timer) > 500) {
+        frame++;
+        if (frame == 10) {
+            frame = 0;
+        }
+        timer = timer_read();
+    }
+    oled_set_cursor(col, line);
+    oled_write_raw_P(train_animation[frame][i], sizeof(train_animation[0][0]));
+}
+
 void oled_render_mario(uint8_t col, uint8_t line) {
     static uint16_t timer = 0;
     static uint8_t  frame = 0;
