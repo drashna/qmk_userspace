@@ -932,7 +932,7 @@ void render_train_animation(uint8_t col, uint8_t line) {
         timer = timer_read();
     }
     oled_set_cursor(col, line);
-    oled_write_raw_P(train_animation[frame][i], sizeof(train_animation[0][0]));
+    oled_write_raw_P(train_animation[frame], sizeof(train_animation[0]));
 }
 
 void oled_render_mario(uint8_t col, uint8_t line) {
