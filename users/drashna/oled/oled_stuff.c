@@ -924,7 +924,7 @@ void render_arasaka_logo(uint8_t col, uint8_t line) {
 void render_train_animation(uint8_t col, uint8_t line) {
     static uint16_t timer = 0;
     static uint8_t  frame = 0;
-    if (timer_elapsed(timer) > 500) {
+    if (timer_elapsed(timer) > 50) {
         frame++;
         if (frame == 10) {
             frame = 0;
