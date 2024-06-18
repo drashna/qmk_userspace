@@ -242,7 +242,7 @@ __attribute__((weak)) layer_state_t default_layer_state_set_keymap(layer_state_t
 }
 
 #if defined(AUDIO_ENABLE) && defined(DEFAULT_LAYER_SONGS)
-static float default_layer_songs[][MAX_LAYER][2] = DEFAULT_LAYER_SONGS;
+static float default_layer_songs[][16][2] = DEFAULT_LAYER_SONGS;
 #endif
 
 layer_state_t default_layer_state_set_user(layer_state_t state) {
