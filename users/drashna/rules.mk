@@ -6,9 +6,11 @@ SRC += $(USER_PATH)/drashna.c \
 
 # TOP_SYMBOLS = yes
 
-DEBOUNCE_TYPE        ?= asym_eager_defer_pk
-DEFERRED_EXEC_ENABLE ?= yes
-OS_DETECTION_ENABLE  ?= yes
+DEBOUNCE_TYPE                 ?= asym_eager_defer_pk
+DEFERRED_EXEC_ENABLE          ?= yes
+OS_DETECTION_ENABLE           ?= yes
+GRAVE_ESC_ENABLE              := no
+SPACE_CADET_ENABLE            := no
 DEBUG_MATRIX_SCAN_RATE_ENABLE := no
 
 ifeq ($(PLATFORM_KEY),chibios)
