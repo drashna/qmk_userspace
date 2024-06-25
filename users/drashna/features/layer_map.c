@@ -81,17 +81,22 @@ void housekeeping_task_layer_map(void) {
     }
 }
 
-#ifdef VIA_ENABLE
-#    include "via.h"
+#ifdef DYNAMIC_KEYMAP_ENABLE
+#    include "dynamic_keymap.h"
 
-bool via_command_kb(uint8_t *data, uint8_t length) {
-    switch (data[0]) {
-        case id_dynamic_keymap_set_keycode:
-        case id_dynamic_keymap_reset:
-        case id_dynamic_keymap_set_buffer:
-        case id_dynamic_keymap_set_encoder:
-            layer_map_set = true;
-    }
-    return false;
+#    ifdef ENCODER_MAP_ENABLE
+bool dynamic_keymap_set_encoder_user(uint8_t layer, uint8_t encoder_id, bool clockwise, uint16_t keycode) {
+    layer_map_set = true;
+    return true;
+}
+#    endif
+
+bool dynamic_keymap_set_keycode_user(uint8_t layer, uint8_t row, uint8_t column, uint16_t keycode) {
+    layer_map_set = true;
+    return true;
+}
+bool dynamic_keymap_set_buffer_user(uint16_t offset, uint16_t size, uint8_t *data) {
+    layer_map_set = true;
+    return true;
 }
 #endif // VIA_ENABLE
