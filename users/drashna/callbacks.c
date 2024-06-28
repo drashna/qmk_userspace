@@ -261,7 +261,7 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
     if (has_init_been_ran) {
 #if defined(AUDIO_ENABLE) && defined(DEFAULT_LAYER_SONGS)
         if (get_highest_layer(state) < MAX_LAYER) {
-            audio_play_melody(&default_layer_songs[get_highest_layer(state)], NOTE_ARRAY_SIZE(default_layer_songs[get_highest_layer(state)]), false);
+            PLAY_SONG(default_layer_songs[get_highest_layer(state)]);
         }
 #endif
         eeconfig_update_default_layer(state);
@@ -311,11 +311,8 @@ void eeconfig_init_user_datablock(void) {
 __attribute__((weak)) void matrix_slave_scan_keymap(void) {}
 void                       matrix_slave_scan_user(void) {
 #    if defined(AUDIO_ENABLE)
-#        if !defined(NO_MUSIC_MODE)
-    music_task();
-#        endif
 #        ifdef AUDIO_INIT_DELAY
-                          if (!is_keyboard_master()) {
+    if (!is_keyboard_master()) {
         static bool     delayed_tasks_run  = false;
         static uint16_t delayed_task_timer = 0;
         if (!delayed_tasks_run) {
@@ -329,16 +326,6 @@ void                       matrix_slave_scan_user(void) {
     }
 #        endif
 #    endif
-#    ifdef SEQUENCER_ENABLE
-    sequencer_task();
-#    endif
-#    ifdef LED_MATRIX_ENABLE
-    led_matrix_task();
-#    endif
-#    ifdef HAPTIC_ENABLE
-    haptic_task();
-#    endif
-
     matrix_slave_scan_keymap();
 }
 #endif
