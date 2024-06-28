@@ -213,7 +213,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             if (is_click_on) {
                 clicky_off();
             }
-            audio_play_melody(&doom_song, NOTE_ARRAY_SIZE(doom_song), true);
+            PLAY_LOOP(doom_song);
         } else {
             if (is_click_on) {
                 clicky_on();
