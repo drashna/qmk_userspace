@@ -2,6 +2,10 @@
 
 [![Build QMK firmware](https://github.com/drashna/qmk_userspace/actions/workflows/build_binaries.yaml/badge.svg)](https://github.com/drashna/qmk_userspace/actions/workflows/build_binaries.yaml)
 
+For instructions on how to setup see [main readme](https://github.com/qmk/qmk_userspace/blob/main/README.md).
+
+For quick setup, mostly just run `qmk config user.overlay_dir="$(realpath .)"`
+
 ## Overview
 
 This is my personal userspace file.  Most of my code exists here, as it's heavily shared.
