@@ -1,6 +1,6 @@
 # Drashna's Keymaps
 
-[![Build QMK firmware](https://github.com/drashna/qmk_userspace/actions/workflows/build_binaries.yaml/badge.svg)](https://github.com/drashna/qmk_userspace/actions/workflows/build_binaries.yaml)
+[![Build QMK firmware](https://github.com/drashna/qmk_userspace/actions/workflows/build_binaries.yaml/badge.svg?branch=master)](https://github.com/drashna/qmk_userspace/actions/workflows/build_binaries.yaml)
 
 For instructions on how to setup see [main readme](https://github.com/qmk/qmk_userspace/blob/main/README.md).
 
