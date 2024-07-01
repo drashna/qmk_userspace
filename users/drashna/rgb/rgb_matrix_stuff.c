@@ -7,8 +7,7 @@
 extern led_config_t g_led_config;
 
 static uint32_t hypno_timer;
-RGB rgb_matrix_hsv_to_rgb(HSV hsv);
-
+RGB             rgb_matrix_hsv_to_rgb(HSV hsv);
 
 void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode, uint8_t speed, uint8_t led_type,
                              uint8_t led_min, uint8_t led_max) {
@@ -89,6 +88,25 @@ bool process_record_user_rgb_matrix(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+#if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
+#    include "rgblight_drivers.h"
+
+rgb_led_t led_array[RGBLIGHT_LED_COUNT] = {0};
+
+extern uint8_t led_mapping[RGBLIGHT_LED_COUNT];
+
+void init(void) {}
+
+void setleds(rgb_led_t *ledarray, uint16_t number_of_leds) {
+    memcpy(led_array, ledarray, number_of_leds * sizeof(rgb_led_t));
+}
+
+const rgblight_driver_t rgblight_driver = {
+    .init    = init,
+    .setleds = setleds,
+};
+#endif
+
 __attribute__((weak)) bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
     return true;
 }
@@ -97,12 +115,12 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         return false;
     }
 
-#if defined(RGBLIGHT_ENABLE)
-    if (!userspace_config.rgb_layer_change)
+    if (userspace_config.rgb_layer_change) {
+#if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
+        for (uint8_t i = 0; i < RGBLIGHT_LED_COUNT; i++) {
+            RGB_MATRIX_INDICATOR_SET_COLOR(led_mapping[i], led_array[i].r, led_array[i].g, led_array[i].b);
+        }
 #else
-    if (userspace_config.rgb_layer_change)
-#endif
-    {
         switch (get_highest_layer(layer_state & ~((layer_state_t)1 << _MOUSE))) {
             case _GAMEPAD:
                 rgb_matrix_layer_helper(HSV_ORANGE, 1, rgb_matrix_config.speed, LED_FLAG_MODIFIER, led_min, led_max);
@@ -145,6 +163,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                 }
                 break;
         }
+#endif
     }
     return false;
 }

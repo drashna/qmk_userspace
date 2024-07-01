@@ -115,8 +115,11 @@ void keyboard_post_init_keymap(void) {
 #endif
 }
 
-#if defined(BOOTLOADER_RESET_PIN)
+#if defined(RGB_MATRIX_ENABLE) && defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
+uint8_t led_mapping[RGBLIGHT_LED_COUNT] = {0, 1, 2, 3, 26, 25, 27, 24, 28, 53, 55, 54, 32, 31, 30, 29};
+#endif
 
+#if defined(BOOTLOADER_RESET_PIN)
 void keyboard_pre_init_keymap(void) {
     setPinOutput(BOOTLOADER_RESET_PIN);
 }

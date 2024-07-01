@@ -30,6 +30,11 @@
 #undef RGB_MATRIX_MAXIMUM_BRIGHTNESS
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 150
 
+#define RGBLIGHT_LED_COUNT 17
+#define RGBLED_SPLIT \
+    { 9, 7 }
+#define RGBLIGHT_SLEEP
+
 // Display common config
 #define DISPLAY_DC_PIN C15
 

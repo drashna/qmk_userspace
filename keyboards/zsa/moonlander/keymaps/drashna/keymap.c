@@ -154,24 +154,9 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 
 #ifdef RGB_MATRIX_ENABLE
 
-#    ifdef RGBLIGHT_ENABLE
-#        include "rgblight_drivers.h"
-
-rgb_led_t led_array[RGBLIGHT_LED_COUNT] = {0};
-
+#    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
 uint8_t led_mapping[RGBLIGHT_LED_COUNT] = {0,  1,  2,  3,  4,  9,  14, 19, 24, 29, 30, 31, 32, 33, 34, 35,
                                            71, 70, 69, 68, 67, 66, 65, 60, 55, 50, 45, 40, 39, 38, 37, 36};
-
-void init(void) {}
-
-void setleds(rgb_led_t *ledarray, uint16_t number_of_leds) {
-    memcpy(led_array, ledarray, number_of_leds * sizeof(rgb_led_t));
-}
-
-const rgblight_driver_t rgblight_driver = {
-    .init    = init,
-    .setleds = setleds,
-};
 #    endif
 
 bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
@@ -189,14 +174,6 @@ bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
         RGB_MATRIX_INDICATOR_SET_COLOR((userspace_config.swapped_numbers ? 10 : 15), 0x00, 0xFF, 0x00); // 2
         RGB_MATRIX_INDICATOR_SET_COLOR(20, 0x7A, 0x00, 0xFF);                                           // 3
     }
-#    ifdef RGBLIGHT_ENABLE
-    if (userspace_config.rgb_layer_change) {
-        for (uint8_t i = 0; i < RGBLIGHT_LED_COUNT; i++) {
-            RGB_MATRIX_INDICATOR_SET_COLOR(led_mapping[i], led_array[i].r, led_array[i].g, led_array[i].b);
-        }
-    }
-    return false;
-#    endif
     return true;
 }
 #endif
