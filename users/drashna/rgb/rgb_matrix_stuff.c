@@ -65,6 +65,7 @@ void keyboard_post_init_rgb_matrix(void) {
 }
 
 bool process_record_user_rgb_matrix(uint16_t keycode, keyrecord_t *record) {
+    bool shifted = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
 #if defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS)
     hypno_timer = sync_timer_read32();
     if (userspace_config.rgb_matrix_idle_anim && rgb_matrix_get_mode() == RGB_MATRIX_REST_MODE) {
@@ -84,6 +85,22 @@ bool process_record_user_rgb_matrix(uint16_t keycode, keyrecord_t *record) {
             }
 #endif
             break;
+#if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
+        case QK_RGB_MATRIX_VALUE_DOWN:
+        case QK_UNDERGLOW_VALUE_DOWN:
+            if (record->event.pressed) {
+                shifted ? rgb_matrix_increase_val() : rgb_matrix_decrease_val();
+                rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), rgb_matrix_get_val());
+            }
+            return false;
+        case QK_RGB_MATRIX_VALUE_UP:
+        case QK_UNDERGLOW_VALUE_UP:
+            if (record->event.pressed) {
+                shifted ? rgb_matrix_decrease_val() : rgb_matrix_increase_val();
+                rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), rgb_matrix_get_val());
+            }
+            return false;
+#endif
     }
     return true;
 }

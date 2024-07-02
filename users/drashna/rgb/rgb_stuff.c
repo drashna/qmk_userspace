@@ -14,6 +14,14 @@ void rgblight_set_hsv_and_mode(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mo
     if (val > RGBLIGHT_LIMIT_VAL) {
         val = RGBLIGHT_LIMIT_VAL;
     }
+#ifdef RGB_MATRIX_ENABLE
+    if (val > rgb_matrix_get_val()) {
+        val = rgb_matrix_get_val();
+    }
+#endif
+    if (val > rgblight_get_val()) {
+        val = rgblight_get_val();
+    }
     rgblight_sethsv_noeeprom(hue, sat, val);
     // wait_us(175);  // Add a slight delay between color and mode to ensure it's processed correctly
     rgblight_mode_noeeprom(mode);
@@ -34,7 +42,7 @@ uint32_t rgb_startup_animation(uint32_t triger_time, void *cb_arg) {
     if (is_rgblight_startup && is_keyboard_master()) {
         static uint8_t counter = 0;
         counter++;
-        rgblight_sethsv_noeeprom((counter + old_hsv.h) % 255, 255, 255);
+        rgblight_sethsv_noeeprom((counter + old_hsv.h) % 255, 255, old_hsv.v);
         if (counter >= 255) {
             is_rgblight_startup = false;
             if (userspace_config.rgb_layer_change) {
@@ -60,6 +68,12 @@ bool is_rgblight_startup_running(void) {
 }
 
 void keyboard_post_init_rgb_light(void) {
+    debug_enable = true;
+#ifdef RGB_MATRIX_ENABLE
+    if (rgblight_get_val() != rgb_matrix_get_val()) {
+        rgblight_sethsv(rgblight_get_hue(), rgblight_get_sat(), rgb_matrix_get_val());
+    }
+#endif // RGB_MATRIX_ENABLE
 #if defined(RGBLIGHT_STARTUP_ANIMATION)
     is_enabled = rgblight_is_enabled();
     if (userspace_config.rgb_layer_change) {
