@@ -6,6 +6,9 @@
 #ifdef ACHORDION_ENABLE
 #    include "keyrecords/achordion.h"
 #endif
+#ifdef CUSTOM_KEY_CANCELLATION_ENABLE
+#    include "keyrecords/custom_key_cancellation.h"
+#endif
 #ifdef CUSTOM_TAP_DANCE_ENABLE
 #    include "keyrecords/custom_tap_dance.h"
 #endif // CUSTOM_TAP_DANCE_ENABLE

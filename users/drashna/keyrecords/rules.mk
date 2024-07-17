@@ -17,6 +17,9 @@ endif
 ifeq ($(strip $(TAP_DANCE_ENABLE)), yes)
     CUSTOM_TAP_DANCE_ENABLE ?= yes
 endif
+ifeq ($(strip $(KEY_CANCELLATION_ENABLE)), yes)
+    CUSTOM_KEY_CANCELLATION_ENABLE ?= yes
+endif
 
 KEYLOGGER_ENABLE ?= no
 ifeq ($(strip $(KEYLOGGER_ENABLE)), yes)
@@ -28,6 +31,7 @@ KEYRECORD_FEATURES = \
     CUSTOM_SHIFT_KEYS \
     CUSTOM_TAP_DANCE \
     CUSTOM_DYNAMIC_MACROS \
+    CUSTOM_KEY_CANCELLATION \
     SELECT_WORD \
     SENTENCE_CASE
 
