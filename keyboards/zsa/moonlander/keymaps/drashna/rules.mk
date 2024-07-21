@@ -7,6 +7,8 @@ BOOTMAGIC_ENABLE      = yes      # Enable Bootmagic Lite
 CUSTOM_UNICODE_ENABLE = yes
 WATCHDOG_ENABLE       = yes
 
+KEY_CANCELLATION_ENABLE = yes
+
 BOOTLOADER = tinyuf2
 
 RGBLIGHT_ENABLE = yes

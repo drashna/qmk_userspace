@@ -12,6 +12,8 @@ OLED_ENABLE           = yes
 WPM_ENABLE            = yes
 DISPLAY_KEYLOGGER_ENABLE = yes
 
+KEY_CANCELLATION_ENABLE = yes
+
 POINTING_DEVICE_ENABLE = yes
 POINTING_DEVICE_DRIVER = cirque_pinnacle_i2c
 

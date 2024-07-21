@@ -67,4 +67,5 @@ ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     RTC_ENABLE                       = yes
     SENTENCE_CASE_ENABLE             = yes
     DISPLAY_KEYLOGGER_ENABLE         = yes
+    KEY_CANCELLATION_ENABLE          = yes
 endif
