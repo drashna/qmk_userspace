@@ -218,9 +218,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             }
             audio_stop_all();
         }
-#    ifdef CUSTOM_KEY_CANCELLATION_ENABLE
-        keymap_config.key_cancellation_enable = is_gamepad_on;
-#    endif // CUSTOM_KEY_CANCELLATION_ENABLE
     }
 #endif
     state = layer_state_set_keymap(state);

@@ -2,8 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "custom_key_cancellation.h"
+#include "drashna.h"
 
 const key_cancellation_t PROGMEM key_cancellation_list[] = {
     [KEY_CANC_AD] = {KC_A, KC_D},
     [KEY_CANC_DA] = {KC_D, KC_A},
 };
+
+bool process_key_cancellation_user(uint16_t keycode, keyrecord_t *record) {
+    return is_gaming_layer_active(layer_state);
+}
