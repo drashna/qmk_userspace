@@ -40,6 +40,7 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f411)
     HAPTIC_DRIVER                    = drv2605l
     RTC_DRIVER                       = ds3231
     WATCHDOG_ENABLE                  = yes
+    OLED_ENABLE                      = yes
 endif
 ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405_coreboard)
     BOOTLOADER                       = tinyuf2
@@ -50,13 +51,15 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405_coreboard)
     HAPTIC_DRIVER                    = drv2605l
     RTC_DRIVER                       = vendor
     WATCHDOG_ENABLE                  = yes
+    OLED_ENABLE                      = no
+
 
     BACKLIGHT_ENABLE                 = yes
     QUANTUM_PAINTER_ENABLE           = yes
     QUANTUM_PAINTER_DRIVERS          += ili9341_spi
-    SRC += painter/graphics/asuka-240x320.qgf.c \
-	       painter/graphics/unit-02-240x320.qgf.c \
-		   painter/graphics/anime-girl-jacket-240x320.qgf.c
+    SRC += $(USER_PATH)/painter/graphics/asuka-240x320.qgf.c \
+           $(USER_PATH)/painter/graphics/unit-02-240x320.qgf.c \
+           $(USER_PATH)/painter/graphics/anime-girl-jacket-240x320.qgf.c
 endif
 ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     AUDIO_ENABLE                     = yes
@@ -65,7 +68,6 @@ ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     CUSTOM_UNICODE_ENABLE            = yes
     ENCODER_ENABLE                   = yes
     ENCODER_MAP_ENABLE               = yes
-    OLED_ENABLE                      = yes
     RGBLIGHT_ENABLE                  = yes
     RGBLIGHT_STARTUP_ANIMATION       = yes
     TAP_DANCE_ENABLE                 = yes
