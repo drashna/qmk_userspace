@@ -53,6 +53,8 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405_coreboard)
     WATCHDOG_ENABLE                  = yes
     OLED_ENABLE                      = no
     OLED_TRANSPORT                   = spi
+    RGB_MATRIX_ENABLE                = yes
+    RGBLIGHT_DRIVER                  = custom
 
     BACKLIGHT_ENABLE                 = yes
     QUANTUM_PAINTER_ENABLE           = yes

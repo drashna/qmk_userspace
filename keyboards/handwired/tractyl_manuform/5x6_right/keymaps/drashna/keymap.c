@@ -160,6 +160,11 @@ keypos_t layer_remap[LAYER_MAP_ROWS][LAYER_MAP_COLS] = {
 };
 // clang-format on
 
+#if defined(RGB_MATRIX_ENABLE) && defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
+const uint8_t led_mapping[RGBLIGHT_LED_COUNT] = {0,  1,  2,  3,  33, 32, 12, 13, 26, 27, 28, 29, 31,
+                                                 30, 63, 62, 61, 60, 47, 46, 64, 65, 37, 36, 35, 34};
+#endif
+
 #if defined(QUANTUM_PAINTER_ENABLE) && !defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
 #    include "qp.h"
 #    include "display/painter/graphics/assets.h"
@@ -180,6 +185,7 @@ void keyboard_post_init_keymap(void) {
         my_image = qp_load_image_mem(gfx_samurai_cyberpunk_minimal_dark_8k_b3_240x320);
         qp_drawimage(display, 0, 0, my_image);
     }
+    qp_flush(display);
     // my_image = qp_load_image_mem(gfx_neon_genesis_evangelion_initial_machine_02_240x320);
     // my_image = qp_load_image_mem(gfx_asuka_240x320);
     qp_close_image(my_image);
