@@ -41,6 +41,7 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f411)
     RTC_DRIVER                       = ds3231
     WATCHDOG_ENABLE                  = yes
     OLED_ENABLE                      = yes
+    RTC_ENABLE                       = yes
 endif
 ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405_coreboard)
     BOOTLOADER                       = tinyuf2
@@ -59,6 +60,8 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405_coreboard)
     BACKLIGHT_ENABLE                 = yes
     QUANTUM_PAINTER_ENABLE           = yes
     QUANTUM_PAINTER_DRIVERS          += ili9341_spi
+    CUSTOM_QUANTUM_PAINTER_ENABLE    = yes
+    KEYLOGGER_ENABLE                 = yes
 endif
 ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     AUDIO_ENABLE                     = yes
@@ -72,7 +75,6 @@ ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     TAP_DANCE_ENABLE                 = yes
     SWAP_HANDS_ENABLE                = yes
     WPM_ENABLE                       = yes
-    RTC_ENABLE                       = yes
     SENTENCE_CASE_ENABLE             = yes
     DISPLAY_KEYLOGGER_ENABLE         = yes
     KEY_CANCELLATION_ENABLE          = yes
