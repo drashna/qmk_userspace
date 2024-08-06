@@ -105,6 +105,43 @@ void ili9341_display_power(bool on) {
     qp_power(ili9341_display, on);
 }
 
+#define NUM_LOG_LINES (10 + 1)
+#define MAX_LOG_LINE  38
+
+static bool    needs_redraw  = false;
+static uint8_t log_write_idx = 0;
+static char    loglines[NUM_LOG_LINES][MAX_LOG_LINE + 2];
+static char*   logline_ptrs[NUM_LOG_LINES];
+
+void display_sendchar_hook(uint8_t c) {
+    static bool first_setup = false;
+    if (!first_setup) {
+        memset(loglines, 0, sizeof(loglines));
+        for (int i = 0; i < NUM_LOG_LINES; ++i) {
+            logline_ptrs[i] = loglines[i];
+        }
+        first_setup = true;
+    }
+
+    if (c == '\n') {
+        logline_ptrs[NUM_LOG_LINES - 1][log_write_idx] = 0;
+        char* tmp                                      = logline_ptrs[0];
+        for (int i = 0; i < NUM_LOG_LINES - 1; ++i) {
+            logline_ptrs[i] = logline_ptrs[i + 1];
+        }
+        logline_ptrs[NUM_LOG_LINES - 1]    = tmp;
+        log_write_idx                      = 0;
+        logline_ptrs[NUM_LOG_LINES - 1][0] = 0;
+        needs_redraw                       = true;
+    } else if (log_write_idx >= (MAX_LOG_LINE)) {
+        // Ignore.
+    } else {
+        logline_ptrs[NUM_LOG_LINES - 1][log_write_idx++] = c;
+        logline_ptrs[NUM_LOG_LINES - 1][log_write_idx]   = 0;
+        needs_redraw                                     = true;
+    }
+}
+
 __attribute__((weak)) void ili9341_draw_user(void) {
     bool hue_redraw = false;
 #if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
@@ -592,6 +629,26 @@ __attribute__((weak)) void ili9341_draw_user(void) {
         }
 #endif // AUTOCORRECT_ENABLE
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Console Log
+
+        ypos += (font_oled->line_height + 4);
+        static uint32_t last_log_redraw = 0;
+        static uint16_t max_line_width  = 0;
+        if (hue_redraw || (needs_redraw && timer_elapsed32(last_log_redraw) > 50)) {
+            for (uint8_t i = 0; i < NUM_LOG_LINES; ++i) {
+                xpos = 5;
+                xpos += qp_drawtext_recolor(ili9341_display, xpos, ypos, font_oled, logline_ptrs[i], curr_hue, 255, 255,
+                                            curr_hue, 255, 0);
+                if (max_line_width < xpos) {
+                    max_line_width = xpos;
+                }
+                qp_rect(ili9341_display, xpos, ypos, max_line_width, ypos + font_oled->line_height, 0, 0, 0, true);
+                ypos += font_oled->line_height + 4;
+            }
+            last_log_redraw = timer_read32();
+            needs_redraw    = false;
+        }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Font test
 

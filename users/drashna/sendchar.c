@@ -14,14 +14,19 @@ int8_t console_write(uint8_t c);
 #endif
 
 int8_t sendchar(uint8_t c) {
+    uint8_t ret = 0;
 #ifdef CONSOLE_ENABLE
-    c = console_write(c);
+    ret = console_write(c);
 #endif
 #ifdef SEGGER_RTT_ENABLE
-    c = SEGGER_RTT_PutChar(0, (char)c);
+    ret = SEGGER_RTT_PutChar(0, (char)c);
 #endif
 #ifdef VIRTSER_ENABLE
     virtser_send(c);
 #endif
-    return c;
+#if defined(CUSTOM_QUANTUM_PAINTER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ILI9341)
+    void display_sendchar_hook(uint8_t c);
+    display_sendchar_hook(c);
+#endif
+    return ret;
 }
