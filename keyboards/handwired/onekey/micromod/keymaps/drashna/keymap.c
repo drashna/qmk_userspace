@@ -312,7 +312,6 @@ led_config_t g_led_config = { {
 
 
 #if defined(OLED_ENABLE) && defined(OLED_DISPLAY_128X128)
-#include "oled/oled_stuff.h"
 
 void oled_render_large_display(bool side) {
 #if 1
