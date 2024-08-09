@@ -24,7 +24,7 @@ int8_t sendchar(uint8_t c) {
 #ifdef VIRTSER_ENABLE
     virtser_send(c);
 #endif
-#if defined(CUSTOM_QUANTUM_PAINTER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ILI9341)
+#if defined(DISPLAY_DRIVER_ENABLE)
     void display_sendchar_hook(uint8_t c);
     display_sendchar_hook(c);
 #endif
