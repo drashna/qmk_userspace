@@ -110,3 +110,46 @@ void keyboard_post_init_display_driver(void) {
     }
 #endif // DISPLAY_KEYLOGGER_ENABLE
 }
+
+bool           console_log_needs_redraw = false;
+static uint8_t log_write_idx            = 0;
+static char    loglines[DISPLAY_CONSOLE_LOG_LINE_NUM + 1][DISPLAY_CONSOLE_LOG_LINE_LENGTH + 2];
+char*          logline_ptrs[DISPLAY_CONSOLE_LOG_LINE_NUM + 1];
+
+#if defined(OLED_ENABLE) && !defined(QUANTUM_PAINTER_ENABLE)
+_Static_assert(DISPLAY_CONSOLE_LOG_LINE_LENGTH <= (OLED_DISPLAY_WIDTH / OLED_FONT_WIDTH),
+               "DISPLAY_CONSOLE_LOG_LINE_LENGTH must be lower than oled chararcter limit");
+#endif
+/**
+ * @brief Function for capturing console log messages.
+ *
+ * @param c
+ */
+void display_sendchar_hook(uint8_t c) {
+    static bool first_setup = false;
+    if (!first_setup) {
+        memset(loglines, 0, sizeof(loglines));
+        for (int i = 0; i < (DISPLAY_CONSOLE_LOG_LINE_NUM + 1); ++i) {
+            logline_ptrs[i] = loglines[i];
+        }
+        first_setup = true;
+    }
+
+    if (c == '\n') {
+        logline_ptrs[DISPLAY_CONSOLE_LOG_LINE_NUM][log_write_idx] = 0;
+        char* tmp                                                 = logline_ptrs[0];
+        for (int i = 0; i < DISPLAY_CONSOLE_LOG_LINE_NUM; ++i) {
+            logline_ptrs[i] = logline_ptrs[i + 1];
+        }
+        logline_ptrs[DISPLAY_CONSOLE_LOG_LINE_NUM]    = tmp;
+        log_write_idx                                 = 0;
+        logline_ptrs[DISPLAY_CONSOLE_LOG_LINE_NUM][0] = 0;
+        console_log_needs_redraw                      = true;
+    } else if (log_write_idx >= (DISPLAY_CONSOLE_LOG_LINE_LENGTH)) {
+        // Ignore.
+    } else {
+        logline_ptrs[DISPLAY_CONSOLE_LOG_LINE_NUM][log_write_idx++] = c;
+        logline_ptrs[DISPLAY_CONSOLE_LOG_LINE_NUM][log_write_idx]   = 0;
+        console_log_needs_redraw                                    = true;
+    }
+}

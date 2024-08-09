@@ -29,3 +29,20 @@ void keyboard_post_init_display_driver(void);
 extern char display_keylogger_string[DISPLAY_KEYLOGGER_LENGTH + 1];
 extern bool keylogger_has_changed;
 #endif
+
+#ifndef DISPLAY_CONSOLE_LOG_LINE_NUM
+#    if defined(OLED_ENABLE) && !defined(QUANTUM_PAINTER_ENABLE)
+#        define DISPLAY_CONSOLE_LOG_LINE_NUM 10
+#    else // OLED_ENABLE && !QUANTUM_PAINTER_ENABLE
+#        define DISPLAY_CONSOLE_LOG_LINE_NUM 4
+#    endif // OLED_ENABLE && !QUANTUM_PAINTER_ENABLE
+#endif
+#ifndef DISPLAY_CONSOLE_LOG_LINE_LENGTH
+#    if defined(OLED_ENABLE) && !defined(QUANTUM_PAINTER_ENABLE)
+#        define DISPLAY_CONSOLE_LOG_LINE_LENGTH 38
+#    else // OLED_ENABLE && !QUANTUM_PAINTER_ENABLE
+#        define DISPLAY_CONSOLE_LOG_LINE_LENGTH 20
+#    endif // OLED_ENABLE && !QUANTUM_PAINTER_ENABLE
+#endif     // DISPLAY_CONSOLE_LOG_LINE_LENGTH
+extern bool  console_log_needs_redraw;
+extern char* logline_ptrs[DISPLAY_CONSOLE_LOG_LINE_NUM + 1];
