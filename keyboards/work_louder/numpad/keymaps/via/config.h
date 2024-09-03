@@ -1,0 +1,16 @@
+// Copyright 2023 QMK
+// SPDX-License-Identifier: GPL-2.0-or-later
+#pragma once
+
+// #define MIDI_BASIC
+// #define NO_ACTION_ONESHOT
+
+#define USB_SUSPEND_WAKEUP_DELAY 200
+
+#undef RGBLIGHT_LIMIT_VAL
+#define RGBLIGHT_LIMIT_VAL 255
+
+#undef RGB_MATRIX_MAXIMUM_BRIGHTNESS
+#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 255
+
+#define DYNAMIC_KEYMAP_LAYER_COUNT 8
