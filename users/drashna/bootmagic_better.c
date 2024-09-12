@@ -49,7 +49,13 @@ void bootmagic_scan(void) {
     uint8_t row_e = BOOTMAGIC_EEPROM_ROW, col_e = BOOTMAGIC_EEPROM_COLUMN;
 #endif // BOOTMAGIC_EEPROM_ROW && BOOTMAGIC_EEPROM_COLUMN
 
-#if defined(SPLIT_KEYBOARD) && defined(BOOTMAGIC_ROW_RIGHT) && defined(BOOTMAGIC_COLUMN_RIGHT)
+#if defined(SPLIT_KEYBOARD) && defined(KEYBOARD_handwired_tractyl_manuform)
+    bool check_user_button_state(void);
+    if (is_keyboard_master() && check_user_button_state()) {
+        perform_reset = true;
+    }
+#endif // SPLIT_KEYBOARD
+#if defined(BOOTMAGIC_ROW_RIGHT) && defined(BOOTMAGIC_COLUMN_RIGHT)
     if (!is_keyboard_left()) {
         row = BOOTMAGIC_ROW_RIGHT;
         col = BOOTMAGIC_COLUMN_RIGHT;
