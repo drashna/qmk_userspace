@@ -118,13 +118,22 @@ extern uint8_t led_mapping[RGBLIGHT_LED_COUNT];
 
 void init(void) {}
 
-void setleds(rgb_led_t *ledarray, uint16_t number_of_leds) {
-    memcpy(led_array, ledarray, number_of_leds * sizeof(rgb_led_t));
+void set_color_custom(int index, uint8_t red, uint8_t green, uint8_t blue) {
+    led_array[index].r = red;
+    led_array[index].g = green;
+    led_array[index].b = blue;
+}
+void set_color_all_custom(uint8_t red, uint8_t green, uint8_t blue) {
+    for (int i = 0; i < RGBLIGHT_LED_COUNT; i++) {
+        set_color_custom(i, red, green, blue);
+    }
 }
 
 const rgblight_driver_t rgblight_driver = {
-    .init    = init,
-    .setleds = setleds,
+    .init          = init,
+    .set_color_all = set_color_all_custom,
+    .set_color     = set_color_custom,
+    .flush         = init,
 };
 #endif // RGBLIGHT_ENABLE && RGBLIGHT_CUSTOM
 
