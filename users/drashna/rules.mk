@@ -70,5 +70,3 @@ include $(USER_PATH)/split/rules.mk
 include $(USER_PATH)/rgb/rules.mk
 include $(USER_PATH)/keyrecords/rules.mk
 include $(USER_PATH)/features/rules.mk
-# Ignore if not found
--include $(KEYMAP_PATH)/post_rules.mk

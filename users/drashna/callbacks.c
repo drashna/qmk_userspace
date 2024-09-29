@@ -21,10 +21,10 @@
 #ifdef CUSTOM_DYNAMIC_MACROS_ENABLE
 #    include "keyrecords/custom_dynamic_macros.h"
 #endif // CUSTOM_DYNAMIC_MACROS_ENABLE
-#if defined(__arm__) && HAL_USE_I2C == TRUE
+#if defined(I2C_DRIVER_REQUIRED)
 void housekeeping_task_i2c_scanner(void);
 void keyboard_post_init_i2c(void);
-#endif // HAL_USE_I2C == TRUE
+#endif // I2C_DRIVER_REQUIRED
 #ifdef RTC_ENABLE
 #    include "rtc.h"
 #endif // RTC_ENABLE
@@ -93,9 +93,9 @@ void                       keyboard_post_init_user(void) {
     void keyboard_post_init_qp(void);
     keyboard_post_init_quantum_painter();
 #endif // CUSTOM_QUANTUM_PAINTER_ENABLE
-#if defined(__arm__) && HAL_USE_I2C == TRUE
+#if defined(I2C_DRIVER_REQUIRED)
     keyboard_post_init_i2c();
-#endif // HAL_USE_I2C == TRUE
+#endif // I2C_DRIVER_REQUIRED
 #ifdef CUSTOM_UNICODE_ENABLE
     keyboard_post_init_unicode();
 #endif // CUSTOM_UNICODE_ENABLE
@@ -399,9 +399,9 @@ void                       housekeeping_task_user(void) {
 #if defined(CUSTOM_RGBLIGHT)
     housekeeping_task_rgb_light();
 #endif // CUSTOM_RGBLIGHT
-#if defined(__arm__) && HAL_USE_I2C == TRUE
+#if defined(I2C_DRIVER_REQUIRED)
     housekeeping_task_i2c_scanner();
-#endif // HAL_USE_I2C == TRUE
+#endif // I2C_DRIVER_REQUIRED
 #ifdef CUSTOM_OLED_DRIVER
     housekeeping_task_oled();
 #endif // CUSTOM_OLED_DRIVER
