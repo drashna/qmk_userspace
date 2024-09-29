@@ -88,5 +88,3 @@ include $(USER_PATH)/split/split.mk
 include $(USER_PATH)/rgb/rgb.mk
 include $(USER_PATH)/keyrecords/keyrecords.mk
 include $(USER_PATH)/features/common.mk
-# Ignore if not found
--include $(KEYMAP_PATH)/post_rules.mk
