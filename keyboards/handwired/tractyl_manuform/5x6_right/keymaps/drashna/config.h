@@ -34,7 +34,8 @@
 #define LAYER_MAP_COLS 17
 #define LAYER_MAP_ROWS 8
 
-#if defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f405)
+#if defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f405) || \
+    defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f407)
 #    define RGBLIGHT_LIMIT_VAL 255
 #    undef RGB_MATRIX_MAXIMUM_BRIGHTNESS
 #    define RGB_MATRIX_MAXIMUM_BRIGHTNESS    255
