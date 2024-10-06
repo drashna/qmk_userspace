@@ -21,7 +21,8 @@ ifeq ($(PLATFORM_KEY),chibios)
         OPT_DEFS += -DFASTLED_TEENSY3
     endif
     CUSTOM_UNICODE_ENABLE ?= yes
-
+    SRC += $(USER_PATH)/hardware/hardware_id.c
+    VPATH += $(USER_PATH)/hardware
 else
     ifneq ($(strip $(LTO_SUPPORTED)), no)
         LTO_ENABLE        = yes
