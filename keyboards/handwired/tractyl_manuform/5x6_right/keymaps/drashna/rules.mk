@@ -35,6 +35,20 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405)
     CUSTOM_QUANTUM_PAINTER_ST7789_135X240 = no
     WEAR_LEVELING_DRIVER                  = spi_flash
 endif
+ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f407)
+    OVERLOAD_FEATURES                     = yes
+
+    CONSOLE_ENABLE                        = yes
+    BACKLIGHT_ENABLE                      = yes
+    RGB_MATRIX_ENABLE                     = yes
+    RGBLIGHT_DRIVER                       = custom
+    QUANTUM_PAINTER_ENABLE                = yes
+    CUSTOM_QUANTUM_PAINTER_ENABLE         = yes
+    CUSTOM_QUANTUM_PAINTER_ILI9341        = yes
+    CUSTOM_QUANTUM_PAINTER_ILI9488        = no
+    CUSTOM_QUANTUM_PAINTER_ST7789_170X320 = no
+    CUSTOM_QUANTUM_PAINTER_ST7789_135X240 = no
+endif
 
 ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     AUDIO_ENABLE                  = yes
@@ -50,13 +64,10 @@ ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     LAYER_MAP_ENABLE              = yes
     I2C_DRIVER_REQUIRED           = yes
     LTO_ENABLE                    = yes
-    MULTITHREADED_LIGHTING_ENABLE = yes
-    MULTITHREADED_PAINTER_ENABLE  = no
     OPT                           = fast
     RGBLIGHT_ENABLE               = yes
     RGBLIGHT_STARTUP_ANIMATION    = no
     RTC_ENABLE                    = yes
-    RTC_TOTP_ENABLE               = yes
     SENTENCE_CASE_ENABLE          = yes
     SWAP_HANDS_ENABLE             = yes
     TAP_DANCE_ENABLE              = yes
