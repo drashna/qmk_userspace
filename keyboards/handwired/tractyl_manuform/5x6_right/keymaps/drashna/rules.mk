@@ -63,6 +63,27 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405)
     DISPLAY_KEYLOGGER_ENABLE         = yes
     I2C_DRIVER_REQUIRED              = yes
 endif
+ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f407)
+    CONSOLE_ENABLE                   = yes
+    AUTOCORRECT_ENABLE               = yes
+    OVERLOAD_FEATURES                = yes
+    RTC_ENABLE                       = yes
+    RTC_DRIVER                       = vendor
+    WATCHDOG_ENABLE                  = yes
+    OLED_ENABLE                      = no
+    RGB_MATRIX_ENABLE                = yes
+    RGBLIGHT_DRIVER                  = custom
+    LAYER_MAP_ENABLE                 = yes
+    HAPTIC_ENABLE                    = yes
+
+    BACKLIGHT_ENABLE                 = yes
+    QUANTUM_PAINTER_ENABLE           = yes
+    QUANTUM_PAINTER_DRIVERS          += ili9341_spi
+    CUSTOM_QUANTUM_PAINTER_ENABLE    = yes
+    DISPLAY_KEYLOGGER_ENABLE         = yes
+    I2C_DRIVER_REQUIRED              = yes
+endif
+
 ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     AUDIO_ENABLE                     = yes
     CAPS_WORD_ENABLE                 = yes
