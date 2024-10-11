@@ -62,7 +62,7 @@ void render_frame(painter_device_t _display) {
     uint16_t height;
     qp_get_geometry(_display, &width, &height, NULL, NULL, NULL);
 
-    HSV hsv = painter_get_hsv(true);
+    hsv_t hsv = painter_get_hsv(true);
     // frame top
     qp_drawimage_recolor(_display, 1, 2, frame_top, hsv.h, hsv.s, hsv.v, 0, 0, 0);
     // lines for frame sides

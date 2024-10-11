@@ -37,7 +37,7 @@ bool process_record_user_rgb_light(uint16_t keycode, keyrecord_t *record) {
 #if defined(RGBLIGHT_STARTUP_ANIMATION)
 static bool    is_enabled;
 static bool    is_rgblight_startup;
-static HSV     old_hsv;
+static hsv_t   old_hsv;
 static uint8_t old_mode;
 deferred_token rgb_startup_token;
 
