@@ -14,8 +14,8 @@
 #include "debug.h"
 
 typedef struct PACKED {
-    HSV primary;
-    HSV secondary;
+    hsv_t primary;
+    hsv_t secondary;
 } dual_hsv_t;
 
 typedef union PACKED {

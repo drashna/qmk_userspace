@@ -16,11 +16,11 @@
 extern led_config_t g_led_config;
 
 static uint32_t hypno_timer;
-RGB             rgb_matrix_hsv_to_rgb(HSV hsv);
+rgb_t           rgb_matrix_hsv_to_rgb(hsv_t hsv);
 
 void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode, uint8_t speed, uint8_t led_type,
                              uint8_t led_min, uint8_t led_max) {
-    HSV hsv = {hue, sat, val};
+    hsv_t hsv = {hue, sat, val};
     if (hsv.v > rgb_matrix_get_val()) {
         hsv.v = rgb_matrix_get_val();
     }
@@ -30,7 +30,7 @@ void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode
             {
                 uint16_t time = scale16by8(g_rgb_timer, speed / 8);
                 hsv.v         = scale8(abs8(sin8(time) - 128) * 2, hsv.v);
-                RGB rgb       = rgb_matrix_hsv_to_rgb(hsv);
+                rgb_t rgb     = rgb_matrix_hsv_to_rgb(hsv);
                 for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
                     if (HAS_FLAGS(g_led_config.flags[i], led_type)) {
                         RGB_MATRIX_INDICATOR_SET_COLOR(i, rgb.r, rgb.g, rgb.b);
@@ -40,7 +40,7 @@ void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode
             }
         default: // Solid Color
             {
-                RGB rgb = rgb_matrix_hsv_to_rgb(hsv);
+                rgb_t rgb = rgb_matrix_hsv_to_rgb(hsv);
                 for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
                     if (HAS_FLAGS(g_led_config.flags[i], led_type)) {
                         RGB_MATRIX_INDICATOR_SET_COLOR(i, rgb.r, rgb.g, rgb.b);
@@ -112,7 +112,7 @@ bool process_record_user_rgb_matrix(uint16_t keycode, keyrecord_t *record) {
 #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
 #    include "rgblight_drivers.h"
 
-rgb_led_t led_array[RGBLIGHT_LED_COUNT] = {0};
+rgb_t led_array[RGBLIGHT_LED_COUNT] = {0};
 
 extern uint8_t led_mapping[RGBLIGHT_LED_COUNT];
 
