@@ -265,7 +265,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case RGB_MODE_PLAIN ... RGB_MODE_TWINKLE:
         case QK_RGB_MATRIX_MODE_NEXT:
         case QK_RGB_MATRIX_MODE_PREVIOUS:
-        case RGB_MODE_FORWARD ... RGB_MODE_GRADIENT: // quantum_keycodes.h L400 for definitions
             if (record->event.pressed) {
                 bool is_eeprom_updated;
 #    if defined(CUSTOM_RGBLIGHT) && !defined(RGBLIGHT_DISABLE_KEYCODES)
