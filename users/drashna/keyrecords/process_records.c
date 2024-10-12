@@ -243,7 +243,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
 
 #if defined(CUSTOM_RGBLIGHT) || defined(CUSTOM_RGB_MATRIX)
-        case RGB_TOG:
+        case QK_RGB_MATRIX_TOGGLE:
+        case QK_UNDERGLOW_TOGGLE:
             // Split keyboards need to trigger on key-up for edge-case issue
 #    ifndef SPLIT_KEYBOARD
             if (record->event.pressed) {
@@ -259,6 +260,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
+        case QK_UNDERGLOW_MODE_NEXT:
+        case QK_UNDERGLOW_MODE_PREVIOUS:
+        case RGB_MODE_PLAIN ... RGB_MODE_TWINKLE:
+        case QK_RGB_MATRIX_MODE_NEXT:
+        case QK_RGB_MATRIX_MODE_PREVIOUS:
         case RGB_MODE_FORWARD ... RGB_MODE_GRADIENT: // quantum_keycodes.h L400 for definitions
             if (record->event.pressed) {
                 bool is_eeprom_updated;
