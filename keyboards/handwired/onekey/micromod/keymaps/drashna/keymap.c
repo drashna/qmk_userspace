@@ -308,8 +308,7 @@ led_config_t g_led_config = { {
   4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 } };
 #endif
-// clang-format off
-
+// clang-format on
 
 #if defined(OLED_ENABLE) && defined(OLED_DISPLAY_128X128)
 
