@@ -66,7 +66,6 @@ __attribute__((weak)) void display_handler_mouse_debugging(char *text_buffer, si
     snprintf(text_buffer, buffer_len - 1, "%s", debug_mouse ? "enabled" : "disabled");
 }
 
-#if 0
 bool menu_handler_pointing_debugging(menu_input_t input) {
     switch (input) {
         case menu_input_left:
@@ -130,7 +129,6 @@ bool menu_handler_quantum_painter_debugging(menu_input_t input) {
 __attribute__((weak)) void display_handler_quantum_painter_debugging(char *text_buffer, size_t buffer_len) {
     snprintf(text_buffer, buffer_len - 1, "%s", debug_quantum_painter ? "enabled" : "disabled");
 }
-#endif
 
 #ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
 #    include "i2c_scanner.h"
@@ -193,16 +191,14 @@ __attribute__((weak)) void display_handler_keylogger(char *text_buffer, size_t b
 #endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
 
 menu_entry_t debug_entries[] = {
-    MENU_ENTRY_CHILD("Debugging", "Enabled", debugging_enable), // force formatting
+    MENU_ENTRY_CHILD("Debugging", "Enabled", debugging_enable),
     MENU_ENTRY_CHILD("Keyboard Debugging", "Keeb", keyboard_debugging),
     MENU_ENTRY_CHILD("Matrix Debugging", "Matrix", matrix_debugging),
     MENU_ENTRY_CHILD("Mouse Debugging", "Mouse", mouse_debugging),
-#if 0
     MENU_ENTRY_CHILD("Pointing Device Debugging", "Pointing", pointing_debugging),
     MENU_ENTRY_CHILD("Action Debugging", "Action", action_debugging),
     MENU_ENTRY_CHILD("Split Serial Debugging", "Split", split_serial_debugging),
     MENU_ENTRY_CHILD("Quantum Painter Debugging", "QP????", quantum_painter_debugging),
-#endif
 #ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
     MENU_ENTRY_CHILD("I2C Scanner", "I2C Scan", i2c_scanner),
 #endif // COMMUNITY_MODULE_I2C_SCANNER_ENABLE
