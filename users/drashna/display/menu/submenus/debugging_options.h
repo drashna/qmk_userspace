@@ -70,7 +70,6 @@ __attribute__((weak)) void display_handler_mouse_debugging(char *text_buffer, si
     snprintf(text_buffer, buffer_len - 1, "%s", debug_mouse ? "enabled" : "disabled");
 }
 
-#if 0
 bool menu_handler_pointing_debugging(menu_input_t input) {
     switch (input) {
         case menu_input_left:
@@ -138,7 +137,6 @@ bool menu_handler_quantum_painter_debugging(menu_input_t input) {
 __attribute__((weak)) void display_handler_quantum_painter_debugging(char *text_buffer, size_t buffer_len) {
     snprintf(text_buffer, buffer_len - 1, "%s", debug_quantum_painter ? "enabled" : "disabled");
 }
-#endif
 
 
 bool menu_handler_scan_rate(menu_input_t input) {
@@ -159,11 +157,10 @@ __attribute__((weak)) void display_handler_scan_rate(char *text_buffer, size_t b
 }
 
 menu_entry_t debug_entries[] = {
-    MENU_ENTRY_CHILD("Debugging", "Enabled", debugging_enable), // force formatting
+    MENU_ENTRY_CHILD("Debugging", "Enabled", debugging_enable),
     MENU_ENTRY_CHILD("Keyboard Debugging", "Keeb", keyboard_debugging),
     MENU_ENTRY_CHILD("Matrix Debugging", "Matrix", matrix_debugging),
     MENU_ENTRY_CHILD("Mouse Debugging", "Mouse", mouse_debugging),
-#if 0
     MENU_ENTRY_CHILD("Pointing Device Debugging", "Pointing", pointing_debugging),
     MENU_ENTRY_CHILD("Action Debugging", "Action", action_debugging),
     MENU_ENTRY_CHILD("Split Serial Debugging", "Split", split_serial_debugging),
