@@ -48,6 +48,7 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f407)
     CUSTOM_QUANTUM_PAINTER_ILI9488        = no
     CUSTOM_QUANTUM_PAINTER_ST7789_170X320 = no
     CUSTOM_QUANTUM_PAINTER_ST7789_135X240 = no
+    WEAR_LEVELING_DRIVER                  = spi_flash
 endif
 
 ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
