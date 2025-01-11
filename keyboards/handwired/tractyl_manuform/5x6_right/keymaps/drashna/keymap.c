@@ -101,3 +101,34 @@ void early_hardware_init_post(void) {
         B15, PAL_MODE_ALTERNATE(12) | PAL_STM32_OTYPE_PUSHPULL | PAL_STM32_OSPEED_HIGHEST | PAL_STM32_PUPDR_FLOATING);
 }
 #endif
+
+void execute_user_button_action(bool state) {
+    // for the double tap action of the reset pin
+    static bool     last_state     = false;
+    static uint8_t  tap_counter    = 0;
+    static uint16_t reset_timer    = 0;
+    static uint16_t debounce_timer = 0;
+    bool            reset_pin_fe   = state < last_state && timer_elapsed(debounce_timer) > 50;
+
+    // switch pin on
+
+    if (reset_pin_fe) {
+        if (tap_counter == 0) {
+            reset_timer = timer_read();
+        }
+        debounce_timer = timer_read();
+        tap_counter++; // count falling edges
+    }
+
+    if (timer_elapsed(reset_timer) > 1000) {
+        reset_timer = timer_read();
+        tap_counter = 0;
+    } else {
+        if (tap_counter >= 2) {
+            dprintf("Bootloader jumps\n");
+            reset_keyboard();
+        }
+    }
+    // update last state
+    last_state = state;
+}
