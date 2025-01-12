@@ -76,6 +76,9 @@ extern painter_image_handle_t akira_explosion;
 #    endif
 #    define SURFACE_MENU_WIDTH  236
 #    define SURFACE_MENU_HEIGHT 120
+#    if HAL_USE_SDRAM == TRUE
+__attribute__((section(".ram7")))
+#    endif
 static uint8_t   menu_buffer[2][SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 16)];
 painter_device_t menu_surface[2];
 #endif
