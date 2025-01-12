@@ -61,6 +61,22 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f407)
     CUSTOM_QUANTUM_PAINTER_ST7789_135X240 = no
     WEAR_LEVELING_DRIVER                  = spi_flash
 endif
+ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f429)
+    OVERLOAD_FEATURES                     = yes
+    AUDIO_SUPPORTED = no
+    BACKLIGHT_ENABLE                      = yes
+    RGB_MATRIX_ENABLE                     = yes
+    RGBLIGHT_DRIVER                       = custom
+    QUANTUM_PAINTER_ENABLE                = yes
+    CUSTOM_QUANTUM_PAINTER_ENABLE         = yes
+    CUSTOM_QUANTUM_PAINTER_ILI9341        = yes
+    CUSTOM_QUANTUM_PAINTER_ILI9488        = no
+    CUSTOM_QUANTUM_PAINTER_ST7789_170X320 = no
+    QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE = yes
+    CUSTOM_QUANTUM_PAINTER_ST7789_135X240 = no
+    DIP_SWITCH_ENABLE                     = yes
+    DIP_SWITCH_MAP_ENABLE                 = yes
+endif
 
 ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     AUDIO_ENABLE                  = yes
