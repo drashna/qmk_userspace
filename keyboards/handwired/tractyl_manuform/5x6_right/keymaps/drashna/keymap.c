@@ -89,6 +89,19 @@ void eeconfig_init_keymap(void) {
     userspace_config.display.oled.rotation = 1; // OLED_ROTATION_180;
 }
 
+#if defined(DIP_SWITCH_MAP_ENABLE)
+const uint16_t PROGMEM dip_switch_map[NUM_DIP_SWITCHES][NUM_DIP_STATES] = {
+    // clang-format off
+    DIP_SWITCH_OFF_ON(KC_NO, KC_UP),
+    DIP_SWITCH_OFF_ON(KC_NO, KC_RIGHT),
+    DIP_SWITCH_OFF_ON(KC_NO, KC_LEFT),
+    DIP_SWITCH_OFF_ON(KC_NO, KC_DOWN),
+    DIP_SWITCH_OFF_ON(KC_NO, KC_ENTER),
+    DIP_SWITCH_OFF_ON(KC_NO, DISPLAY_MENU),
+    // clang-format on
+};
+#endif
+
 #if defined(RGB_MATRIX_ENABLE) && defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
 const uint8_t led_mapping[RGBLIGHT_LED_COUNT] = {0,  1,  2,  3,  32, 31, 12, 13, 26, 30, 29, 27,
                                                  28, 59, 61, 60, 46, 45, 62, 63, 36, 35, 34, 33};
