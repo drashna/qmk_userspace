@@ -46,7 +46,11 @@
 painter_device_t st7789_135x240_display;
 #ifdef QUANTUM_PAINTER_DRIVERS_ST7789_135X240_SURFACE
 static painter_device_t st7789_135x240_surface_display;
-static __attribute__((aligned(4))) uint8_t display_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(135, 240, 16)];
+#    if HAL_USE_SDRAM == TRUE
+__attribute__((section(".ram7")))
+#    endif
+static __attribute__((
+    aligned(4)))  uint8_t display_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(135, 240, 16)];
 #else
 #    define st7789_135x240_surface_display st7789_135x240_display
 #endif // QUANTUM_PAINTER_DRIVERS_ST7789_135X240_SURFACE
