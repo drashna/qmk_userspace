@@ -541,6 +541,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
             painter_render_wpm(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
 #    endif
 
+#    ifdef KEYCODE_STRING_ENABLE
             static uint16_t last_keycode = 0xFFFF;
             if (hue_redraw || last_keycode != userspace_runtime_state.last_keycode) {
                 last_keycode = userspace_runtime_state.last_keycode;
@@ -548,10 +549,11 @@ __attribute__((weak)) void ili9341_draw_user(void) {
                 qp_drawtext_recolor(display, xpos, ypos, font_oled, "Last keycode:", curr_hsv.primary.h,
                                     curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
                 ypos += font_oled->line_height + 4;
-                snprintf(buf, 17, "%16s", keycode_name(last_keycode, false));
+                snprintf(buf, 17, "%16s", get_keycode_string(last_keycode));
                 qp_drawtext_recolor(display, xpos, ypos, font_oled, buf, curr_hsv.secondary.h, curr_hsv.secondary.s,
                                     curr_hsv.secondary.v, 0, 0, 0);
             }
+#    endif
 
 #    ifdef CUSTOM_UNICODE_ENABLE
             ypos                             = 149;
