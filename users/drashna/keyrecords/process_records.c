@@ -163,9 +163,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef KEYLOGGER_ENABLE
     if (userspace_config.debug.console_keylogger) {
         xprintf("KL: %s, kc: 0x%04X, col: %2u, row: %2u, pressed: %1d, time: %5u, int: %1d, count: %u\n",
-                keycode_name(keycode, (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT), keycode,
-                record->event.key.col, record->event.key.row, record->event.pressed, record->event.time,
-                record->tap.interrupted, record->tap.count);
+                get_keycode_string(keycode), keycode, record->event.key.col, record->event.key.row,
+                record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
     }
 #endif // KEYLOGGER_ENABLE
 

@@ -7,10 +7,66 @@
 #include "quantum_keycodes.h"
 #include "drashna_layers.h"
 #include "drashna_names.h"
+#include "keyrecords/process_records.h"
 #include "util.h"
 #if defined(UNICODE_COMMON_ENABLE)
 #    include "keyrecords/unicode.h"
 #endif // UNICODE_COMMON_ENABLE
+
+#ifdef KEYCODE_STRING_ENABLE
+const keycode_string_name_t *keycode_string_names_user = (keycode_string_name_t[]){
+    {VRSN, "VRSN"},
+    {KC_DIABLO_CLEAR, "DIAB_CLR"},
+    {KC_RGB_T, "RGB_T"},
+    {RGB_IDL, "RGB_IDL"},
+    {KC_SECRET_1, "SECRET_1"},
+    {KC_SECRET_2, "SECRET_2"},
+    {KC_SECRET_3, "SECRET_3"},
+    {KC_SECRET_4, "SECRET_4"},
+    {KC_SECRET_5, "SECRET_5"},
+    {KC_CCCV, "CCCV"},
+    {KC_NUKE, "NUKE"},
+    {UC_FLIP, "UC_FLIP"},
+    {UC_TABL, "UC_TABL"},
+    {UC_SHRG, "UC_SHRG"},
+    {UC_DISA, "UC_DISA"},
+    {UC_IRNY, "UC_IRNY"},
+    {UC_CLUE, "UC_CLUE"},
+    {KEYLOCK, "KEYLOCK"},
+    {KC_NOMODE, "UT_NOMODE"},
+    {KC_WIDE, "UT_WIDE"},
+    {KC_SCRIPT, "UT_SCRIPT"},
+    {KC_BLOCKS, "UT_BLOCKS"},
+    {KC_REGIONAL, "UT_REGIONAL"},
+    {KC_AUSSIE, "UT_AUSSIE"},
+    {KC_ZALGO, "UT_ZALGO"},
+    {KC_SUPER, "UT_SUPER"},
+    {KC_COMIC, "UT_COMIC"},
+    {OLED_LOCK, "OLED_LOCK"},
+    {OLED_BRIGHTNESS_INC, "OLED_BRIGHTNESS_INC"},
+    {OLED_BRIGHTNESS_DEC, "OLED_BRIGHTNESS_DEC"},
+    {OLED_ROTATE_CW, "OLED_ROTATE_CW"},
+    {OLED_ROTATE_CCW, "OLED_ROTATE_CCW"},
+    {STORE_SETUPS, "STORE_SETUPS"},
+    {PRINT_SETUPS, "PRINT_SETUPS"},
+    {PD_JIGGLER, "PD_JIGGLER"},
+    {PD_ACCEL_TOGGLE, "PD_ACCEL_TOGGLE"},
+    {PD_ACCEL_TAKEOFF, "PD_ACCEL_TAKEOFF"},
+    {PD_ACCEL_GROWTH_RATE, "PD_ACCEL_GROWTH_RATE"},
+    {PD_ACCEL_OFFSET, "PD_ACCEL_OFFSET"},
+    {PD_ACCEL_LIMIT, "PD_ACCEL_LIMIT"},
+    {US_MATRIX_SCAN_RATE_PRINT, "SCAN_RATE"},
+    {US_SELECT_WORD, "SELECT_WORD"},
+    {LAYER_LOCK, "LAYER_LOCK"},
+    {DISPLAY_MENU, "DISPLAY_MENU"},
+    {CLAP_TRAP_ON, "SOCD_ON"},
+    {CLAP_TRAP_OFF, "SOCD_OFF"},
+    {CLAP_TRAP_TOGGLE, "SOCD_TG"},
+    {US_I2C_SCAN_ENABLE, "I2C_SCAN"},
+    {US_GAMING_SCAN_TOGGLE, "GAME_MODE"},
+    {0, NULL},
+};
+#endif
 
 #ifndef __AVR__
 static const char *const keycode_display_map[][2] = {
