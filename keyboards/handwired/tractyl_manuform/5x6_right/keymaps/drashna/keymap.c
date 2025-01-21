@@ -132,3 +132,19 @@ void execute_user_button_action(bool state) {
     // update last state
     last_state = state;
 }
+
+#ifdef KEYCODE_STRING_ENABLE
+const keycode_string_name_t *keycode_string_names_kb = (keycode_string_name_t[]){
+    // clang-format off
+    {QK_KB_0, "DPI_INC"},
+    {QK_KB_1, "DPI_DEC"},
+    {QK_KB_2, "SNI_INC"},
+    {QK_KB_3, "SNI_DEC"},
+    {QK_KB_4, "SNIP_MO"},
+    {QK_KB_5, "SNIP_TG"},
+    {QK_KB_6, "DRAG_MO"},
+    {QK_KB_7, "DRAG_TG"},
+    {0, NULL},
+    // clang-format on
+};
+#endif
