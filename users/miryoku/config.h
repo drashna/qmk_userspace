@@ -18,6 +18,9 @@
 // Auto Shift
 #define NO_AUTO_SHIFT_ALPHA
 #define AUTO_SHIFT_TIMEOUT TAPPING_TERM
+#if defined (VIAL_ENABLE)
+  #undef AUTO_SHIFT_NO_SETUP
+#endif
 #define AUTO_SHIFT_NO_SETUP
 
 // Mouse key speed and acceleration.
@@ -36,4 +39,29 @@
 #if defined (MIRYOKU_KLUDGE_THUMBCOMBOS)
   #define COMBO_TERM 200
   #define EXTRA_SHORT_COMBOS
+#endif
+
+// If Vial is enabled, replace tap dances with corresponding keys
+#if defined (VIAL_ENABLE)
+  #define U_TD_KC_BOOT QK_BOOT
+  #define U_TD_TAP DF(U_TAP)
+  #define U_TD_EXTRA DF(U_EXTRA)
+  #define U_TD_BASE DF(U_BASE)
+  #define U_TD_FUN DF(U_FUN)
+  #define U_TD_MEDIA DF(U_MEDIA)
+  #define U_TD_NAV DF(U_NAV)
+  #define U_TD_NUM DF(U_NUM)
+  #define U_TD_MOUSE DF(U_MOUSE)
+  #define U_TD_SYM DF(U_SYM)
+#else
+  #define U_TD_KC_BOOT TD(U_TD_BOOT)
+  #define U_TD_TAP TD(U_TD_U_TAP)
+  #define U_TD_EXTRA TD(U_TD_U_EXTRA)
+  #define U_TD_BASE TD(U_TD_U_BASE)
+  #define U_TD_FUN TD(U_TD_U_FUN)
+  #define U_TD_MEDIA TD(U_TD_U_MEDIA)
+  #define U_TD_NAV TD(U_TD_U_NAV)
+  #define U_TD_NUM TD(U_TD_U_NUM)
+  #define U_TD_MOUSE TD(U_TD_U_MOUSE)
+  #define U_TD_SYM TD(U_TD_U_SYM)
 #endif
