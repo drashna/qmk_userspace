@@ -31,13 +31,13 @@ i2c_status_t pcf8523_set_time(rtc_time_t t) {
         rtc_bin2bcd(t.year - 2000U)
     };
 
-    if (i2c_writeReg(PCF8523_I2C_ADDRESS << 1, PCF8523_TIME_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
+    if (i2c_write_register(PCF8523_I2C_ADDRESS << 1, PCF8523_TIME_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT) != I2C_STATUS_SUCCESS) {
         uprintf("Error while sending time to RTC!\n");
         return I2C_STATUS_ERROR;
     }
 
     uint8_t status[1] = {0}; // set to battery switchover mode
-    return i2c_writeReg(PCF8523_I2C_ADDRESS << 1, PCF8523_CONTROL_3_REG, status, ARRAY_SIZE(status), PCF8523_I2C_TIMEOUT);
+    return i2c_write_register(PCF8523_I2C_ADDRESS << 1, PCF8523_CONTROL_3_REG, status, ARRAY_SIZE(status), PCF8523_I2C_TIMEOUT);
 }
 
 /**
@@ -49,7 +49,7 @@ i2c_status_t pcf8523_set_time(rtc_time_t t) {
 i2c_status_t pcf8523_get_time(rtc_time_t *time) {
     uint8_t data[7] = {0, 0, 0, 0, 0, 0, 0};
 
-    i2c_status_t status = i2c_readReg(PCF8523_I2C_ADDRESS << 1, PCF8523_TIME_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
+    i2c_status_t status = i2c_read_register(PCF8523_I2C_ADDRESS << 1, PCF8523_TIME_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
     if (status != I2C_STATUS_SUCCESS) {
         return status;
     }
@@ -82,7 +82,7 @@ i2c_status_t pcf8523_get_time(rtc_time_t *time) {
  */
 bool pcf8523_has_lost_power(void) {
     uint8_t status[1] = {0};
-    i2c_readReg(PCF8523_I2C_ADDRESS << 1, PCF8523_STATUS_REG, status, ARRAY_SIZE(status), PCF8523_I2C_TIMEOUT);
+    i2c_read_register(PCF8523_I2C_ADDRESS << 1, PCF8523_STATUS_REG, status, ARRAY_SIZE(status), PCF8523_I2C_TIMEOUT);
     return status[0] >> 7;
 }
 
@@ -100,7 +100,7 @@ bool pcf8523_init(rtc_time_t *time) {
     i2c_init();
 
     uint8_t data[1] = {0};
-    i2c_status_t status = i2c_readReg(PCF8523_I2C_ADDRESS << 1, PCF8523_CONTROL_3_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
+    i2c_status_t status = i2c_read_register(PCF8523_I2C_ADDRESS << 1, PCF8523_CONTROL_3_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
     pcf8523_initialized = (status == I2C_STATUS_SUCCESS) && ((data[0] & 0xE0) != 0xE0) ;
     if (pcf8523_initialized) {
         pcf8523_initialized = true;
@@ -123,11 +123,11 @@ bool pcf8523_init(rtc_time_t *time) {
     }
 
     // check clock stop bit
-    i2c_readReg(PCF8523_I2C_ADDRESS << 1, PCF8523_CONTROL_1_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
+    i2c_read_register(PCF8523_I2C_ADDRESS << 1, PCF8523_CONTROL_1_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
     // if clock is stopped, start it
     if (data[0] & (1<<5)) {
         data[0] &= ~(1<<5);
-        i2c_writeReg(PCF8523_I2C_ADDRESS << 1, PCF8523_CONTROL_1_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
+        i2c_write_register(PCF8523_I2C_ADDRESS << 1, PCF8523_CONTROL_1_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
     };
     return pcf8523_initialized;
 }
@@ -141,7 +141,7 @@ bool pcf8523_init(rtc_time_t *time) {
  */
 i2c_status_t pcf8523_calibate(pcf8523_offset_mode_t mode, int8_t offset) {
     uint8_t data[1] = { ((uint8_t)offset & 0x7F) | mode };
-    return i2c_writeReg(PCF8523_I2C_ADDRESS << 1, PCF8523_OFFSET_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
+    return i2c_write_register(PCF8523_I2C_ADDRESS << 1, PCF8523_OFFSET_REG, data, ARRAY_SIZE(data), PCF8523_I2C_TIMEOUT);
 }
 
 /**

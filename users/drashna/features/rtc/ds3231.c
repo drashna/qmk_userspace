@@ -33,7 +33,7 @@ i2c_status_t ds3231_set_time(rtc_time_t t) {
     };
     // clang-format on
 
-    if (i2c_writeReg(DS3231_I2C_ADDRESS << 1, DS3231_TIME_REG, data, ARRAY_SIZE(data), DS3231_I2C_TIMEOUT) !=
+    if (i2c_write_register(DS3231_I2C_ADDRESS << 1, DS3231_TIME_REG, data, ARRAY_SIZE(data), DS3231_I2C_TIMEOUT) !=
         I2C_STATUS_SUCCESS) {
         dprintf("Error while sending time to RTC!\n");
         return I2C_STATUS_ERROR;
@@ -41,7 +41,7 @@ i2c_status_t ds3231_set_time(rtc_time_t t) {
 
     uint8_t status[1] = {0};
 
-    if (i2c_readReg(DS3231_I2C_ADDRESS << 1, DS3231_STATUS_REG, status, ARRAY_SIZE(status), DS3231_I2C_TIMEOUT) !=
+    if (i2c_read_register(DS3231_I2C_ADDRESS << 1, DS3231_STATUS_REG, status, ARRAY_SIZE(status), DS3231_I2C_TIMEOUT) !=
         I2C_STATUS_SUCCESS) {
         dprintf("Error while reading status!\n");
         return I2C_STATUS_ERROR;
@@ -49,7 +49,8 @@ i2c_status_t ds3231_set_time(rtc_time_t t) {
 
     status[0] &= ~0x80; // flip OSF bit
 
-    return i2c_writeReg(DS3231_I2C_ADDRESS << 1, DS3231_STATUS_REG, status, ARRAY_SIZE(status), DS3231_I2C_TIMEOUT);
+    return i2c_write_register(DS3231_I2C_ADDRESS << 1, DS3231_STATUS_REG, status, ARRAY_SIZE(status),
+                              DS3231_I2C_TIMEOUT);
 }
 
 /**
@@ -62,7 +63,7 @@ i2c_status_t ds3231_get_time(rtc_time_t *time) {
     uint8_t data[7] = {0, 0, 0, 0, 0, 0, 0};
 
     i2c_status_t status =
-        i2c_readReg(DS3231_I2C_ADDRESS << 1, DS3231_TIME_REG, data, ARRAY_SIZE(data), DS3231_I2C_TIMEOUT);
+        i2c_read_register(DS3231_I2C_ADDRESS << 1, DS3231_TIME_REG, data, ARRAY_SIZE(data), DS3231_I2C_TIMEOUT);
     if (status != I2C_STATUS_SUCCESS) {
         return status;
     }
@@ -95,7 +96,7 @@ i2c_status_t ds3231_get_time(rtc_time_t *time) {
  */
 bool ds3231_has_lost_power(void) {
     uint8_t status[1] = {0};
-    i2c_readReg(DS3231_I2C_ADDRESS << 1, DS3231_STATUS_REG, status, ARRAY_SIZE(status), DS3231_I2C_TIMEOUT);
+    i2c_read_register(DS3231_I2C_ADDRESS << 1, DS3231_STATUS_REG, status, ARRAY_SIZE(status), DS3231_I2C_TIMEOUT);
     return status[0] >> 7;
 }
 
@@ -106,7 +107,7 @@ bool ds3231_has_lost_power(void) {
  */
 int8_t ds3231_get_aging_offset(void) {
     uint8_t offset[1] = {0};
-    i2c_readReg(DS3231_I2C_ADDRESS << 1, DS3231_AGING_OFFSET_REG, offset, ARRAY_SIZE(offset), DS3231_I2C_TIMEOUT);
+    i2c_read_register(DS3231_I2C_ADDRESS << 1, DS3231_AGING_OFFSET_REG, offset, ARRAY_SIZE(offset), DS3231_I2C_TIMEOUT);
     return (int8_t)offset[0];
 }
 
@@ -117,7 +118,7 @@ int8_t ds3231_get_aging_offset(void) {
  */
 void ds3231_set_aging_offset(int8_t offset) {
     uint8_t data[1] = {(uint8_t)offset};
-    i2c_writeReg(DS3231_I2C_ADDRESS << 1, DS3231_AGING_OFFSET_REG, data, ARRAY_SIZE(data), DS3231_I2C_TIMEOUT);
+    i2c_write_register(DS3231_I2C_ADDRESS << 1, DS3231_AGING_OFFSET_REG, data, ARRAY_SIZE(data), DS3231_I2C_TIMEOUT);
 }
 
 /**
@@ -128,7 +129,7 @@ void ds3231_set_aging_offset(int8_t offset) {
 float ds3231_get_temperature(void) {
     uint8_t temp[2] = {0};
 
-    i2c_readReg(DS3231_I2C_ADDRESS << 1, DS3231_TEMPERATURE_REG, temp, ARRAY_SIZE(temp), DS3231_I2C_TIMEOUT);
+    i2c_read_register(DS3231_I2C_ADDRESS << 1, DS3231_TEMPERATURE_REG, temp, ARRAY_SIZE(temp), DS3231_I2C_TIMEOUT);
     return (float)temp[0] + (float)(temp[1] >> 6) * 0.25;
 }
 
