@@ -32,7 +32,7 @@ i2c_status_t ds1307_set_time(rtc_time_t t) {
     };
     // clang-format on
 
-    if (i2c_writeReg(DS1307_I2C_ADDRESS << 1, DS1307_TIME_REG, data, ARRAY_SIZE(data), DS1307_I2C_TIMEOUT) !=
+    if (i2c_write_register(DS1307_I2C_ADDRESS << 1, DS1307_TIME_REG, data, ARRAY_SIZE(data), DS1307_I2C_TIMEOUT) !=
         I2C_STATUS_SUCCESS) {
         uprintf("Error while sending time to RTC!\n");
         return I2C_STATUS_ERROR;
@@ -51,7 +51,7 @@ i2c_status_t ds1307_get_time(rtc_time_t *time) {
     uint8_t data[7] = {0, 0, 0, 0, 0, 0, 0};
 
     i2c_status_t status =
-        i2c_readReg(DS1307_I2C_ADDRESS << 1, DS1307_TIME_REG, data, ARRAY_SIZE(data), DS1307_I2C_TIMEOUT);
+        i2c_read_register(DS1307_I2C_ADDRESS << 1, DS1307_TIME_REG, data, ARRAY_SIZE(data), DS1307_I2C_TIMEOUT);
     if (status != I2C_STATUS_SUCCESS) {
         return status;
     }
@@ -84,7 +84,7 @@ i2c_status_t ds1307_get_time(rtc_time_t *time) {
  */
 bool ds1307_has_lost_power(void) {
     uint8_t status[1] = {0};
-    i2c_readReg(DS1307_I2C_ADDRESS << 1, DS1307_TIME_REG, status, ARRAY_SIZE(status), DS1307_I2C_TIMEOUT);
+    i2c_read_register(DS1307_I2C_ADDRESS << 1, DS1307_TIME_REG, status, ARRAY_SIZE(status), DS1307_I2C_TIMEOUT);
     return status[0] >> 7;
 }
 
@@ -166,7 +166,7 @@ i2c_status_t ds1307_read_nvram(uint8_t address, uint8_t *data, uint16_t len) {
     } else if (address + len > 0x3F) {
         len = 0x3F - address;
     }
-    return i2c_readReg(DS1307_I2C_ADDRESS << 1, address, data, len, DS1307_I2C_TIMEOUT);
+    return i2c_read_register(DS1307_I2C_ADDRESS << 1, address, data, len, DS1307_I2C_TIMEOUT);
 }
 
 /**
@@ -185,5 +185,5 @@ i2c_status_t ds1307_write_nvram(uint8_t address, uint8_t *data, uint16_t len) {
     } else if (address + len > 0x3F) {
         len = 0x3F - address;
     }
-    return i2c_writeReg(DS1307_I2C_ADDRESS << 1, address, data, len, DS1307_I2C_TIMEOUT);
+    return i2c_write_register(DS1307_I2C_ADDRESS << 1, address, data, len, DS1307_I2C_TIMEOUT);
 }
