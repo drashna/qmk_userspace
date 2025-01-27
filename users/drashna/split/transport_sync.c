@@ -111,14 +111,14 @@ void recv_keylogger_string_sync(const uint8_t* data, uint8_t size) {
 void recv_keymap_config(const uint8_t* data, uint8_t size) {
     if (memcmp(data, &keymap_config, size) != 0) {
         memcpy(&keymap_config, data, size);
-        eeconfig_update_keymap(keymap_config.raw);
+        eeconfig_update_keymap(&keymap_config);
     }
 }
 
 void recv_debug_config(const uint8_t* data, uint8_t size) {
     if (memcmp(data, &debug_config, size) != 0) {
         memcpy(&debug_config, data, size);
-        eeconfig_update_debug(debug_config.raw);
+        eeconfig_update_debug(&debug_config);
     }
 }
 
@@ -171,9 +171,9 @@ void recv_userspace_runtime_state(const uint8_t* data, uint8_t size) {
 #    endif // MUSIC_ENABLE
         if (has_audio_changed) {
             static audio_config_t last_audio_config = {0};
-            last_audio_config.raw                   = eeconfig_read_audio();
+            eeconfig_read_audio(&last_audio_config);
             if (last_audio_config.raw != audio_config.raw) {
-                eeconfig_update_audio(audio_config.raw);
+                eeconfig_update_audio(&audio_config);
             }
         }
 #endif // AUDIO_ENABLE
@@ -181,7 +181,7 @@ void recv_userspace_runtime_state(const uint8_t* data, uint8_t size) {
 #ifdef UNICODE_COMMON_ENABLE
         if (get_unicode_input_mode() != userspace_runtime_state.unicode.mode) {
             unicode_config.input_mode = userspace_runtime_state.unicode.mode;
-            eeprom_update_byte(EECONFIG_UNICODEMODE, unicode_config.input_mode);
+            eeconfig_update_unicode_mode(&unicode_config);
         }
 #endif // UNICODE_COMMON_ENABLE
 #if defined(POINTING_DEVICE_ENABLE) && defined(POINTING_DEVICE_AUTO_MOUSE_ENABLE)
