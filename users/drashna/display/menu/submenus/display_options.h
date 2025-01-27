@@ -10,14 +10,14 @@ bool menu_handler_display_menu_location(menu_input_t input) {
             if (userspace_config.display.menu_render_side < 1) {
                 userspace_config.display.menu_render_side = 3;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         case menu_input_right:
             userspace_config.display.menu_render_side = (userspace_config.display.menu_render_side + 1) % 4;
             if (userspace_config.display.menu_render_side < 1) {
                 userspace_config.display.menu_render_side = 1;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -90,7 +90,7 @@ bool menu_handler_display_inverted(menu_input_t input) {
         case menu_input_left:
         case menu_input_right:
             userspace_config.display.inverted = !userspace_config.display.inverted;
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 #ifdef QUANTUM_PAINTER_ILI9341_ENABLE
             init_display_ili9341_inversion();
 #endif // QUANTUM_PAINTER_ILI9341_ENABLE
@@ -137,7 +137,7 @@ bool menu_handler_oled_lock(menu_input_t input) {
         case menu_input_left:
         case menu_input_right:
             userspace_config.display.oled.screen_lock = !userspace_config.display.oled.screen_lock;
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -155,14 +155,14 @@ bool menu_handler_oled_pet_animation(menu_input_t input) {
             if (userspace_config.display.oled.pet.index > 2) {
                 userspace_config.display.oled.pet.index = 2;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         case menu_input_right:
             userspace_config.display.oled.pet.index = (userspace_config.display.oled.pet.index + 1) % 3;
             if (userspace_config.display.oled.pet.index > 2) {
                 userspace_config.display.oled.pet.index = 0;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -192,14 +192,14 @@ bool menu_handler_oled_pet_sleep_speed(menu_input_t input) {
             if (userspace_config.display.oled.pet.sleep_speed > 100) {
                 userspace_config.display.oled.pet.sleep_speed = 100;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         case menu_input_right:
             userspace_config.display.oled.pet.sleep_speed = (userspace_config.display.oled.pet.sleep_speed + 1) % 100;
             if (userspace_config.display.oled.pet.sleep_speed > 100) {
                 userspace_config.display.oled.pet.sleep_speed = 0;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -217,14 +217,14 @@ bool menu_handler_oled_pet_kaki_speed(menu_input_t input) {
             if (userspace_config.display.oled.pet.kaki_speed > 200) {
                 userspace_config.display.oled.pet.kaki_speed = 200;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         case menu_input_right:
             userspace_config.display.oled.pet.kaki_speed = (userspace_config.display.oled.pet.kaki_speed + 5) % 200;
             if (userspace_config.display.oled.pet.kaki_speed > 200) {
                 userspace_config.display.oled.pet.kaki_speed = 0;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -242,14 +242,14 @@ bool menu_handler_oled_pet_mati_speed(menu_input_t input) {
             if (userspace_config.display.oled.pet.mati_speed > 200) {
                 userspace_config.display.oled.pet.mati_speed = 200;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         case menu_input_right:
             userspace_config.display.oled.pet.mati_speed = (userspace_config.display.oled.pet.mati_speed + 5) % 200;
             if (userspace_config.display.oled.pet.mati_speed > 200) {
                 userspace_config.display.oled.pet.mati_speed = 0;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -275,7 +275,7 @@ bool menu_handler_display_mode_master(menu_input_t input) {
             if (userspace_config.display.painter.display_mode_master > 5) {
                 userspace_config.display.painter.display_mode_master = 5;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         case menu_input_right:
             userspace_config.display.painter.display_mode_master =
@@ -283,7 +283,7 @@ bool menu_handler_display_mode_master(menu_input_t input) {
             if (userspace_config.display.painter.display_mode_master > 5) {
                 userspace_config.display.painter.display_mode_master = 0;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -323,7 +323,7 @@ bool menu_handler_display_mode_slave(menu_input_t input) {
             if (userspace_config.display.painter.display_mode_slave > 4) {
                 userspace_config.display.painter.display_mode_slave = 4;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         case menu_input_right:
             userspace_config.display.painter.display_mode_slave =
@@ -331,7 +331,7 @@ bool menu_handler_display_mode_slave(menu_input_t input) {
             if (userspace_config.display.painter.display_mode_slave > 4) {
                 userspace_config.display.painter.display_mode_slave = 0;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -371,7 +371,7 @@ bool menu_handler_display_image(menu_input_t input) {
             if (userspace_config.display.painter.display_logo > (screensaver_image_size - 1)) {
                 userspace_config.display.painter.display_logo = (screensaver_image_size - 1);
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         case menu_input_right:
             userspace_config.display.painter.display_logo =
@@ -379,7 +379,7 @@ bool menu_handler_display_image(menu_input_t input) {
             if (userspace_config.display.painter.display_logo > (screensaver_image_size - 1)) {
                 userspace_config.display.painter.display_logo = 0;
             }
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;

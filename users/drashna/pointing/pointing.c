@@ -340,7 +340,7 @@ void pointing_device_mouse_jiggler_toggle(void) {
     mouse_jiggler_timer          = timer_read();
     mouse_jiggler_debounce_timer = timer_read32() + (userspace_config.pointing.mouse_jiggler.timeout - 5) * 1000;
     userspace_config.pointing.mouse_jiggler.enable = !userspace_config.pointing.mouse_jiggler.enable;
-    eeconfig_update_user_datablock(&userspace_config);
+    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }
 
 /**
@@ -388,7 +388,7 @@ void pointing_device_accel_set_takeoff(float val) {
     if (val >= 0.5) { // value less than 0.5 leads to nonsensical results
         userspace_config.pointing.accel.takeoff = val;
     }
-    eeconfig_update_user_datablock(&userspace_config);
+    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }
 
 /**
@@ -400,7 +400,7 @@ void pointing_device_accel_set_growth_rate(float val) {
     if (val >= 0) { // value less 0 leads to nonsensical results
         userspace_config.pointing.accel.growth_rate = val;
     }
-    eeconfig_update_user_datablock(&userspace_config);
+    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }
 
 /**
@@ -410,7 +410,7 @@ void pointing_device_accel_set_growth_rate(float val) {
  */
 void pointing_device_accel_set_offset(float val) {
     userspace_config.pointing.accel.offset = val;
-    eeconfig_update_user_datablock(&userspace_config);
+    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }
 
 /**
@@ -422,7 +422,7 @@ void pointing_device_accel_set_limit(float val) {
     if (val >= 0) {
         userspace_config.pointing.accel.limit = val;
     }
-    eeconfig_update_user_datablock(&userspace_config);
+    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }
 
 /**
@@ -432,7 +432,7 @@ void pointing_device_accel_set_limit(float val) {
  */
 void pointing_device_accel_enabled(bool enable) {
     userspace_config.pointing.accel.enabled = enable;
-    eeconfig_update_user_datablock(&userspace_config);
+    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 #ifdef POINTING_DEVICE_ACCEL_DEBUG
     printf("maccel: enabled: %d\n", userspace_config.pointing.accel.enabled);
 #endif

@@ -75,7 +75,7 @@ bool menu_handler_gaming_song_enabled(menu_input_t input) {
         case menu_input_left:
         case menu_input_right:
             userspace_config.gaming.song_enable = !userspace_config.gaming.song_enable;
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             void set_doom_song(layer_state_t);
             set_doom_song(layer_state);
             return false;
@@ -93,7 +93,7 @@ bool menu_handler_audio_mouse_clicky(menu_input_t input) {
         case menu_input_left:
         case menu_input_right:
             userspace_config.pointing.audio_mouse_clicky = !userspace_config.pointing.audio_mouse_clicky;
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;

@@ -108,7 +108,7 @@ bool process_record_user_oled(uint16_t keycode, keyrecord_t *record) {
                 break;
             case OLED_LOCK:
                 userspace_config.display.oled.screen_lock = !userspace_config.display.oled.screen_lock;
-                eeconfig_update_user_datablock(&userspace_config);
+                eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
                 if (userspace_config.display.oled.screen_lock) {
                     oled_on();
                 }
@@ -1224,7 +1224,7 @@ void oled_post_init(void) {
 void oled_brightness_increase_step(void) {
     userspace_config.display.oled.brightness = qadd8(userspace_config.display.oled.brightness, OLED_BRIGHTNESS_STEP);
     oled_set_brightness(userspace_config.display.oled.brightness);
-    eeconfig_update_user_datablock(&userspace_config);
+    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }
 
 /**
@@ -1237,5 +1237,5 @@ void oled_brightness_increase_step(void) {
 void oled_brightness_decrease_step(void) {
     userspace_config.display.oled.brightness = qsub8(userspace_config.display.oled.brightness, OLED_BRIGHTNESS_STEP);
     oled_set_brightness(userspace_config.display.oled.brightness);
-    eeconfig_update_user_datablock(&userspace_config);
+    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }

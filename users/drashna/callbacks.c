@@ -67,7 +67,7 @@ user_runtime_config_t userspace_runtime_state;
 __attribute__((weak)) void keyboard_pre_init_keymap(void) {}
 void                       keyboard_pre_init_user(void) {
     print_set_sendchar(drashna_sendchar);
-    eeconfig_read_user_datablock(&userspace_config);
+    eeconfig_read_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
     if (!eeconfig_is_user_datablock_valid() || !userspace_config.check) {
         eeconfig_init_user();
     }
@@ -318,12 +318,12 @@ void                       eeconfig_init_user(void) {
 
     userspace_config.rtc.timezone = RTC_TIMEZONE;
     // ensure that nkro is enabled
-    keymap_config.raw  = eeconfig_read_keymap();
+    eeconfig_read_keymap(&keymap_config);
     keymap_config.nkro = true;
-    eeconfig_update_keymap(keymap_config.raw);
+    eeconfig_update_keymap(&keymap_config);
 
     eeconfig_init_keymap();
-    eeconfig_update_user_datablock(&userspace_config);
+    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }
 
 /**

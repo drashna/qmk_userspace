@@ -1444,7 +1444,7 @@ void painter_sethsv_eeprom_helper(uint8_t hue, uint8_t sat, uint8_t val, bool wr
     hsv->s = sat;
     hsv->v = val;
     if (write_to_eeprom) {
-        eeconfig_update_user_datablock(&userspace_config);
+        eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
     }
     dprintf("painter set %s hsv [%s]: %u,%u,%u\n", primary ? "primary" : "secondary",
             write_to_eeprom ? "EEPROM" : "NOEEPROM", hsv->h, hsv->s, hsv->v);

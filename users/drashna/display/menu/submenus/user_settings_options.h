@@ -6,7 +6,7 @@ bool menu_handler_overwatch_mode(menu_input_t input) {
         case menu_input_left:
         case menu_input_right:
             userspace_config.gaming.is_overwatch = !userspace_config.gaming.is_overwatch;
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -22,7 +22,7 @@ bool menu_handler_gamepad_swap(menu_input_t input) {
         case menu_input_left:
         case menu_input_right:
             userspace_config.gaming.swapped_numbers = !userspace_config.gaming.swapped_numbers;
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -38,7 +38,7 @@ bool menu_handler_clap_trap(menu_input_t input) {
         case menu_input_left:
         case menu_input_right:
             userspace_config.gaming.clap_trap_enable = !userspace_config.gaming.clap_trap_enable;
-            eeconfig_update_user_datablock(&userspace_config);
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
