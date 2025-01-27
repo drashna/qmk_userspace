@@ -207,7 +207,7 @@ void set_doom_song(layer_state_t state) {
             audio_config.clicky_enable = false;
         } else {
             audio_stop_all();
-            audio_config.raw = eeconfig_read_audio();
+            eeconfig_read_audio(&audio_config);
         }
     }
 }
