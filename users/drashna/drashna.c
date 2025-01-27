@@ -155,7 +155,7 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
                 break;
         }
         keymap_config.swap_lctl_lgui = keymap_config.swap_rctl_rgui = os_detection_config.swap_ctl_gui;
-        eeconfig_update_keymap(keymap_config.raw);
+        eeconfig_update_keymap(&keymap_config);
 #    ifdef UNICODE_COMMON_ENABLE
         set_unicode_input_mode_soft(os_detection_config.unicode_input_mode);
 #    endif // UNICODE_COMMON_ENABLE
@@ -212,7 +212,7 @@ void set_doom_song(layer_state_t state) {
             audio_config.clicky_enable = false;
         } else {
             audio_stop_all();
-            audio_config.raw = eeconfig_read_audio();
+            eeconfig_read_audio(&audio_config);
         }
     }
 }

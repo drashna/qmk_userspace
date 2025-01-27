@@ -196,7 +196,7 @@ void layer_state_set_gaming(layer_state_t state) {
             keymap_config.swap_lctl_lgui = false;
         } else {
             if (is_swap_active) {
-                keymap_config.raw = eeconfig_read_keymap();
+                eeconfig_read_keymap(&keymap_config);
             }
         }
     }
@@ -300,9 +300,9 @@ void                       eeconfig_init_user(void) {
 
     userspace_config.rtc.timezone = RTC_TIMEZONE;
     // ensure that nkro is enabled
-    keymap_config.raw  = eeconfig_read_keymap();
+    eeconfig_read_keymap(&keymap_config);
     keymap_config.nkro = true;
-    eeconfig_update_keymap(keymap_config.raw);
+    eeconfig_update_keymap(&keymap_config);
 
     eeconfig_init_keymap();
     eeconfig_update_user_datablock_handler(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
