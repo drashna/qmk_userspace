@@ -218,8 +218,7 @@ uint16_t extract_basic_keycode(uint16_t keycode, keyrecord_t *record, bool check
  * @return uint32_t
  */
 uint32_t eeconfig_update_user_datablock_handler(const void *data, uint8_t offset, uint8_t size) {
-    eeconfig_update_user_datablock(data);
-    return 0;
+    return eeconfig_update_user_datablock(data, offset, size);
 }
 
 /**
@@ -230,6 +229,5 @@ uint32_t eeconfig_update_user_datablock_handler(const void *data, uint8_t offset
  * @param size size of data to be read
  */
 uint32_t eeconfig_read_user_datablock_handler(void *data, uint8_t offset, uint8_t size) {
-    eeconfig_read_user_datablock(data);
-    return 0;
+    return eeconfig_read_user_datablock(data, offset, size);
 }
