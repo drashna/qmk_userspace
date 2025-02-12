@@ -223,8 +223,10 @@ void update_slave_state(void) {
     }
 #    endif // MUSIC_ENABLE
     if (has_audio_changed) {
-        if (eeconfig_read_audio() != audio_config.raw) {
-            eeconfig_update_audio(audio_config.raw);
+        static audio_config_t last_audio_config = {0};
+        eeconfig_read_audio(&last_audio_config);
+        if (last_audio_config.raw != audio_config.raw) {
+            eeconfig_update_audio(&audio_config);
         }
     }
 #endif // AUDIO_ENABLE
@@ -232,7 +234,7 @@ void update_slave_state(void) {
 #ifdef UNICODE_COMMON_ENABLE
     if (get_unicode_input_mode() != userspace_runtime_state.unicode.mode) {
         unicode_config.input_mode = userspace_runtime_state.unicode.mode;
-        eeprom_update_byte(EECONFIG_UNICODEMODE, unicode_config.input_mode);
+        eeconfig_update_unicode_mode(&unicode_config);
     }
 #endif // UNICODE_COMMON_ENABLE
 #if defined(POINTING_DEVICE_ENABLE) && defined(POINTING_DEVICE_AUTO_MOUSE_ENABLE)
@@ -288,15 +290,11 @@ void update_slave_state(void) {
 #endif // WPM_ENABLE
     if (keymap_config.raw != userspace_runtime_state.keymap_config.raw) {
         keymap_config = userspace_runtime_state.keymap_config;
-        if (eeconfig_read_keymap() != keymap_config.raw) {
-            eeconfig_update_keymap(keymap_config.raw);
-        }
+        eeconfig_update_keymap(&keymap_config);
     }
     if (debug_config.raw != userspace_runtime_state.debug_config.raw) {
         debug_config = userspace_runtime_state.debug_config;
-        if (eeconfig_read_debug() != debug_config.raw) {
-            eeconfig_update_debug(debug_config.raw);
-        }
+        eeconfig_update_debug(&debug_config);
     }
 #if defined(DISPLAY_DRIVER_ENABLE)
     if (userspace_runtime_state.display.menu_state_runtime.dirty) {
@@ -504,11 +502,11 @@ void housekeeping_task_transport_sync(void) {
 #if defined(RGB_MATRIX_ENABLE)
         static rgb_config_t last_rgb_matrix_config = {0};
         if (is_first_run) {
-            eeprom_read_block(&last_rgb_matrix_config, EECONFIG_RGB_MATRIX, sizeof(last_rgb_matrix_config));
+            eeconfig_read_rgb_matrix(&last_rgb_matrix_config);
         }
         if (last_rgb_matrix_config.raw != rgb_matrix_config.raw) {
             last_rgb_matrix_config = rgb_matrix_config;
-            eeconfig_update_rgb_matrix();
+            eeconfig_update_rgb_matrix(&rgb_matrix_config);
             rgb_matrix_reload_from_eeprom();
             xprintf("RGB Matrix config updated\n");
         }
@@ -518,11 +516,11 @@ void housekeeping_task_transport_sync(void) {
         extern rgblight_config_t rgblight_config;
 
         if (is_first_run) {
-            last_rgblight_config.raw = eeconfig_read_rgblight();
+            eeconfig_read_rgblight(&last_rgblight_config);
         }
         if (last_rgblight_config.raw != rgblight_config.raw) {
             last_rgblight_config = rgblight_config;
-            eeconfig_update_rgblight(rgblight_config.raw);
+            eeconfig_update_rgblight(&rgblight_config);
             rgblight_reload_from_eeprom();
             xprintf("RGB Light config updated\n");
         }
@@ -532,11 +530,11 @@ void housekeeping_task_transport_sync(void) {
         extern haptic_config_t haptic_config;
 
         if (is_first_run) {
-            last_haptic_config.raw = eeconfig_read_haptic();
+            eeconfig_read_haptic(&last_haptic_config);
         }
         if (last_haptic_config.raw != haptic_config.raw) {
             last_haptic_config = haptic_config;
-            eeconfig_update_haptic(haptic_config.raw);
+            eeconfig_update_haptic(&haptic_config);
             xprintf("Haptic config updated\n");
         }
 #endif
@@ -545,7 +543,7 @@ void housekeeping_task_transport_sync(void) {
         extern backlight_config_t backlight_config;
 
         if (is_first_run) {
-            last_backlight_config.raw = eeconfig_read_backlight();
+            eeconfig_read_backlight(&last_backlight_config);
         }
 #    if defined(QUANTUM_PAINTER_ENABLE)
         if (last_backlight_config.level != backlight_config.level ||
@@ -555,7 +553,7 @@ void housekeeping_task_transport_sync(void) {
 #    endif
         {
             last_backlight_config = backlight_config;
-            eeconfig_update_backlight(backlight_config.raw);
+            eeconfig_update_backlight(&backlight_config);
             xprintf("Backlight config updated\n");
         }
 #endif // BACKLIGHT_ENABLE
