@@ -60,10 +60,6 @@
 #define SPLIT_WATCHDOG_TIMEOUT          700
 #define AUDIO_INIT_DELAY
 
-#ifdef USE_USB_OTG_HS_PORT
-#    define USB_DRIVER USBD2
-#endif
-
 #if defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f407)
 #    define ST7789_CS_PIN A8
 #endif
