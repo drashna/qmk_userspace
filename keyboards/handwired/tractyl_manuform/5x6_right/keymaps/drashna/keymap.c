@@ -6,8 +6,8 @@
 // USB Port Pin Definitions
 // black - GND
 // red - VCC
-// white - D- - A11
-// blue - D+ - A12
+// white - D- - A11 - B14
+// blue - D+ - A12 - B15
 // green - CC1
 // yellow - CC2
 
