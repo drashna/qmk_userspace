@@ -63,7 +63,3 @@
 #define SPLIT_USB_TIMEOUT      500
 #define SPLIT_WATCHDOG_TIMEOUT 700
 #define AUDIO_INIT_DELAY
-
-#ifdef USE_USB_OTG_HS_PORT
-#    define USB_DRIVER USBD2
-#endif
