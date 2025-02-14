@@ -14,10 +14,3 @@
 #    undef STM32_I2C_BUSY_TIMEOUT
 #    define STM32_I2C_BUSY_TIMEOUT 10
 #endif
-
-#ifdef USE_USB_OTG_HS_PORT
-#    undef STM32_USB_USE_OTG1
-#    define STM32_USB_USE_OTG1 FALSE
-#    undef STM32_USB_USE_OTG2
-#    define STM32_USB_USE_OTG2 TRUE
-#endif
