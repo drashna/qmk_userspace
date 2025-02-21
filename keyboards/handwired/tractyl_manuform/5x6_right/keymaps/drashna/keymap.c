@@ -140,7 +140,11 @@ void execute_user_button_action(bool state) {
     } else {
         if (tap_counter >= 2) {
             dprintf("Bootloader jumps\n");
-            reset_keyboard();
+            if (is_keyboard_master()) {
+                reset_keyboard();
+            } else {
+                soft_reset_keyboard();
+            }
         }
     }
     // update last state
