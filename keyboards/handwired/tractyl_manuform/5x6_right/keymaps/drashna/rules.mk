@@ -54,11 +54,10 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f429)
     RGBLIGHT_DRIVER                       = custom
     QUANTUM_PAINTER_ENABLE                = yes
     CUSTOM_QUANTUM_PAINTER_ENABLE         = yes
-    CUSTOM_QUANTUM_PAINTER_ILI9341        = yes
-    CUSTOM_QUANTUM_PAINTER_ILI9488        = no
-    CUSTOM_QUANTUM_PAINTER_ST7789_170X320 = no
-    QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE = yes
-    CUSTOM_QUANTUM_PAINTER_ST7789_135X240 = no
+    CUSTOM_QUANTUM_PAINTER_ILI9341        = no
+    CUSTOM_QUANTUM_PAINTER_ILI9488        = yes
+    QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE = yes
+    COMMUNITY_SDRAM_ENABLE                = yes
     DIP_SWITCH_ENABLE                     = yes
     DIP_SWITCH_MAP_ENABLE                 = yes
 endif
