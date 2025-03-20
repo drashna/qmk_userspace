@@ -321,7 +321,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         if (hue_redraw || last_am_layer != get_auto_mouse_layer() || auto_mouse_redraw) {
             last_am_state = get_auto_mouse_layer();
             xpos          = 5;
-            snprintf(buf, sizeof(buf), "%12s", layer_name(get_auto_mouse_layer()));
+            snprintf(buf, sizeof(buf), "%12s", get_layer_name_string(get_auto_mouse_layer()));
             qp_drawtext_recolor(display, xpos, ypos, font_oled, truncate_text(buf, 80 - 5 - 2, font_oled, false, false),
                                 get_auto_mouse_enable() ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                 get_auto_mouse_enable() ? curr_hsv.secondary.s : curr_hsv.primary.s,
