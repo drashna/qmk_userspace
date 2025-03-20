@@ -20,6 +20,7 @@ ifeq ($(PLATFORM_KEY),chibios)
         OPT_DEFS += -DFASTLED_TEENSY3
     endif
     CUSTOM_UNICODE_ENABLE ?= yes
+    KEYCODE_STRING_ENABLE ?= yes
     SRC += $(USER_PATH)/hardware/hardware_id.c
     VPATH += $(USER_PATH)/hardware
     ifeq ($(strip $(MCU_FAMILY)), STM32)
