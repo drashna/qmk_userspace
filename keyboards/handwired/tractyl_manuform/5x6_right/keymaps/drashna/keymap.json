@@ -1,7 +1,6 @@
 {
     "modules": [
         "drashna/console_keylogging",
-        "drashna/keycode_string",
         "drashna/display_menu",
         "drashna/i2c_scanner",
         "drashna/layer_map",

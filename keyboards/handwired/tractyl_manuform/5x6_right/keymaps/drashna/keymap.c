@@ -101,8 +101,7 @@ void early_hardware_init_post(void) {
 }
 #endif
 
-#ifdef COMMUNITY_MODULE_KEYCODE_STRING_ENABLE
-#    include "keycode_string.h"
+#ifdef KEYCODE_STRING_ENABLE
 // clang-format off
 KEYCODE_STRING_NAMES_KB(
     {QK_KB_0, "DPI_INC"},

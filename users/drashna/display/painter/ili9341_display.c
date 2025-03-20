@@ -29,9 +29,6 @@
 #else // COMMUNITY_MODULE_RTC_ENABLE
 #    include "version.h"
 #endif // COMMUNITY_MODULE_RTC_ENABLE
-#if defined(COMMUNITY_MODULE_KEYCODE_STRING_ENABLE)
-#    include "keycode_string.h"
-#endif // COMMUNITY_MODULE_KEYCODE_STRING_ENABLE
 #ifdef COMMUNITY_MODULE_UNICODE_TYPING_ENABLE
 #    include "unicode_typing.h"
 #endif // COMMUNITY_MODULE_UNICODE_TYPING_ENABLE
@@ -367,7 +364,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
             if (hue_redraw || last_am_layer != get_auto_mouse_layer() || auto_mouse_redraw) {
                 last_am_layer = get_auto_mouse_layer();
                 xpos          = 5;
-                snprintf(buf, sizeof(buf), "%12s", layer_name(get_auto_mouse_layer()));
+                snprintf(buf, sizeof(buf), "%12s", get_layer_name_string(get_auto_mouse_layer(), false, true));
                 qp_drawtext_recolor(display, xpos, ypos, font_oled,
                                     truncate_text(buf, 80 - 5 - 2, font_oled, false, false),
                                     get_auto_mouse_enable() ? curr_hsv.secondary.h : curr_hsv.primary.h,
@@ -568,11 +565,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
                 qp_drawtext_recolor(display, xpos, ypos, font_oled, "Last keycode:", curr_hsv.primary.h,
                                     curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
                 ypos += font_oled->line_height + 4;
-#    if defined(COMMUNITY_MODULE_KEYCODE_STRING_ENABLE)
                 snprintf(buf, 17, "%16s", get_keycode_string(last_keycode));
-#    else
-                snprintf(buf, 17, "%16s", keycode_name(last_keycode, false));
-#    endif
                 qp_drawtext_recolor(display, xpos, ypos, font_oled, buf, curr_hsv.secondary.h, curr_hsv.secondary.s,
                                     curr_hsv.secondary.v, 0, 0, 0);
             }
