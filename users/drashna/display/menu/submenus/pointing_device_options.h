@@ -45,7 +45,8 @@ bool menu_handler_auto_mouse_layer(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_auto_mouse_layer(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%s", layer_name(userspace_config.pointing.auto_mouse_layer.layer));
+    snprintf(text_buffer, buffer_len - 1, "%s",
+             get_layer_name_string(userspace_config.pointing.auto_mouse_layer.layer, false, true));
 }
 
 bool menu_handler_auto_mouse_timeout(menu_input_t input) {
