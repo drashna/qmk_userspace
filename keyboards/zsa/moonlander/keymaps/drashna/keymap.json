@@ -3,7 +3,7 @@
         "drashna/keyboard_lock",
         "drashna/unicode_typing",
         "drashna/watchdog",
-        "elpekenin/ledmap",
+        "temp/ledmap",
         "getreuer/sentence_case"
     ]
 }

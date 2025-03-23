@@ -215,7 +215,6 @@ const ledmap_color_t PROGMEM ledmap[MAX_USER_LAYERS][MATRIX_ROWS][MATRIX_COLS] =
         TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS, TRNS)};
 #endif
 bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
-    draw_ledmap(led_min, led_max);
     if (layer_state_is(_GAMEPAD)) {
         RGB_MATRIX_INDICATOR_SET_COLOR((userspace_config.gaming.swapped_numbers ? 15 : 10), 0xFF, 0xFF, 0xFF); // 1
         RGB_MATRIX_INDICATOR_SET_COLOR((userspace_config.gaming.swapped_numbers ? 10 : 15), 0x00, 0xFF, 0x00); // 2
