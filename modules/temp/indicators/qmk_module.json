@@ -1,0 +1,7 @@
+{
+    "maintainer": "elpekenin",
+    "module_name": "indicators",
+    "features": {
+        "rgb_matrix": true
+    }
+}
