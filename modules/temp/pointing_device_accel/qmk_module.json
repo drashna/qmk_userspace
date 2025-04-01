@@ -1,0 +1,37 @@
+{
+    "module_name": "Pointing Device Acceleration",
+    "maintainer": "drashna",
+    "keycodes": [
+        {
+            "key": "CM_MOUSE_ACCEL_TOGGLE",
+            "aliases": [
+                "MA_TOGG"
+            ]
+        },
+        {
+            "key": "CM_MOUSE_ACCEL_TAKEOFF",
+            "aliases": [
+                "MA_TKOF"
+            ]
+        },
+        {
+            "key": "CM_MOUSE_ACCEL_GROWTH_RATE",
+            "aliases": [
+                "MA_GROW"
+            ]
+        },
+        {
+            "key": "CM_MOUSE_ACCEL_OFFSET",
+            "aliases": [
+                "MA_OFST"
+            ]
+        },
+        {
+            "key": "CM_MOUSE_ACCEL_LIMIT",
+            "aliases": [
+                "MA_LMT"
+            ]
+        }
+    ]
+
+}
