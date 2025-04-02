@@ -1,0 +1,54 @@
+{
+    "keyboard": "ploopyco/mouse/rev1_002",
+    "keymap": "accel",
+    "config": {
+        "features": {
+            "encoder_map": true,
+            "via": true
+        },
+        "build": {
+            "lto": true
+        },
+        "bootloader": "qmk-hid"
+    },
+    "encoders": [
+        [
+            {
+                "ccw": "KC_WH_D",
+                "cw": "KC_WH_U"
+            }
+        ],
+        [
+            {
+                "ccw": "RGB_HUD",
+                "cw": "RGB_HUI"
+            }
+        ]
+    ],
+    "layout": "LAYOUT",
+    "layers": [
+        [
+            "C(KC_C)",
+            "KC_BTN1",
+            "KC_BTN3",
+            "KC_BTN2",
+            "MO(1)",
+            "KC_BTN4",
+            "KC_BTN5",
+            "DPI_CONFIG"
+        ],
+        [
+            "RGB_HUI",
+            "RGB_MOD",
+            "RGB_TOG",
+            "RGB_RMOD",
+            "MO(1)",
+            "KC_VOLU",
+            "KC_VOLD",
+            "QK_BOOT"
+        ]
+    ],
+    "modules": [
+        "temp/pointing_device_accel"
+    ]
+}
