@@ -1,6 +1,7 @@
 {
     "module_name": "Pointing Device Acceleration",
     "maintainer": "drashna",
+    "license": "GPL-2.0-or-later",
     "keycodes": [
         {
             "key": "CM_MOUSE_ACCEL_TOGGLE",

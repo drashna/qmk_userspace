@@ -188,21 +188,3 @@ void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
 
     *command_id = id_unhandled;
 }
-
-void eeconfig_init_pointing_device(void) {
-    g_pointing_device_accel_config = (pointing_device_accel_config_t){
-        .growth_rate = POINTING_DEVICE_ACCEL_GROWTH_RATE,
-        .offset      = POINTING_DEVICE_ACCEL_OFFSET,
-        .limit       = POINTING_DEVICE_ACCEL_LIMIT,
-        .takeoff     = POINTING_DEVICE_ACCEL_TAKEOFF,
-        .enabled     = true,
-    };
-    // Write default value to EEPROM now
-    pointing_device_config_update(&g_pointing_device_accel_config);
-}
-
-// On Keyboard startup
-__attribute__((weak)) void keyboard_post_init_pointing_device_accel_kb(void) {
-    // Read custom menu variables from memory
-    pointing_device_config_read(&g_pointing_device_accel_config);
-}
