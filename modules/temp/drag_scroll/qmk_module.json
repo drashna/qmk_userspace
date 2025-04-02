@@ -1,0 +1,19 @@
+{
+    "module_name": "Drag Scroll",
+    "maintainer": "drashna",
+    "license": "GPL-2.0-or-later",
+    "keycodes": [
+        {
+            "key": "DRAG_SCROLL_TOGGLE",
+            "aliases": [
+                "DRG_TOG"
+            ]
+        },
+        {
+            "key": "DRAG_SCROLL_MOMENTARY",
+            "aliases": [
+                "DRG_SCL"
+            ]
+        }
+    ]
+}
