@@ -1,22 +1,18 @@
 // Copyright 2021 Christopher Courtney, aka Drashna Jael're  (@drashna) <drashna@live.com>
 // Copyright 2024 burkfers (@burkfers)
 // Copyright 2024 Wimads (@wimads)
-// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
 #include "pointing_device_internal.h"
 #include "pointing_device_accel.h"
 #include "math.h"
 
+ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 1, 0);
+
 static uint32_t pointing_device_accel_timer;
 
-pointing_device_accel_config_t g_pointing_device_accel_config = {
-    .growth_rate = POINTING_DEVICE_ACCEL_GROWTH_RATE,
-    .offset      = POINTING_DEVICE_ACCEL_OFFSET,
-    .limit       = POINTING_DEVICE_ACCEL_LIMIT,
-    .takeoff     = POINTING_DEVICE_ACCEL_TAKEOFF,
-    .enabled     = true,
-};
+pointing_device_accel_config_t g_pointing_device_accel_config;
 
 #ifndef POINTING_DEVICE_ACCEL_TAKEOFF_STEP
 #    define POINTING_DEVICE_ACCEL_TAKEOFF_STEP 0.01f
@@ -232,7 +228,10 @@ bool process_record_pointing_device_accel(uint16_t keycode, keyrecord_t *record)
     return true;
 }
 
-__attribute__((weak)) void pointing_device_config_update(pointing_device_accel_config_t *config) {}
+__attribute__((weak)) void pointing_device_config_update(pointing_device_accel_config_t *config) {
+    // Co nothing since we're saving/storing in memory.
+    // Can be overridden to implement NVM storage.  VIA module does this, in fact.
+}
 
 __attribute__((weak)) void pointing_device_config_read(pointing_device_accel_config_t *config) {
     g_pointing_device_accel_config = (pointing_device_accel_config_t){
@@ -242,4 +241,28 @@ __attribute__((weak)) void pointing_device_config_read(pointing_device_accel_con
         .takeoff     = POINTING_DEVICE_ACCEL_TAKEOFF,
         .enabled     = true,
     };
+}
+
+__attribute__((weak)) void keyboard_post_init_pointing_device_accel(void) {
+    // Read initial config into memory.
+    // Via module reads settings from NVM into memory.
+    pointing_device_config_read(&g_pointing_device_accel_config);
+
+    keyboard_post_init_pointing_device_accel_kb();
+}
+
+// Unfortunately, there is no way to automatically call this as of 1.0.0 or 1.1.0
+// Compounding this is that NVM abstraction prevents us from saving to arbitrary locations, safely.
+// We could still do so, but to future proof this .... for now, it needs to be called from either
+// eeconfig_init_user(void) or eeconfig_init_kb(void).
+void eeconfig_init_pointing_device(void) {
+    g_pointing_device_accel_config = (pointing_device_accel_config_t){
+        .growth_rate = POINTING_DEVICE_ACCEL_GROWTH_RATE,
+        .offset      = POINTING_DEVICE_ACCEL_OFFSET,
+        .limit       = POINTING_DEVICE_ACCEL_LIMIT,
+        .takeoff     = POINTING_DEVICE_ACCEL_TAKEOFF,
+        .enabled     = true,
+    };
+    // Write default value to EEPROM now
+    pointing_device_config_update(&g_pointing_device_accel_config);
 }
