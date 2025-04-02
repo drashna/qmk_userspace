@@ -44,7 +44,8 @@ typedef struct PACKED pointing_device_accel_config_t {
     bool  enabled;
 } pointing_device_accel_config_t;
 
-extern pointing_device_accel_config_t g_pointing_device_accel_config;
+void                            set_pointing_device_accel_config_pointer(pointing_device_accel_config_t *config);
+pointing_device_accel_config_t *pointing_device_accel_config_get_pointer(void);
 
 void pointing_device_accel_enabled(bool enable);
 bool pointing_device_accel_get_enabled(void);
@@ -66,5 +67,5 @@ float pointing_device_accel_get_limit(void);
 void  pointing_device_accel_set_limit(float val);
 void  pointing_device_accel_set_limit_increment(void);
 
-void pointing_device_config_update(pointing_device_accel_config_t *config);
-void pointing_device_config_read(pointing_device_accel_config_t *config);
+void pointing_device_accel_config_update(pointing_device_accel_config_t *config);
+void pointing_device_accel_config_read(pointing_device_accel_config_t *config);
