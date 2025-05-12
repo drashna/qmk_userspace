@@ -314,48 +314,48 @@ led_config_t g_led_config = { {
 #    include "display/oled/oled_stuff.h"
 
 void oled_render_large_display(bool side) {
-#if 1
-        render_rgb_hsv(1, 6);
-        render_rgb_mode(1, 7);
-        render_arasaka_logo(0, 8);
+#    if 1
+    render_rgb_hsv(1, 6);
+    render_rgb_mode(1, 7);
+    render_arasaka_logo(0, 8);
 
-        oled_render_time(1, 13);
-        render_unicode_mode(1, 12);
-#else
-        render_rgb_hsv(1, 6);
-        render_rgb_mode(1, 7);
+    oled_render_time(1, 13);
+    render_unicode_mode(1, 12);
+#    else
+    render_rgb_hsv(1, 6);
+    render_rgb_mode(1, 7);
 
-        render_arasaka_logo(0, 8);
-        render_wpm_graph(23, 107, 25, 96);
+    render_arasaka_logo(0, 8);
+    render_wpm_graph(23, 107, 25, 96);
 
-#endif
-
+#    endif
 }
 #endif
 
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case FUN_TIME: {
+        case FUN_TIME:
+            {
 #ifdef RGB_MATRIX_ENABLE
-            uint32_t my_callback(uint32_t trigger_time, void *cb_arg) {
-                rgb_matrix_step_noeeprom();
-                void last_matrix_activity_trigger(void);
-                last_matrix_activity_trigger();
-                return 5000;
-            }
-            static deferred_token my_token = INVALID_DEFERRED_TOKEN;
-            if (record->event.pressed) {
-                if (my_token == INVALID_DEFERRED_TOKEN) {
-                    my_token = defer_exec(500, my_callback, NULL);
-                } else {
-                    if (cancel_deferred_exec(my_token)) {
-                        my_token = INVALID_DEFERRED_TOKEN;
+                uint32_t my_callback(uint32_t trigger_time, void *cb_arg) {
+                    rgb_matrix_step_noeeprom();
+                    void last_matrix_activity_trigger(void);
+                    last_matrix_activity_trigger();
+                    return 5000;
+                }
+                static deferred_token my_token = INVALID_DEFERRED_TOKEN;
+                if (record->event.pressed) {
+                    if (my_token == INVALID_DEFERRED_TOKEN) {
+                        my_token = defer_exec(500, my_callback, NULL);
+                    } else {
+                        if (cancel_deferred_exec(my_token)) {
+                            my_token = INVALID_DEFERRED_TOKEN;
+                        }
                     }
                 }
-            }
 #endif
-            break;
-        }
+                break;
+            }
     }
     return true;
 }

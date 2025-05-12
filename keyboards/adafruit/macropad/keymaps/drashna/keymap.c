@@ -45,9 +45,9 @@ void render_rgb_mode(uint8_t col, uint8_t line);
 
 void l_render_keylock_status(led_t led_usb_state, uint8_t col, uint8_t line) {
     oled_set_cursor(col, line);
-#ifdef CAPS_WORD_ENABLE
+#    ifdef CAPS_WORD_ENABLE
     led_usb_state.caps_lock |= is_caps_word_on();
-#endif
+#    endif
     oled_write_P(PSTR(OLED_RENDER_LOCK_NUML), led_usb_state.num_lock);
     oled_write_P(PSTR(" "), false);
     oled_write_P(PSTR(OLED_RENDER_LOCK_CAPS), led_usb_state.caps_lock);
@@ -65,46 +65,46 @@ bool oled_task_keymap(void) {
     render_pet(0, 2);
     render_matrix_scan_rate(1, 7, 2);
 
-#ifdef AUDIO_ENABLE
+#    ifdef AUDIO_ENABLE
     oled_set_cursor(7, 4);
     bool l_is_audio_on = is_audio_on();
 
     static const char PROGMEM audio_status[2][3] = {{0xE0, 0xE1, 0}, {0xE2, 0xE3, 0}};
     oled_write_P(audio_status[l_is_audio_on], false);
 
-#    ifdef AUDIO_CLICKY
+#        ifdef AUDIO_CLICKY
     bool                      l_is_clicky_on            = is_clicky_on();
     static const char PROGMEM audio_clicky_status[2][3] = {{0xF4, 0xF5, 0}, {0xF6, 0xF7, 0}};
     oled_write_P(audio_clicky_status[l_is_clicky_on && l_is_audio_on], false);
+#        endif
 #    endif
-#endif
 
-#ifdef COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
+#    ifdef COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
     static const char PROGMEM cat_mode[3] = {0xF9, 0xFA, 0};
     oled_write_P(cat_mode, get_keyboard_lock());
-#endif // COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
+#    endif // COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
 
-#ifdef RGB_MATRIX_ENABLE
+#    ifdef RGB_MATRIX_ENABLE
     static const char PROGMEM rgb_layer_status[2][3] = {{0xEE, 0xEF, 0}, {0xF0, 0xF1, 0}};
     oled_write_P(rgb_layer_status[rgb_matrix_is_enabled()], false);
-#endif
+#    endif
 
-#ifdef HAPTIC_ENABLE
+#    ifdef HAPTIC_ENABLE
     static const char PROGMEM nukem_good[2] = {0xFB, 0};
     oled_write_P(haptic_get_enable() ? nukem_good : PSTR(" "), false);
-#endif
+#    endif
 
     l_render_keylock_status(host_keyboard_led_state(), 7, 5);
-#ifdef COMMUNITY_MODULE_RTC_ENABLE
+#    ifdef COMMUNITY_MODULE_RTC_ENABLE
     oled_set_cursor(1, 6);
     if (rtc_is_connected()) {
         oled_write_ln(rtc_read_date_time_str(), false);
     } else {
         oled_write_ln_P(PSTR("RTC Disconnected"), false);
     }
-#else
+#    else
     render_rgb_mode(1, 6);
-#endif
+#    endif
 
     for (uint8_t i = 1; i < 7; i++) {
         oled_set_cursor(0, i);
