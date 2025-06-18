@@ -127,3 +127,5 @@
 #else
 #    define RGB_MATRIX_TIMEOUT 600000
 #endif
+
+#define RGB_MATRIX_MODE_NAME_ENABLE
