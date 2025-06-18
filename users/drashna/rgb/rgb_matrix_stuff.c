@@ -267,59 +267,12 @@ void rgb_matrix_shutdown(bool jump_to_bootloader) {
     rgb_matrix_update_pwm_buffers();
 }
 
-//----------------------------------------------------------
-// RGB Matrix naming
-#include <rgb_matrix.h>
-
-#if defined(RGB_MATRIX_EFFECT)
-#    undef RGB_MATRIX_EFFECT
-#endif // defined(RGB_MATRIX_EFFECT)
-
-#define RGB_MATRIX_EFFECT(x) RGB_MATRIX_EFFECT_##x,
-enum {
-    RGB_MATRIX_EFFECT_NONE,
-#include "rgb_matrix_effects.inc"
-#ifdef RGB_MATRIX_CUSTOM_KB
-#    include "rgb_matrix_kb.inc"
-#endif // RGB_MATRIX_CUSTOM_KB
-#ifdef RGB_MATRIX_CUSTOM_USER
-#    include "rgb_matrix_user.inc"
-#endif // RGB_MATRIX_CUSTOM_USER
-#if defined(COMMUNITY_MODULES_ENABLE) && __has_include("rgb_matrix_community_modules.inc")
-#    include "rgb_matrix_community_modules.inc"
-#endif // COMMUNITY_MODULES_ENABLE
-#undef RGB_MATRIX_EFFECT
-};
-
-#define RGB_MATRIX_EFFECT(x)    \
-    case RGB_MATRIX_EFFECT_##x: \
-        return #x;
-const char *rgb_matrix_name(uint8_t effect) {
-    switch (effect) {
-        case RGB_MATRIX_EFFECT_NONE:
-            return "NONE";
-#include "rgb_matrix_effects.inc"
-#ifdef RGB_MATRIX_CUSTOM_KB
-#    include "rgb_matrix_kb.inc"
-#endif // RGB_MATRIX_CUSTOM_KB
-#ifdef RGB_MATRIX_CUSTOM_USER
-#    include "rgb_matrix_user.inc"
-#endif // RGB_MATRIX_CUSTOM_USER
-#if defined(COMMUNITY_MODULES_ENABLE) && __has_include("rgb_matrix_community_modules.inc")
-#    include "rgb_matrix_community_modules.inc"
-#endif // COMMUNITY_MODULES_ENABLE
-#undef RGB_MATRIX_EFFECT
-        default:
-            return "UNKNOWN";
-    }
-}
-
 const char *rgb_matrix_get_effect_name(void) {
     static char    buf[32]     = {0};
     static uint8_t last_effect = 0;
     if (last_effect != rgb_matrix_get_mode()) {
         last_effect = rgb_matrix_get_mode();
-        snprintf(buf, sizeof(buf), "%s", rgb_matrix_name(rgb_matrix_get_mode()));
+        snprintf(buf, sizeof(buf), "%s", rgb_matrix_get_mode_name(rgb_matrix_get_mode()));
         for (uint8_t i = 1; i < sizeof(buf); ++i) {
             if (buf[i] == 0)
                 break;
