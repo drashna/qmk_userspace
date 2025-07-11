@@ -63,11 +63,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCTL, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,     _______, _______, _______, _______, _______, _______,
                   _______, KC_DIABLO_CLEAR, _______, _______,    _______, _______, _______, TG(_DIABLOII)
     ),
-    [_MOUSE] = LAYOUT(
+    [_MOUSE] = LAYOUT_wrapper(
         _______, _______, _______, _______, _______, _______,   _______, DPI_RMOD,DPI_MOD, S_D_RMOD,S_D_MOD, PD_JIGGLER,
-        _______, _______, _______, _______, _______, _______,   KC_WH_U, _______, _______, _______, _______, DRGSCRL,
-        _______, _______, _______, _______, _______, _______,   KC_WH_D, KC_BTN1, KC_BTN3, KC_BTN2, KC_BTN6, SNIPING,
-        _______, _______, _______, _______, _______, _______,   KC_BTN7, KC_BTN4, KC_BTN5, KC_BTN8, _______, _______,
+        _______, ___________________BLANK___________________,   _________________MOUSE_R1__________________, XXXXXXX,
+        _______, ___________________BLANK___________________,   _________________MOUSE_R2__________________, XXXXXXX,
+        _______, ___________________BLANK___________________,   _________________MOUSE_R3__________________, XXXXXXX,
                           _______, _______, SNIPING, _______,   _______, _______, _______, _______
     ),
     [_LOWER] = LAYOUT_wrapper(
@@ -97,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #ifdef ENCODER_MAP_ENABLE
 // clang-format off
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [_DEFAULT_LAYER_1] = { ENCODER_CCW_CW( KC_VOLD, KC_VOLU ), ENCODER_CCW_CW( KC_WH_D, KC_WH_U ) },
+    [_DEFAULT_LAYER_1] = { ENCODER_CCW_CW( KC_VOLD, KC_VOLU ), ENCODER_CCW_CW( MS_WHLD, MS_WHLD ) },
     [_DEFAULT_LAYER_2] = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
     [_DEFAULT_LAYER_3] = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
     [_DEFAULT_LAYER_4] = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
@@ -106,7 +106,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [_MOUSE]           = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
     [_MEDIA]           = { ENCODER_CCW_CW( _______, _______ ), ENCODER_CCW_CW( _______, _______ ) },
     [_RAISE]           = { ENCODER_CCW_CW( OL_BINC, OL_BDEC ), ENCODER_CCW_CW( KC_PGDN, KC_PGUP ) },
-    [_LOWER]           = { ENCODER_CCW_CW( RGB_MOD, RGB_RMOD), ENCODER_CCW_CW( RGB_HUI, RGB_HUD ) },
+    [_LOWER]           = { ENCODER_CCW_CW( RM_NEXT, RM_PREV ), ENCODER_CCW_CW( RM_HUEU, RM_HUED ) },
     [_ADJUST]          = { ENCODER_CCW_CW( CK_UP,   CK_DOWN ), ENCODER_CCW_CW( _______, _______ ) },
 };
 // clang-format on

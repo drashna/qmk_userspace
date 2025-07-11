@@ -271,7 +271,9 @@ NOTE: These are all the same length.  If you do a search/replace
 #define _________________LOWER_R2__________________       _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR
 #define _________________LOWER_R3__________________       _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
 
-
+#define _________________MOUSE_R1__________________       MS_WHLU, _______, _______, _______, _______
+#define _________________MOUSE_R2__________________       MS_WHLD, MS_BTN1, MS_BTN3, MS_BTN2, MS_BTN6
+#define _________________MOUSE_R3__________________       MS_BTN7, MS_BTN4, MS_BTN5, MS_BTN8, _______
 
 #define _________________RAISE_L1__________________       ________________NUMBER_LEFT________________
 #define _________________RAISE_L2__________________       _________________FUNC_LEFT_________________

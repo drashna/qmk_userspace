@@ -14,7 +14,7 @@
      LALT_T(KC_TAB), K11, K12,  K13,     K14,     K15,                K16,     K17,     K18,     K19,     K1A,     RALT_T(K1B), \
      OS_LSFT, CTL_T(K21), K22,  K23,     K24,     K25,                K26,     K27,     K28,     K29, RCTL_T(K2A), OS_RSFT, \
      KC_GRV, DISPLAY_MENU, OS_LGUI, OS_LALT,                                            OS_RALT, OS_RGUI, DISPLAY_MENU, KC_ESC, \
-                                KC_MUTE, KC_GRV,                                        KC_BTN3,  \
+                                KC_MUTE, KC_GRV,                                        MS_BTN3,  \
                                          KC_SPC,  UC_IRNY,                     KC_ENT,  \
                                          BK_LWER, MO(_MOUSE),      TG(_MOUSE), DL_RAIS  \
   )
@@ -74,13 +74,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                KC_LSFT, _______,                     _______,
                                                KC_LCTL, KC_V,               _______, _______
     ),
-    [_MOUSE] = LAYOUT_5x6_full_right(
+    [_MOUSE] = LAYOUT_5x6_full_right_wrapper(
         _______, _______, _______, _______, _______, _______,                        XXXXXXX, DPI_RMOD,DPI_MOD, S_D_RMOD,S_D_MOD, PD_JIGG,
-        _______, _______, _______, _______, _______, _______,                        KC_WH_U, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        _______, _______, _______, _______, _______, _______,                        KC_WH_D, KC_BTN1, KC_BTN3, KC_BTN2, KC_BTN6, XXXXXXX,
-        _______, _______, _______, _______, _______, _______,                        KC_BTN7, KC_BTN4, KC_BTN5, KC_BTN8, XXXXXXX, _______,
+        _______, ___________________BLANK___________________,                        _________________MOUSE_R1__________________, XXXXXXX,
+        _______, ___________________BLANK___________________,                        _________________MOUSE_R2__________________, XXXXXXX,
+        _______, ___________________BLANK___________________,                        _________________MOUSE_R3__________________, XXXXXXX,
         _______, _______, _______, _______,                                                            _______, _______, _______, _______,
-                                            _______, _______,                                 KC_BTN3,
+                                            _______, _______,                                 MS_BTN3,
                                                      _______, _______,               _______,
                                                      _______, _______,      _______, _______
     ),

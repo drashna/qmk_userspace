@@ -45,9 +45,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_MOUSE] = LAYOUT_charybdis_3x5(
-        _______, _______, _______, _______, _______,    KC_WH_U, DPI_RMOD,DPI_MOD, S_D_RMOD,S_D_MOD,
-        _______, _______, _______, _______, _______,    KC_WH_D, KC_BTN1, KC_BTN3, KC_BTN2, KC_BTN6,
-        _______, _______, _______, _______, _______,    KC_BTN7, KC_BTN4, KC_BTN5, KC_BTN8, _______,
+        _______, _______, _______, _______, _______,    MS_WHLU, DPI_RMOD,DPI_MOD, S_D_RMOD,S_D_MOD,
+        _______, _______, _______, _______, _______,    MS_WHLD, MS_BTN1, MS_BTN3, MS_BTN2, MS_BTN6,
+        _______, _______, _______, _______, _______,    MS_BTN7, MS_BTN4, MS_BTN5, MS_BTN8, _______,
                           _______, SNIPING, _______,    _______, _______
     ),
     [_LOWER] = LAYOUT_charybdis_3x5_wrapper(

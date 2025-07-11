@@ -10,22 +10,22 @@ extern haptic_config_t haptic_config;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT_ortho_4x3( /* Base */
+    [0] = LAYOUT_ortho_4x3(
         KC_MUTE, TG(1),   TG(2),
         KC_P7,   KC_P8,   KC_P9,
         KC_P4,   KC_P5,   KC_P6,
         KC_P1,   KC_P2,   KC_P3
     ),
-    [1] = LAYOUT_ortho_4x3( /* Layer 1 */
+    [1] = LAYOUT_ortho_4x3(
         QK_BOOT, _______, XXXXXXX,
         AU_ON,   AU_OFF,  XXXXXXX,
         CK_TOGG, XXXXXXX, CK_UP,
         CK_RST,  XXXXXXX, CK_DOWN
     ),
-    [2] = LAYOUT_ortho_4x3( /* Layer 2*/
-        RGB_TOG, RGB_MOD, _______,
-        RGB_HUI, RGB_SAI, RGB_VAI,
-        RGB_HUD, RGB_SAD, RGB_VAD,
+    [2] = LAYOUT_ortho_4x3(
+        RM_TOGG, RM_NEXT, _______,
+        RM_HUEU, RM_SATU, RM_VALU,
+        RM_HUED, RM_SATD, RM_VALD,
         HF_TOGG, HF_FDBK, HF_CONT
     )
 };
@@ -34,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [0] = { { KC_DOWN, KC_UP   } },
     [1] = { { KC_VOLD, KC_VOLU } },
-    [2] = { { RGB_MOD, RGB_RMOD} },
+    [2] = { { RM_NEXT, RM_PREV} },
 };
 #endif
 // clang-format on
