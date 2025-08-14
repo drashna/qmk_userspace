@@ -29,7 +29,7 @@
 #endif     // ST7789_THIN_RST_PIN
 #ifndef ST7789_THIN_SPI_DIVIDER
 #    ifndef DISPLAY_SPI_DIVIDER
-#        define ST7789_THIN_SPI_DIVIDER 32
+#        define ST7789_THIN_SPI_DIVIDER 1
 #    else // DISPLAY_SPI_DIVIDER
 #        define ST7789_THIN_SPI_DIVIDER DISPLAY_SPI_DIVIDER
 #    endif // DISPLAY_SPI_DIVIDER
@@ -89,12 +89,12 @@ void init_display_st7789_76x284_rotation(void) {
     qp_set_viewport_offsets(st7789_76x284_display, 82, 18); // for qp_rotation_0
 
     qp_clear(st7789_76x284_display);
-    qp_rect(st7789_76x284_display, 0, 0, 76 - 1, 284 - 1, HSV_BLACK, true);
+    qp_rect(st7789_76x284_surface_display, 0, 0, 76 - 1, 284 - 1, HSV_BLACK, true);
 
     init_display_st7789_76x284_inversion();
 
-    painter_render_frame_box(st7789_76x284_display, painter_get_hsv(false), 1, 1, 0, 2, true, true);
-    painter_render_frame_box(st7789_76x284_display, painter_get_hsv(true), 0, 0, 0, 2, true, true);
+    painter_render_frame_box(st7789_76x284_surface_display, painter_get_hsv(false), 1, 1, 0, 2, true, true);
+    painter_render_frame_box(st7789_76x284_surface_display, painter_get_hsv(true), 0, 0, 0, 2, true, true);
 
     qp_power(st7789_76x284_display, true);
     qp_flush(st7789_76x284_display);
@@ -108,6 +108,11 @@ void init_display_st7789_76x284(void) {
     st7789_76x284_display =
         qp_st7789_make_spi_device(76, 284, ST7789_THIN_CS_PIN, ST7789_THIN_DC_PIN, ST7789_THIN_RST_PIN,
                                   ST7789_THIN_SPI_DIVIDER, ST7789_THIN_SPI_MODE);
+
+#ifdef QUANTUM_PAINTER_DRIVERS_ST7789_76X284_SURFACE
+    st7789_76x284_surface_display = qp_make_rgb565_surface(76, 284, display_buffer);
+    qp_init(st7789_76x284_surface_display, QP_ROTATION_0);
+#endif
 
     init_display_st7789_76x284_rotation();
 
@@ -123,5 +128,9 @@ void st7789_76x284_display_shutdown(bool jump_to_bootloader) {}
 __attribute__((weak)) void st7789_76x284_draw_user(void) {
     // static uint16_t last_activity = UINT16_MAX - 9999;
     // qp_rect(st7789_76x284_display, 0, 0, 240, 320 - 1, HSV_MAGENTA, true);
-    // qp_flush(st7789_76x284_display);
+
+#ifdef QUANTUM_PAINTER_DRIVERS_ST7789_76X284_SURFACE
+    qp_surface_draw(st7789_76x284_surface_display, st7789_76x284_display, 0, 0, false);
+#endif // QUANTUM_PAINTER_DRIVERS_ST7789_76X284_SURFACE
+    qp_flush(st7789_76x284_display);
 }
