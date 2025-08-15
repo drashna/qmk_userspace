@@ -9,6 +9,7 @@
 #include "version.h"
 #include "hardware_id_string.h"
 #include "keyrecords/process_records.h"
+#include <lib/lib8tion/lib8tion.h>
 
 #ifdef SPLIT_KEYBOARD
 #    include "split_util.h"
@@ -28,6 +29,10 @@
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_76X284)
 #    include "display/painter/st7789_76x284.h"
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_76X284
+#ifdef CUSTOM_QUANTUM_PAINTER_SH1107_128X128
+#    include "display/painter/sh1107_128x128.h"
+#endif // CUSTOM_QUANTUM_PAINTER_SH1107_128X128
+
 #if defined(RGB_MATRIX_ENABLE)
 #    include "rgb/rgb_matrix_stuff.h"
 #endif // defined(RGB_MATRIX_ENABLE)
@@ -1495,6 +1500,9 @@ void painter_display_power(bool enable) {
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_76X284)
     st7789_76x284_display_power(enable);
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_76X284
+#ifdef CUSTOM_QUANTUM_PAINTER_SH1107_128X128
+    sh1107_128x128_display_power(enable);
+#endif // CUSTOM_QUANTUM_PAINTER_SH1107_128X128
 }
 
 void painter_init_user(void) {
@@ -1513,6 +1521,9 @@ void painter_init_user(void) {
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_76X284)
     init_display_st7789_76x284();
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_76X284
+#ifdef CUSTOM_QUANTUM_PAINTER_SH1107_128X128
+    init_display_sh1107_128x128();
+#endif // CUSTOM_QUANTUM_PAINTER_SH1107_128X128
 }
 
 void painter_render_user(void) {
@@ -1531,6 +1542,10 @@ void painter_render_user(void) {
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_76X284)
     st7789_76x284_draw_user();
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_76X284
+#ifdef CUSTOM_QUANTUM_PAINTER_SH1107_128X128
+    sh1107_128x128_draw_user();
+#endif // CUSTOM_QUANTUM_PAINTER_SH1107_128X128
+
 #if defined(RGB_MATRIX_ENABLE) || defined(RGBLIGHT_ENABLE)
     rgb_redraw = false;
 #endif
@@ -1658,6 +1673,10 @@ void shutdown_quantum_painter(bool jump_to_bootloader) {
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_76X284)
     st7789_76x284_display_shutdown(jump_to_bootloader);
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_76X284
+#ifdef CUSTOM_QUANTUM_PAINTER_SH1107_128X128
+    sh1107_128x128_display_shutdown(jump_to_bootloader);
+#endif // CUSTOM_QUANTUM_PAINTER_SH1107_128X128
+
 #ifdef BACKLIGHT_ENABLE
     qp_backlight_enable();
 #elif defined(BACKLIGHT_PIN)

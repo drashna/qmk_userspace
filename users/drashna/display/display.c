@@ -203,6 +203,9 @@ void display_rotate_screen(bool clockwise, bool is_left) {
 #ifdef QUANTUM_PAINTER_ILI9488_ENABLE
     init_display_ili9488_rotation();
 #endif // QUANTUM_PAINTER_ILI9341_ENABLE
+#ifdef QUANTUM_PAINTER_SH1107_128X128_ENABLE
+    init_display_sh1107_128x128_rotation();
+#endif // QUANTUM_PAINTER_SH1107_128X128_ENABLE
 #ifdef OLED_ENABLE
     oled_post_init();
 #endif // OLED_ENABLE;
