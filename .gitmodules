@@ -18,3 +18,6 @@
 [submodule "modules/mintchipleaf"]
     path = modules/mintchipleaf
     url = https://github.com/mintchipleaf/qmk_modules
+[submodule "modules/dave-thompson"]
+    path = modules/dave-thompson
+    url = https://github.com/dave-thompson/qmk-modules.git
