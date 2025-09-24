@@ -12,3 +12,9 @@
     path = modules/tzarc
     url = https://github.com/tzarc/qmk_modules.git
     branch = main
+[submodule "modules/eynsai"]
+    path = modules/eynsai
+    url = https://github.com/eynsai/qmk_modules.git
+[submodule "modules/mintchipleaf"]
+    path = modules/mintchipleaf
+    url = https://github.com/mintchipleaf/qmk_modules
