@@ -79,15 +79,16 @@ extern painter_image_handle_t akira_explosion;
 #    if HAL_USE_SDRAM == TRUE
 __attribute__((section(".ram7")))
 #    endif
-static uint8_t   menu_buffer[2][SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 16)];
-painter_device_t menu_surface[2];
+static uint8_t   menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
+painter_device_t menu_surface;
 #endif
 
 static bool has_run = false, forced_reinit = false;
 
 void init_display_ili9488_inversion(void) {
     qp_comms_start(display);
-    qp_comms_command(display, userspace_config.display.inverted ? ILI9XXX_CMD_INVERT_OFF : ILI9XXX_CMD_INVERT_ON);
+    qp_comms_command(display,
+                     userspace_config.display.painter.left.inverted ? ILI9XXX_CMD_INVERT_OFF : ILI9XXX_CMD_INVERT_ON);
     qp_comms_stop(display);
     if (has_run) {
         forced_reinit = true;
@@ -98,7 +99,7 @@ void init_display_ili9488_rotation(void) {
     uint16_t width;
     uint16_t height;
 
-    qp_init(display, userspace_config.display.rotation ? QP_ROTATION_90 : QP_ROTATION_270);
+    qp_init(display, userspace_config.display.painter.left.rotation ? QP_ROTATION_90 : QP_ROTATION_270);
     qp_get_geometry(display, &width, &height, NULL, NULL, NULL);
     qp_clear(display);
     qp_rect(display, 0, 0, width - 1, height - 1, 0, 0, 0, true);
@@ -127,15 +128,13 @@ void init_display_ili9488(void) {
                                          ILI9488_SPI_MODE);
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
-    menu_surface[0] = qp_make_rgb565_surface(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, menu_buffer[0]);
-    menu_surface[1] = qp_make_rgb565_surface(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, menu_buffer[1]);
+    menu_surface = qp_make_rgb888_surface(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, menu_buffer);
 #endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
 
     wait_ms(50);
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
-    qp_init(menu_surface[0], QP_ROTATION_0);
-    qp_init(menu_surface[1], QP_ROTATION_0);
+    qp_init(menu_surface, QP_ROTATION_0);
 #endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
 
     init_display_ili9488_rotation();
@@ -324,7 +323,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         if (hue_redraw || last_am_layer != get_auto_mouse_layer() || auto_mouse_redraw) {
             last_am_state = get_auto_mouse_layer();
             xpos          = 5;
-            snprintf(buf, sizeof(buf), "%12s", get_layer_name_string(get_auto_mouse_layer()));
+            snprintf(buf, sizeof(buf), "%12s", get_layer_name_string(get_auto_mouse_layer(), true, true));
             qp_drawtext_recolor(display, xpos, ypos, font_oled, truncate_text(buf, 80 - 5 - 2, font_oled, false, false),
                                 get_auto_mouse_enable() ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                 get_auto_mouse_enable() ? curr_hsv.secondary.s : curr_hsv.primary.s,
@@ -533,9 +532,9 @@ __attribute__((weak)) void ili9488_draw_user(void) {
 
 #endif // COMMUNITY_MODULE_RTC_ENABLE
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
-        painter_render_menu_block(menu_surface[0], font_oled, 0, 0, SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, hue_redraw,
+        painter_render_menu_block(menu_surface, font_oled, 0, 0, SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, hue_redraw,
                                   &curr_hsv, true, true);
-        qp_surface_draw(menu_surface[0], display, 2, 172, false);
+        qp_surface_draw(menu_surface, display, 2, 172, false);
 #else  // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
         painter_render_menu_block(display, font_oled, 2, 172, 237, 291, hue_redraw, &curr_hsv, true, true);
 #endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
@@ -587,14 +586,15 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         painter_render_rtc_time(display, font_oled, 5 + width, ypos, width + width, hue_redraw, &last_rtc_timer,
                                 &curr_hsv.primary);
 
-#ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
-        painter_render_menu_block(menu_surface[1], font_oled, 0, 0, SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, hue_redraw,
-                                  &curr_hsv, true, true);
-        qp_surface_draw(menu_surface[1], display, 2 + width, 172, false);
-#else  // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
+        // #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
+        //         painter_render_menu_block(menu_surface[1], font_oled, 0, 0, SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT,
+        //         hue_redraw,
+        //                                   &curr_hsv, true, true);
+        //         qp_surface_draw(menu_surface[1], display, 2 + width, 172, false);
+        // #else  // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
         painter_render_menu_block(display, font_oled, 2 + width, 172, 237 + width, 291, hue_redraw, &curr_hsv, true,
                                   true);
-#endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
+        // #endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
     }
     forced_reinit = false;
     qp_flush(display);
