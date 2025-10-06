@@ -84,7 +84,8 @@ static bool has_run = false, forced_reinit = false;
 
 void init_display_ili9488_inversion(void) {
     qp_comms_start(display);
-    qp_comms_command(display, userspace_config.display.inverted ? ILI9XXX_CMD_INVERT_OFF : ILI9XXX_CMD_INVERT_ON);
+    qp_comms_command(display,
+                     userspace_config.display.painter.left.inverted ? ILI9XXX_CMD_INVERT_OFF : ILI9XXX_CMD_INVERT_ON);
     qp_comms_stop(display);
     if (has_run) {
         forced_reinit = true;
@@ -124,15 +125,13 @@ void init_display_ili9488(void) {
                                          ILI9488_SPI_MODE);
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
-    menu_surface[0] = qp_make_rgb565_surface(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, menu_buffer[0]);
-    menu_surface[1] = qp_make_rgb565_surface(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, menu_buffer[1]);
+    menu_surface = qp_make_rgb888_surface(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, menu_buffer);
 #endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
 
     wait_ms(50);
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
-    qp_init(menu_surface[0], QP_ROTATION_0);
-    qp_init(menu_surface[1], QP_ROTATION_0);
+    qp_init(menu_surface, QP_ROTATION_0);
 #endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
 
     init_display_ili9488_rotation();
