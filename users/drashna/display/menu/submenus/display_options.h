@@ -176,12 +176,12 @@ __attribute__((weak)) void display_handler_display_inverted_oled(char *text_buff
     strncpy(text_buffer, userspace_config.display.oled.inverted ? "Flipped" : "Normal", buffer_len - 1);
 }
 
-#ifdef QUANTUM_PAINTER_ILI9341_ENABLE
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9341
 void init_display_ili9341_inversion(void);
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
-#ifdef QUANTUM_PAINTER_ILI9488_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9341
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9488
 void init_display_ili9488_inversion(void);
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9488
 
 bool menu_handler_display_inverted_left(menu_input_t input) {
     switch (input) {
@@ -190,12 +190,12 @@ bool menu_handler_display_inverted_left(menu_input_t input) {
         case menu_input_enter:
             userspace_config.display.painter.left.inverted = !userspace_config.display.painter.left.inverted;
             eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-#ifdef QUANTUM_PAINTER_ILI9341_ENABLE
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9341
             init_display_ili9341_inversion();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
-#ifdef QUANTUM_PAINTER_ILI9488_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9341
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9488
             init_display_ili9488_inversion();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9488
 #ifdef OLED_ENABLE
             void oled_post_init(void);
             oled_post_init();
@@ -217,12 +217,12 @@ bool menu_handler_display_inverted_right(menu_input_t input) {
         case menu_input_enter:
             userspace_config.display.painter.right.inverted = !userspace_config.display.painter.right.inverted;
             eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-#ifdef QUANTUM_PAINTER_ILI9341_ENABLE
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9341
             init_display_ili9341_inversion();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
-#ifdef QUANTUM_PAINTER_ILI9488_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9341
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9488
             init_display_ili9488_inversion();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9488
 #ifdef OLED_ENABLE
             void oled_post_init(void);
             oled_post_init();

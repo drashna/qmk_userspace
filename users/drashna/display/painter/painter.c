@@ -14,12 +14,12 @@
 #ifdef SPLIT_KEYBOARD
 #    include "split_util.h"
 #endif // SPLIT_KEYBOARD
-#if defined(QUANTUM_PAINTER_ILI9341_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ILI9341)
+#if CUSTOM_QUANTUM_PAINTER_ILI9341
 #    include "display/painter/ili9341_display.h"
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE && CUSTOM_QUANTUM_PAINTER_ILI9341
-#if defined(QUANTUM_PAINTER_ILI9488_ENABLE)
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9341
+#if defined(CUSTOM_QUANTUM_PAINTER_ILI9488)
 #    include "display/painter/ili9488_display.h"
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE && CUSTOM_QUANTUM_PAINTER_ILI9341
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9488
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_135X240)
 #    include "display/painter/st7789_135x240.h"
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_135X240
@@ -60,7 +60,7 @@ void display_menu_set_dirty(bool state) {}
 #    include "qp_helpers.h"
 #endif
 #ifdef MULTITHREADED_PAINTER_ENABLE
-thread_t*     painter_thread         = NULL;
+thread_t     *painter_thread         = NULL;
 volatile bool painter_thread_running = true;
 #endif
 
@@ -122,13 +122,13 @@ painter_image_array_t screen_saver_image[] = {
 const uint8_t screensaver_image_size = ARRAY_SIZE(screen_saver_image);
 
 void painter_render_menu_block_console(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                                       uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t* curr_hsv) {
+                                       uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
     painter_render_console(device, font, x + 2, y + 2, width, force_redraw, &curr_hsv->primary,
                            DISPLAY_CONSOLE_LOG_LINE_START, DISPLAY_CONSOLE_LOG_LINE_NUM);
 }
 
 void painter_render_menu_block_fonts(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                                     uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t* curr_hsv) {
+                                     uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
     static uint16_t              max_font_xpos[3][4] = {0};
     extern painter_font_handle_t font_thintel, font_mono, font_oled;
     x += 3;
@@ -142,12 +142,12 @@ void painter_render_menu_block_fonts(painter_device_t device, painter_font_handl
 }
 
 void painter_render_menu_block_qmk_info(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                                        uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t* curr_hsv) {
+                                        uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
     painter_render_qmk_info(device, font, x, y + 5, width, force_redraw, curr_hsv);
 }
 
 void painter_render_menu_block_nyan_cat(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                                        uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t* curr_hsv) {
+                                        uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
     if (nyan_token == INVALID_DEFERRED_TOKEN) {
         nyan_token =
             qp_animate(device, x + (width - nyan_cat->width) / 2, y + (height - nyan_cat->height) / 2, nyan_cat);
@@ -155,18 +155,18 @@ void painter_render_menu_block_nyan_cat(painter_device_t device, painter_font_ha
 }
 
 void painter_render_menu_block_game_of_life(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                                            uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t* curr_hsv) {
+                                            uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
     render_life(device, x, y, curr_hsv, force_redraw);
 }
 
 void painter_render_menu_block_layer_map(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                                         uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t* curr_hsv) {
+                                         uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
     painter_render_layer_map(device, font, x, y, width, force_redraw, curr_hsv);
 }
 
 void painter_render_menu_block_pd_accel_graph(painter_device_t device, painter_font_handle_t font, uint16_t x,
                                               uint16_t y, uint16_t width, uint16_t height, bool force_redraw,
-                                              dual_hsv_t* curr_hsv) {
+                                              dual_hsv_t *curr_hsv) {
     painter_render_pd_accel_graph(device, x, y, width, height, force_redraw, curr_hsv);
 }
 
@@ -241,7 +241,7 @@ void painter_init_assets(void) {
  * @param hsv hsv value to render with
  */
 void painter_render_rtc_time(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                             uint16_t display_width, bool force_redraw, uint16_t* rtc_timer, hsv_t* hsv) {
+                             uint16_t display_width, bool force_redraw, uint16_t *rtc_timer, hsv_t *hsv) {
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
 
     bool rtc_redraw = false;
@@ -284,7 +284,7 @@ void painter_render_rtc_time(painter_device_t device, painter_font_handle_t font
  * @param end last line to render
  */
 void painter_render_console(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                            uint16_t display_width, bool force_redraw, hsv_t* hsv, uint8_t start, uint8_t end) {
+                            uint16_t display_width, bool force_redraw, hsv_t *hsv, uint8_t start, uint8_t end) {
     if (console_log_needs_redraw || force_redraw) {
         for (uint8_t i = start; i < end; i++) {
             uint16_t xpos =
@@ -307,7 +307,7 @@ void painter_render_console(painter_device_t device, painter_font_handle_t font,
  * @param curr_hsv painter colors
  */
 void painter_render_scan_rate(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                              bool force_redraw, dual_hsv_t* curr_hsv) {
+                              bool force_redraw, dual_hsv_t *curr_hsv) {
     static uint32_t last_scan_rate = 0;
     if (last_scan_rate != get_matrix_scan_rate() || force_redraw) {
         last_scan_rate = get_matrix_scan_rate();
@@ -334,7 +334,7 @@ void painter_render_scan_rate(painter_device_t device, painter_font_handle_t fon
  * @param matrix
  */
 void painter_render_rgb(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y, bool force_redraw,
-                        dual_hsv_t* curr_hsv, const char* title, const char* (*get_rgb_mode)(void),
+                        dual_hsv_t *curr_hsv, const char *title, const char *(*get_rgb_mode)(void),
                         hsv_t (*get_rgb_hsv)(void), bool is_enabled, uint8_t max_val) {
 #if defined(RGB_MATRIX_ENABLE) || defined(RGBLIGHT_ENABLE)
     char buf[22] = {0};
@@ -375,7 +375,7 @@ void painter_render_rgb(painter_device_t device, painter_font_handle_t font, uin
  * @param disabled_val disabled entry render value
  */
 void painter_render_lock_state(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                               bool force_redraw, dual_hsv_t* curr_hsv, uint8_t disabled_val) {
+                               bool force_redraw, dual_hsv_t *curr_hsv, uint8_t disabled_val) {
     static led_t last_led_state = {0};
     if (force_redraw || last_led_state.raw != host_keyboard_led_state().raw) {
         last_led_state.raw = host_keyboard_led_state().raw;
@@ -407,7 +407,7 @@ void painter_render_lock_state(painter_device_t device, painter_font_handle_t fo
  * @param curr_hsv painter colors
  */
 void painter_render_wpm(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y, bool force_redraw,
-                        dual_hsv_t* curr_hsv) {
+                        dual_hsv_t *curr_hsv) {
 #ifdef WPM_ENABLE
     static wpm_sync_data_t last_wpm_update = {0};
     static char            buf[4]          = {0};
@@ -435,7 +435,7 @@ void painter_render_wpm(painter_device_t device, painter_font_handle_t font, uin
  * @param curr_hsv painter colors
  */
 void painter_render_wpm_graph(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                              bool force_redraw, dual_hsv_t* curr_hsv) {
+                              bool force_redraw, dual_hsv_t *curr_hsv) {
 #if defined(WPM_ENABLE) && defined(COMMUNITY_MODULE_QP_HELPERS_ENABLE)
     static uint16_t wpm_timer = 0;
 
@@ -485,7 +485,7 @@ void painter_render_wpm_graph(painter_device_t device, painter_font_handle_t fon
  * @param curr_hsv colors to render with
  */
 void painter_render_haptic(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                           bool force_redraw, dual_hsv_t* curr_hsv) {
+                           bool force_redraw, dual_hsv_t *curr_hsv) {
 #if defined(HAPTIC_ENABLE)
     char                   buf[22]     = {0};
     static haptic_config_t temp_config = {0};
@@ -541,10 +541,10 @@ void painter_render_haptic(painter_device_t device, painter_font_handle_t font, 
  * @param wide_load Render as  "name XXXXXX" if false, or "name: XXX XXX" if true
  */
 void painter_render_totp(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y, uint16_t width,
-                         bool force_redraw, dual_hsv_t* curr_hsv, bool wide_load) {
+                         bool force_redraw, dual_hsv_t *curr_hsv, bool wide_load) {
 #if defined(COMMUNITY_MODULE_RTC_ENABLE) && defined(RTC_TOTP_ENABLE) && __has_include("rtc_secrets.h")
 #    include "rtc_secrets.h"
-    uint32_t    get_totp_code(const uint8_t* hmackey, const uint8_t keylength, const uint32_t timestep);
+    uint32_t    get_totp_code(const uint8_t *hmackey, const uint8_t keylength, const uint32_t timestep);
     static bool is_rtc_connected = false;
     bool        totp_redraw = false, draw_red_redraw = false;
     if (rtc_is_connected() != is_rtc_connected) {
@@ -755,7 +755,7 @@ void painter_render_frame(painter_device_t device, painter_font_handle_t font_ti
 #endif
 
 void painter_render_pd_accel_graph(painter_device_t device, uint16_t x, uint16_t y, uint16_t width, uint16_t height,
-                                   bool force_redraw, dual_hsv_t* curr_hsv) {
+                                   bool force_redraw, dual_hsv_t *curr_hsv) {
 #if defined(COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE) && defined(COMMUNITY_MODULE_QP_HELPERS_ENABLE)
     static pointing_device_accel_config_t local        = {0};
     bool                                  needs_redraw = false;
@@ -806,7 +806,7 @@ void painter_render_pd_accel_graph(painter_device_t device, uint16_t x, uint16_t
  * @param is_left If true, indicates that the menu block is on the left side rendering.
  */
 void painter_render_menu_block(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                               uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t* curr_hsv, bool is_left,
+                               uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv, bool is_left,
                                bool is_thicc) {
     static bool force_full_block_redraw = false;
 #ifdef SPLIT_KEYBOARD
@@ -877,7 +877,7 @@ void painter_render_menu_block(painter_device_t device, painter_font_handle_t fo
  * @param curr_hsv A pointer to the current HSV color values to use for rendering.
  */
 void painter_render_keylogger(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                              uint16_t width, bool force_redraw, dual_hsv_t* curr_hsv) {
+                              uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
 #ifdef DISPLAY_KEYLOGGER_ENABLE
     if (is_keylogger_dirty() || force_redraw) {
         qp_drawtext_recolor(device, x, y, font, "Keylogger: ", curr_hsv->primary.h, curr_hsv->primary.s,
@@ -908,7 +908,7 @@ void painter_render_keylogger(painter_device_t device, painter_font_handle_t fon
  * rendering.
  */
 void painter_render_autocorrect(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                                uint16_t width, bool force_redraw, dual_hsv_t* curr_hsv) {
+                                uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
 #ifdef AUTOCORRECT_ENABLE
     extern bool autocorrect_str_has_changed;
     extern char autocorrected_str_raw[2][21];
@@ -950,7 +950,7 @@ void painter_render_autocorrect(painter_device_t device, painter_font_handle_t f
  * colors.
  */
 void painter_render_os_detection(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                                 uint16_t width, bool force_redraw, dual_hsv_t* curr_hsv) {
+                                 uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
 #ifdef OS_DETECTION_ENABLE
     static os_variant_t last_detected_os    = {0};
     char                buf[50]             = {0};
@@ -986,7 +986,7 @@ void painter_render_os_detection(painter_device_t device, painter_font_handle_t 
  */
 
 void painter_render_modifiers(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                              uint16_t width, bool force_redraw, dual_hsv_t* curr_hsv, uint8_t disabled_val) {
+                              uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv, uint8_t disabled_val) {
     extern painter_image_handle_t shift_icon, control_icon, alt_icon, command_icon, windows_icon;
     static uint8_t                last_mods    = 0;
     uint8_t                       current_mods = get_mods() | get_weak_mods() | get_oneshot_mods();
@@ -1061,7 +1061,7 @@ void painter_render_modifiers(painter_device_t device, painter_font_handle_t fon
  * @param curr_hsv      Pointer to a dual_hsv_t structure containing the current HSV color values.
  */
 void painter_render_qmk_info(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                             uint16_t width, bool force_redraw, dual_hsv_t* curr_hsv) {
+                             uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
     char     buf[50] = {0};
     uint16_t xpos    = x + 5;
 
@@ -1117,7 +1117,7 @@ void painter_render_qmk_info(painter_device_t device, painter_font_handle_t font
  * rendering.
  */
 void painter_render_layer_map(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                              uint16_t width, bool force_redraw, dual_hsv_t* curr_hsv) {
+                              uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
 #ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
     if (force_redraw || get_layer_map_has_updated()) {
         y += font->line_height + 4;
@@ -1200,7 +1200,7 @@ bool painter_render_shutdown(painter_device_t device, bool jump_to_bootloader) {
  * @param add_ellipses add ellipses to truncated text
  * @return char* truncated text
  */
-char* truncate_text(const char* text, uint16_t max_width, painter_font_handle_t font, bool from_start,
+char *truncate_text(const char *text, uint16_t max_width, painter_font_handle_t font, bool from_start,
                     bool add_ellipses) {
     static char truncated_text[50];
     strncpy(truncated_text, text, sizeof(truncated_text) - 1);
@@ -1212,7 +1212,7 @@ char* truncate_text(const char* text, uint16_t max_width, painter_font_handle_t 
     }
 
     size_t      len            = strlen(truncated_text);
-    const char* ellipses       = "...";
+    const char *ellipses       = "...";
     uint16_t    ellipses_width = add_ellipses ? qp_textwidth(font, ellipses) : 0;
 
     if (from_start) {
@@ -1266,14 +1266,14 @@ char* truncate_text(const char* text, uint16_t max_width, painter_font_handle_t 
  * @param sat_bg background saturation
  * @param val_bg background value
  */
-static const char* test_text[] = {
+static const char *test_text[] = {
     // did intentionally skip PROGMEM here :)
     "abcdefghijklmnopqrstuvwxyz  1234567890",
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ  !@#$%^&*()",
     "__+-=[]{}\\|;:'\",.<>/?¶‽⸮«»˚‣⇤↕↓↲←▼→⇥▲♪",
 };
 
-void render_character_set(painter_device_t display, uint16_t* x_offset, uint16_t* max_pos, uint16_t* ypos,
+void render_character_set(painter_device_t display, uint16_t *x_offset, uint16_t *max_pos, uint16_t *ypos,
                           painter_font_handle_t font, uint8_t hue_fg, uint8_t sat_fg, uint8_t val_fg, uint8_t hue_bg,
                           uint8_t sat_bg, uint8_t val_bg) {
     for (uint8_t i = 0; i < ARRAY_SIZE(test_text); ++i) {
@@ -1305,7 +1305,7 @@ static const hsv_t color_array[] = {
     {.h = 131, .s = 99, .v = 255}, {.h = 154, .s = 94, .v = 255},
 };
 
-void render_life(painter_device_t display, uint16_t xpos, uint16_t ypos, dual_hsv_t* curr_hsv, bool force_redraw) {
+void render_life(painter_device_t display, uint16_t xpos, uint16_t ypos, dual_hsv_t *curr_hsv, bool force_redraw) {
     static bool grid[GRID_HEIGHT][GRID_WIDTH], new_grid[GRID_HEIGHT][GRID_WIDTH], changed_grid[GRID_HEIGHT][GRID_WIDTH];
     static uint8_t color_value = 0;
 
@@ -1406,7 +1406,7 @@ static inline uint8_t scale_value(uint8_t value, uint8_t from, uint8_t to) {
 }
 
 bool qp_draw_graph_l(painter_device_t device, uint16_t graph_x, uint16_t graph_y, uint16_t graph_width,
-                     uint16_t graph_height, dual_hsv_t* curr_hsv, uint8_t* graph_data, uint8_t graph_segments,
+                     uint16_t graph_height, dual_hsv_t *curr_hsv, uint8_t *graph_data, uint8_t graph_segments,
                      uint8_t scale_to) {
     uint8_t graph_starting_index = 0;
     // if there are more segments than the graph width is wide in pixels, then set up things to only render the last
@@ -1485,12 +1485,12 @@ void qp_backlight_disable(void) {
 }
 
 void painter_display_power(bool enable) {
-#ifdef QUANTUM_PAINTER_ILI9341_ENABLE
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9341
     ili9341_display_power(enable);
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
-#ifdef QUANTUM_PAINTER_ILI9488_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9341
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9488
     ili9488_display_power(enable);
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9488
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_135X240)
     st7789_135x240_display_power(enable);
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_135X240
@@ -1506,12 +1506,12 @@ void painter_display_power(bool enable) {
 }
 
 void painter_init_user(void) {
-#ifdef QUANTUM_PAINTER_ILI9341_ENABLE
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9341
     init_display_ili9341();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
-#ifdef QUANTUM_PAINTER_ILI9488_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9341
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9488
     init_display_ili9488();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9488
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_135X240)
     init_display_st7789_135x240();
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_135X240
@@ -1527,12 +1527,12 @@ void painter_init_user(void) {
 }
 
 void painter_render_user(void) {
-#ifdef QUANTUM_PAINTER_ILI9341_ENABLE
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9341
     ili9341_draw_user();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
-#ifdef QUANTUM_PAINTER_ILI9488_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9341
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9488
     ili9488_draw_user();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9488
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_135X240)
     st7789_135x240_draw_user();
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_135X240
@@ -1658,12 +1658,12 @@ void shutdown_quantum_painter(bool jump_to_bootloader) {
         }
     }
 #endif // MULTITHREADED_PAINTER_ENABLE
-#ifdef QUANTUM_PAINTER_ILI9341_ENABLE
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9341
     ili9341_display_shutdown(jump_to_bootloader);
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
-#ifdef QUANTUM_PAINTER_ILI9488_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9341
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9488
     ili9488_display_shutdown(jump_to_bootloader);
-#endif // QUANTUM_PAINTER_ILI9488_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9488
 #if defined(CUSTOM_QUANTUM_PAINTER_ST7789_135X240)
     st7789_135x240_display_shutdown(jump_to_bootloader);
 #endif // CUSTOM_QUANTUM_PAINTER_ST7789_135X240
@@ -1719,7 +1719,7 @@ dual_hsv_t painter_get_dual_hsv(void) {
  * @param write_to_eeprom save changes to eeprom?
  */
 void painter_sethsv_eeprom_helper(uint8_t hue, uint8_t sat, uint8_t val, bool write_to_eeprom, bool primary) {
-    hsv_t* hsv =
+    hsv_t *hsv =
         primary ? &userspace_config.display.painter.hsv.primary : &userspace_config.display.painter.hsv.secondary;
     hsv->h = hue;
     hsv->s = sat;
@@ -1793,7 +1793,7 @@ uint8_t painter_get_val(bool primary) {
  * @param write_to_eeprom Save to eeprom?
  */
 void painter_increase_hue_helper(bool write_to_eeprom, bool primary) {
-    hsv_t* hsv =
+    hsv_t *hsv =
         primary ? &userspace_config.display.painter.hsv.primary : &userspace_config.display.painter.hsv.secondary;
     painter_sethsv_eeprom_helper(qadd8(hsv->h, PAINTER_HUE_STEP), hsv->s, hsv->v, write_to_eeprom, primary);
 }
@@ -1818,7 +1818,7 @@ void painter_increase_hue(bool primary) {
  * @param write_to_eeprom Save to eeprom?
  */
 void painter_decrease_hue_helper(bool write_to_eeprom, bool primary) {
-    hsv_t* hsv =
+    hsv_t *hsv =
         primary ? &userspace_config.display.painter.hsv.primary : &userspace_config.display.painter.hsv.secondary;
     painter_sethsv_eeprom_helper(qsub8(hsv->h, PAINTER_HUE_STEP), hsv->s, hsv->v, write_to_eeprom, primary);
 }
@@ -1843,7 +1843,7 @@ void painter_decrease_hue(bool primary) {
  * @param write_to_eeprom Save to eeprom?
  */
 void painter_increase_sat_helper(bool write_to_eeprom, bool primary) {
-    hsv_t* hsv =
+    hsv_t *hsv =
         primary ? &userspace_config.display.painter.hsv.primary : &userspace_config.display.painter.hsv.secondary;
     painter_sethsv_eeprom_helper(hsv->h, qadd8(hsv->s, PAINTER_SAT_STEP), hsv->v, write_to_eeprom, primary);
 }
@@ -1868,7 +1868,7 @@ void painter_increase_sat(bool primary) {
  * @param write_to_eeprom Save to eeprom?
  */
 void painter_decrease_sat_helper(bool write_to_eeprom, bool primary) {
-    hsv_t* hsv =
+    hsv_t *hsv =
         primary ? &userspace_config.display.painter.hsv.primary : &userspace_config.display.painter.hsv.secondary;
     painter_sethsv_eeprom_helper(hsv->h, qsub8(hsv->s, PAINTER_SAT_STEP), hsv->v, write_to_eeprom, primary);
 }
@@ -1893,7 +1893,7 @@ void painter_decrease_sat(bool primary) {
  * @param write_to_eeprom Save to eeprom?
  */
 void painter_increase_val_helper(bool write_to_eeprom, bool primary) {
-    hsv_t* hsv =
+    hsv_t *hsv =
         primary ? &userspace_config.display.painter.hsv.primary : &userspace_config.display.painter.hsv.secondary;
     painter_sethsv_eeprom_helper(hsv->h, hsv->s, qadd8(hsv->v, PAINTER_VAL_STEP), write_to_eeprom, primary);
 }
@@ -1918,7 +1918,7 @@ void painter_increase_val(bool primary) {
  * @param write_to_eeprom Save to eeprom?
  */
 void painter_decrease_val_helper(bool write_to_eeprom, bool primary) {
-    hsv_t* hsv =
+    hsv_t *hsv =
         primary ? &userspace_config.display.painter.hsv.primary : &userspace_config.display.painter.hsv.secondary;
     painter_sethsv_eeprom_helper(hsv->h, hsv->s, qsub8(hsv->v, PAINTER_VAL_STEP), write_to_eeprom, primary);
 }

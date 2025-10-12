@@ -197,12 +197,12 @@ void display_rotate_screen(bool clockwise, bool is_left) {
     userspace_config.display.oled.rotation = temp_rotation;
 #endif // QUANTUM_PAINTER_ENABLE
     eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-#ifdef QUANTUM_PAINTER_ILI9341_ENABLE
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9341
     init_display_ili9341_rotation();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
-#ifdef QUANTUM_PAINTER_ILI9488_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9341
+#ifdef CUSTOM_QUANTUM_PAINTER_ILI9488
     init_display_ili9488_rotation();
-#endif // QUANTUM_PAINTER_ILI9341_ENABLE
+#endif // CUSTOM_QUANTUM_PAINTER_ILI9488
 #ifdef QUANTUM_PAINTER_SH1107_128X128_ENABLE
     init_display_sh1107_128x128_rotation();
 #endif // QUANTUM_PAINTER_SH1107_128X128_ENABLE
