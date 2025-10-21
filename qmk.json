@@ -12,6 +12,7 @@
         ["crkbd/rev1", "drashna"],
         ["splitkb/zima", "drashna"],
         ["zsa/voyager", "drashna"],
-        ["handwired/feather_stm32f405_express", "drashna"]
+        ["handwired/feather_stm32f405_express", "drashna"],
+        ["handwired/feature_rp2040_host", "drashna"]
     ]
 }
