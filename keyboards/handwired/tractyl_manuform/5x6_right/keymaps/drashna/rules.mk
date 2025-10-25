@@ -20,7 +20,6 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f411)
     HAPTIC_DRIVER                         = drv2605l
     RTC_DRIVER                            = vendor
     QUANTUM_PAINTER_ENABLE                = yes
-    CUSTOM_QUANTUM_PAINTER_ENABLE         = yes
     CUSTOM_QUANTUM_PAINTER_ILI9341        = yes
     # This is stupid, and you shouldn't do this
     KEYMAP_JSON       = $(MAIN_KEYMAP_PATH_5)/keymap_f411.json
@@ -34,7 +33,6 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405)
     RGB_MATRIX_ENABLE                     = yes
     RGBLIGHT_DRIVER                       = custom
     QUANTUM_PAINTER_ENABLE                = yes
-    CUSTOM_QUANTUM_PAINTER_ENABLE         = yes
     CUSTOM_QUANTUM_PAINTER_ILI9341        = yes
     CUSTOM_QUANTUM_PAINTER_ILI9488        = no
     CUSTOM_QUANTUM_PAINTER_ST7789_170X320 = no
