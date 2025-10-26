@@ -4,7 +4,7 @@
 #include "drashna.h"
 
 // clang-format off
-#define LAYOUT_charybdis_4x6_wrapper(...) LAYOUT_charybdis_4x6(__VA_ARGS__)
+#define LAYOUT_charybdis_4x6_wrapper(...) LAYOUT(__VA_ARGS__)
 #define LAYOUT_charybdis_4x6_base( \
     K01, K02, K03, K04, K05, K06, K07, K08, K09, K0A, \
     K11, K12, K13, K14, K15, K16, K17, K18, K19, K1A, K1B, \
@@ -45,7 +45,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _________________DVORAK_L3_________________, _________________DVORAK_R3_________________
     ),
 
-    [_GAMEPAD] = LAYOUT_charybdis_4x6(
+    [_GAMEPAD] = LAYOUT(
         KC_ESC,  KC_NO,   KC_1,    KC_2,    KC_3,    KC_4,       _______, _______, _______, _______, _______, _______,
         KC_F1,   KC_K,    KC_Q,    KC_W,    KC_E,    KC_R,       _______, _______, _______, _______, _______, _______,
         KC_TAB,  KC_G,    KC_A,    KC_S,    KC_D,    KC_F,       _______, _______, _______, _______, _______, _______,
@@ -53,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                    KC_V,    _______, _______,    _______, TG_GAME,
                                            KC_SPC, KC_H,          _______
     ),
-    [_DIABLO] = LAYOUT_charybdis_4x6(
+    [_DIABLO] = LAYOUT(
         KC_ESC,  KC_V,    KC_D,    KC_LALT, KC_NO,   KC_NO,      KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NO,   KC_NO,
         KC_TAB,  KC_S,    KC_I,    KC_F,    KC_M,    KC_T,       _______, _______, _______, _______, _______, _______,
         KC_Q,    KC_1,    KC_2,    KC_3,    KC_4,    KC_G,       _______, _______, _______, _______, _______, _______,
@@ -61,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                    KC_G,    _______, _______,    TO(_DIABLOII), TG_DBLO,
                                            KC_LSFT, KC_LCTL,      _______
     ),
-    [_DIABLOII] = LAYOUT_charybdis_4x6(
+    [_DIABLOII] = LAYOUT(
         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_GRV,     _______, _______, _______, _______, _______, _______,
         KC_TAB,  KC_A,    KC_T,    KC_Q,    KC_I,    KC_M,       _______, _______, _______, _______, _______, _______,
         KC_S,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,      _______, _______, _______, _______, _______, _______,
