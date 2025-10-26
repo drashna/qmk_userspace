@@ -5,12 +5,12 @@
 #include "drashna_runtime.h"
 #include "drashna_names.h"
 #include "drashna_layers.h"
-#include "drashna_util.h"
-#include "version.h"
 #include "qp_ili9xxx_opcodes.h"
 #include "qp_comms.h"
 #include "display/painter/painter.h"
 #include "display/painter/ili9488_display.h"
+#include "hardware_id_string.h"
+#include "version.h"
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
 #    include "qp_surface.h"
 #endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
@@ -96,7 +96,7 @@ void init_display_ili9488_rotation(void) {
     uint16_t width;
     uint16_t height;
 
-    qp_init(display, userspace_config.display.painter.left.rotation ? QP_ROTATION_0 : QP_ROTATION_180);
+    qp_init(display, userspace_config.display.painter.left.rotation ? QP_ROTATION_180 : QP_ROTATION_0);
     qp_get_geometry(display, &width, &height, NULL, NULL, NULL);
     qp_clear(display);
     qp_rect(display, 0, 0, width - 1, height - 1, 0, 0, 0, true);
@@ -106,8 +106,6 @@ void init_display_ili9488_rotation(void) {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initial render of frame/logo
 
-    painter_render_frame(display, font_thintel, true, 0, true);
-    painter_render_frame(display, font_thintel, false, 240, false);
     qp_power(display, true);
     qp_flush(display);
     if (has_run) {
@@ -179,9 +177,9 @@ __attribute__((weak)) void ili9488_draw_user(void) {
     }
 #endif
     if (hue_redraw || transport_icon_redraw) {
-        qp_rect(display, width - mouse_icon->width - 6, 5, width - 6, 5 + mouse_icon->height - 1, 0, 0, 0, true);
+        qp_rect(display, width - mouse_icon->width - 6, 6, width - 6, 6 + mouse_icon->height - 1, 0, 0, 0, true);
         qp_drawimage_recolor(
-            display, width - mouse_icon->width - 6, 5, mouse_icon,
+            display, width - mouse_icon->width - 6, 6, mouse_icon,
             is_keyboard_master() ? curr_hsv.secondary.h : curr_hsv.primary.h,
             is_keyboard_master() ? curr_hsv.secondary.s : curr_hsv.primary.s,
 #ifdef SPLIT_KEYBOARD
