@@ -289,7 +289,7 @@ void painter_render_console(painter_device_t device, painter_font_handle_t font,
         for (uint8_t i = start; i < end; i++) {
             uint16_t xpos =
                 x + qp_drawtext_recolor(device, x, y, font, logline_ptrs[i], hsv->h, hsv->s, hsv->v, 0, 0, 0);
-            qp_rect(device, xpos, y, display_width, y + font->line_height, hsv->h, hsv->s, hsv->v, true);
+            qp_rect(device, xpos, y, display_width, y + font->line_height, 0, 0, 0, true);
             y += font->line_height + 4;
         }
         console_has_redrawn = true;
