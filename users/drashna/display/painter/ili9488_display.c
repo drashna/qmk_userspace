@@ -82,6 +82,13 @@ __attribute__((section(".ram7")))
 #    endif
 static uint8_t   menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
 painter_device_t menu_surface;
+
+#    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
+static uint8_t
+    wpm_graph_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT, 24)] = {0};
+static painter_device_t wpm_graph_surface;
+#    endif // WPM_ENABLE && !WPM_NO_SURFACE
+
 #endif
 
 static bool has_run = false, forced_reinit = false;
@@ -128,13 +135,19 @@ void init_display_ili9488(void) {
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
     menu_surface = qp_make_rgb888_surface(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, menu_buffer);
-#endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
+#    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
+    wpm_graph_surface = qp_make_rgb888_surface(WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT, wpm_graph_buffer);
+#    endif // WPM_ENABLE && !WPM_NO_SURFACE
+#endif     // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
 
     wait_ms(50);
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
     qp_init(menu_surface, QP_ROTATION_0);
-#endif // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
+#    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
+    qp_init(wpm_graph_surface, QP_ROTATION_0);
+#    endif // WPM_ENABLE && !WPM_NO_SURFACE
+#endif     // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
 
     init_display_ili9488_rotation();
 }
@@ -535,7 +548,12 @@ __attribute__((weak)) void ili9488_draw_user(void) {
 #ifdef WPM_ENABLE
         painter_render_wpm(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
         ypos += font_oled->line_height + 2 * 4;
+#    ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
+        painter_render_wpm_graph(wpm_graph_surface, font_oled, 0, 0, hue_redraw, &curr_hsv);
+        qp_surface_draw(wpm_graph_surface, display, xpos, ypos, false);
+#    else
         painter_render_wpm_graph(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
+#    endif
 #endif
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
         painter_render_menu_block(menu_surface, font_oled, 0, 0, SURFACE_MENU_WIDTH - 1, SURFACE_MENU_HEIGHT,

@@ -72,7 +72,13 @@ extern painter_image_handle_t akira_explosion;
 #    define SURFACE_MENU_HEIGHT 120
 static uint8_t          menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 16)];
 static painter_device_t menu_surface;
-#endif // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
+
+#    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
+static uint8_t
+    wpm_graph_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT, 16)] = {0};
+static painter_device_t wpm_graph_surface;
+#    endif // WPM_ENABLE && !WPM_NO_SURFACE
+#endif     // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
 
 static bool has_run = false, forced_reinit = false;
 
@@ -123,13 +129,19 @@ void init_display_ili9341(void) {
                                          ILI9341_SPI_MODE);
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
     menu_surface = qp_make_rgb565_surface(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, menu_buffer);
-#endif // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
+#    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
+    wpm_graph_surface = qp_make_rgb565_surface(WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT, wpm_graph_buffer);
+#    endif // WPM_ENABLE && !WPM_NO_SURFACE
+#endif     // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
 
     wait_ms(50);
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
     qp_init(menu_surface, QP_ROTATION_0);
-#endif // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
+#    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
+    qp_init(wpm_graph_surface, QP_ROTATION_0);
+#    endif // WPM_ENABLE && !WPM_NO_SURFACE
+#endif     // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
 
     init_display_ili9341_rotation();
 }
@@ -594,6 +606,13 @@ __attribute__((weak)) void ili9341_draw_user(void) {
 #    ifdef WPM_ENABLE
             painter_render_wpm(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
             ypos += font_oled->line_height + 2 * 4;
+#        if defined(QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE) && !defined(WPM_NO_SURFACE)
+            painter_render_wpm_graph(wpm_graph_surface, font_oled, 0, 0, hue_redraw, &curr_hsv);
+            qp_surface_draw(wpm_graph_surface, display, xpos, ypos, false);
+#        else
+            painter_render_wpm_graph(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
+#        endif
+
             painter_render_wpm_graph(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
 #    endif
 

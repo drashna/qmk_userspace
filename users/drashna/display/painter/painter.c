@@ -63,20 +63,6 @@ void display_menu_set_dirty(bool state) {}
 thread_t     *painter_thread         = NULL;
 volatile bool painter_thread_running = true;
 #endif
-
-#ifndef WPM_PAINTER_GRAPH_HEIGHT
-#    define WPM_PAINTER_GRAPH_HEIGHT 49
-#endif // WPM_PAINTER_GRAPH_HEIGHT
-#ifndef WPM_PAINTER_GRAPH_WIDTH
-#    define WPM_PAINTER_GRAPH_WIDTH 58
-#endif // WPM_PAINTER_GRAPH_WIDTH
-
-#if defined(QUANTUM_PAINTER_SURFACE_ENABLE) && defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
-#    include "qp_surface.h"
-static uint8_t
-    wpm_graph_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT, 16)] = {0};
-static painter_device_t wpm_graph_surface;
-#endif
 #ifdef COMMUNITY_MODULE_QP_HELPERS_ENABLE
 #    include "qp_helpers.h"
 #endif // COMMUNITY_MODULE_QP_HELPERS_ENABLE
@@ -222,10 +208,6 @@ void painter_init_assets(void) {
     akira_explosion = qp_load_image_mem(gfx_akira_explosion);
 
     nyan_cat = qp_load_image_mem(gfx_large_nyan_cat);
-#if defined(QUANTUM_PAINTER_SURFACE_ENABLE) && defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
-    wpm_graph_surface = qp_make_rgb565_surface(WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT, wpm_graph_buffer);
-    qp_init(wpm_graph_surface, QP_ROTATION_0);
-#endif // QUANTUM_PAINTER_SURFACE_ENABLE && WPM_ENABLE && !WPM_NO_SURFACE
 }
 
 /**
@@ -453,13 +435,8 @@ void painter_render_wpm_graph(painter_device_t device, painter_font_handle_t fon
         };
 
         const graph_config_t config = {
-#    if defined(QUANTUM_PAINTER_SURFACE_ENABLE) && !defined(WPM_NO_SURFACE)
-            .device = wpm_graph_surface,
-            .start  = {.x = 0, .y = 0},
-#    else
-            .device = device,
-            .start  = {.x = x, .y = y},
-#    endif // QUANTUM_PAINTER_SURFACE_ENABLE
+            .device      = device,
+            .start       = {.x = x, .y = y},
             .size        = {.x = WPM_PAINTER_GRAPH_WIDTH, .y = WPM_PAINTER_GRAPH_HEIGHT},
             .axis        = curr_hsv->primary,
             .background  = {.h = 0, .s = 0, .v = 0},
@@ -467,9 +444,6 @@ void painter_render_wpm_graph(painter_device_t device, painter_font_handle_t fon
         };
 
         qp_draw_graph(&config, lines);
-#    if defined(QUANTUM_PAINTER_SURFACE_ENABLE) && !defined(WPM_NO_SURFACE)
-        qp_surface_draw(wpm_graph_surface, device, x, y, force_redraw);
-#    endif
     }
 #endif // WPM_ENABLE
 }

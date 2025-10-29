@@ -13,6 +13,13 @@
 #include "display/painter/graphics/assets.h"
 #include "display/display.h"
 
+#ifndef WPM_PAINTER_GRAPH_HEIGHT
+#    define WPM_PAINTER_GRAPH_HEIGHT 49
+#endif // WPM_PAINTER_GRAPH_HEIGHT
+#ifndef WPM_PAINTER_GRAPH_WIDTH
+#    define WPM_PAINTER_GRAPH_WIDTH 58
+#endif // WPM_PAINTER_GRAPH_WIDTH
+
 typedef struct {
     const uint8_t* data;
     const char*    name;
