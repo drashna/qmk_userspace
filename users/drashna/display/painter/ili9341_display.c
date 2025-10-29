@@ -678,7 +678,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
 #endif // SPLIT_KEYBOARD
         }
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
-        painter_render_menu_block(menu_surface, font_oled, 0, 0, SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT,
+        painter_render_menu_block(menu_surface, font_oled, 0, 0, SURFACE_MENU_WIDTH - 1, SURFACE_MENU_HEIGHT,
                                   screen_saver_redraw || hue_redraw, &curr_hsv, is_keyboard_left(), true);
         qp_surface_draw(menu_surface, display, 2, 172, screen_saver_redraw);
 #else  // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
