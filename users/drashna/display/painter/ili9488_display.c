@@ -548,7 +548,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
 #ifdef WPM_ENABLE
         painter_render_wpm(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
         ypos += font_oled->line_height + 2 * 4;
-#    ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
+#    if defined(QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE) && !defined(WPM_NO_SURFACE)
         painter_render_wpm_graph(wpm_graph_surface, font_oled, 0, 0, hue_redraw, &curr_hsv);
         qp_surface_draw(wpm_graph_surface, display, xpos, ypos, false);
 #    else
