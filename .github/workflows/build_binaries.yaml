@@ -10,8 +10,8 @@ jobs:
     name: 'QMK Userspace Build'
     uses: qmk/.github/.github/workflows/qmk_userspace_build.yml@main
     with:
-      qmk_repo: qmk/qmk_firmware
-      qmk_ref: master
+      qmk_repo: drashna/qmk_firmware
+      qmk_ref: openrgb-rawhid-mod
 
   publish:
     name: 'QMK Userspace Publish'
