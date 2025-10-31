@@ -188,28 +188,32 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         // horizontal line below scan rate
         qp_line(display, 2, 30, 80, 30, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
-        // horizontal line below rgb
-        qp_line(display, 80, 54, 237, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        // horizontal line below rgb matrix
+        qp_line(display, 80, 54, 208, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
-        // caps lock horizontal line
-        qp_line(display, 208, 16, 208, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        // horizontal line below rgb light
+        qp_line(display, 80, 92, 208, 92, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
+        // line right of rgb block
+        qp_line(display, 208, 16, 208, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
+        // caps lock vertical line
+        qp_line(display, 288, 16, 288, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
+        // led lock horizontal line
+        qp_line(display, 208, 54, 318, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // vertical lines next to scan rate + wpm + pointing
-        qp_line(display, 80, 16, 80, 106, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(display, 80, 16, 80, 155, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
-        // lines for unicode typing mode and mode
-        qp_line(display, 80, 80, 237, 80, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        // horizontal line below pointing devices
+        qp_line(display, 2, 105, 80, 105, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
-        // qp_line(display, xpos + 180, 80, xpos + 180, 106, curr_hsv.primary.h, curr_hsv.primary.s,
-        // curr_hsv.primary.v);
+        // wpm horizontal line
+        qp_line(display, 2, 120, 80, 120, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
-        // lines for mods and OS detection
-        qp_line(display, 2, 107, 237, 107, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
-        qp_line(display, 155, 107, 155, 122, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
-        // lines for autocorrect and layers
-        qp_line(display, 2, 122, 237, 122, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
-        qp_line(display, 121, 122, 121, 171, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
-        qp_line(display, 186, 122, 186, 171, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        // horizontal line below keymap config
+        qp_line(display, 80, 118, 208, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // line above menu block
         qp_line(display, 2, 304, 317, 304, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
@@ -263,7 +267,15 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Keymap config (nkro, autocorrect, oneshots)
 
-        ypos                                        = 54 + 4;
+        ypos = 54 + 4;
+        xpos = 83;
+#if defined(RGBLIGHT_ENABLE)
+        painter_render_rgb(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv,
+                           "RGB Light Config:", rgblight_get_effect_name, rgblight_get_hsv, rgblight_is_enabled(),
+                           RGB_MATRIX_MAXIMUM_BRIGHTNESS);
+#endif // RGB_MATRIX_ENABLE
+
+        ypos                                        = 96;
         static keymap_config_t last_keymap_config   = {0};
         bool                   keymap_config_redraw = false;
         if (last_keymap_config.raw != keymap_config.raw) {
@@ -337,7 +349,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         }
 
 #ifdef DISPLAY_KEYLOGGER_ENABLE
-        painter_render_keylogger(display, font_oled, 84, 84, 150, hue_redraw, &curr_hsv);
+        painter_render_keylogger(display, font_oled, 84, 128, 150, hue_redraw, &curr_hsv);
 #endif // DISPLAY_KEYLOGGER_ENABLE
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -453,108 +465,58 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         }
 #endif // POINTING_DEVICE_ENABLE
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Mods
-
-        ypos = 107 + 3;
-        xpos = 5;
-
-        painter_render_modifiers(display, font_oled, xpos, ypos, width, hue_redraw || keymap_config_redraw, &curr_hsv,
-                                 disabled_val);
-
-#ifdef OS_DETECTION_ENABLE
-        ypos = 107 + 4;
-        xpos = 159;
-        painter_render_os_detection(display, font_oled, xpos, ypos, width, hue_redraw, &curr_hsv);
-#endif // OS_DETECTION_ENABLE
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //  Default layer state
-
-        ypos                                    = 122 + 4;
-        xpos                                    = 125;
-        bool                 layer_state_redraw = false, dl_state_redraw = false;
-        static layer_state_t last_layer_state = 0, last_dl_state = 0;
-        if (last_layer_state != layer_state) {
-            last_layer_state   = layer_state;
-            layer_state_redraw = true;
-        }
-        if (last_dl_state != default_layer_state) {
-            last_dl_state   = default_layer_state;
-            dl_state_redraw = true;
-        }
-
-        if (hue_redraw || dl_state_redraw || layer_state_redraw) {
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Layout: ", curr_hsv.primary.h, curr_hsv.primary.s,
-                                curr_hsv.primary.v, 0, 0, 0);
-            ypos += font_oled->line_height + 4;
-            snprintf(buf, sizeof(buf), "%10s",
-                     get_layer_name_string(get_highest_layer(default_layer_state), false, true));
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, buf, curr_hsv.secondary.h, curr_hsv.secondary.s,
-                                curr_hsv.secondary.v, 0, 0, 0);
-        } else {
-            ypos += font_oled->line_height + 4;
-        }
-        ypos += font_oled->line_height + 4;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Layer State
-
-        if (hue_redraw || layer_state_redraw) {
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Layer: ", curr_hsv.primary.h, curr_hsv.primary.s,
-                                curr_hsv.primary.v, 0, 0, 0);
-            ypos += font_oled->line_height + 4;
-            layer_state_t temp = last_layer_state;
-            if (is_gaming_layer_active(last_layer_state)) {
-                temp = last_layer_state & ~((layer_state_t)1 << _MOUSE);
-            }
-            snprintf(buf, sizeof(buf), "%10s", get_layer_name_string(get_highest_layer(temp), false, false));
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, buf, curr_hsv.secondary.h, curr_hsv.secondary.s,
-                                curr_hsv.secondary.v, 0, 0, 0);
-            ypos = 122 + 4;
-            xpos = 190;
-            qp_drawimage_recolor(display, xpos, ypos, gamepad_icon, curr_hsv.primary.h, curr_hsv.primary.s,
-                                 layer_state_cmp(last_layer_state, _GAMEPAD) ? curr_hsv.primary.v : disabled_val, 0, 0,
-                                 0);
-            qp_drawimage_recolor(display, xpos + gamepad_icon->width + 6, ypos + 4, mouse_icon, curr_hsv.primary.h,
-                                 curr_hsv.primary.s,
-                                 layer_state_cmp(layer_state, _MOUSE) ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
-            ypos += gamepad_icon->height + 2;
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Diablo",
-                                layer_state_cmp(last_layer_state, _DIABLO) ? 0 : curr_hsv.primary.h, curr_hsv.primary.s,
-                                layer_state_cmp(last_layer_state, _DIABLO) ? curr_hsv.primary.v : disabled_val, 0, 0,
-                                0);
-            ypos += font_oled->line_height + 2;
-            qp_drawtext_recolor(
-                display, xpos, ypos, font_oled, "Diablo 2",
-                layer_state_cmp(last_layer_state, _DIABLOII) ? 0 : curr_hsv.primary.h, curr_hsv.primary.s,
-                layer_state_cmp(last_layer_state, _DIABLOII) ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Autocorrection values
-
-#ifdef AUTOCORRECT_ENABLE
-        ypos = 122 + 4;
-
-        painter_render_autocorrect(display, font_oled, 5, ypos, width, hue_redraw, &curr_hsv);
-        ypos += (font_oled->line_height + 4) * 3;
-
-#endif // AUTOCORRECT_ENABLE
-
         ypos += font_oled->line_height + 1;
-        ypos = 80;
-        xpos = 238;
+        xpos = 1;
+        ypos = 105;
 #ifdef WPM_ENABLE
         painter_render_wpm(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
         ypos += font_oled->line_height + 2 * 4;
 #    if defined(QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE) && !defined(WPM_NO_SURFACE)
-        painter_render_wpm_graph(wpm_graph_surface, font_oled, 0, 0, hue_redraw, &curr_hsv);
+        painter_render_wpm_graph(wpm_graph_surface, font_oled, 0, 0, WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT,
+                                 hue_redraw, &curr_hsv);
         qp_surface_draw(wpm_graph_surface, display, xpos, ypos, false);
 #    else
-        painter_render_wpm_graph(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
+        painter_render_wpm_graph(display, font_oled, xpos, ypos, WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT,
+                                 hue_redraw, &curr_hsv);
 #    endif
 #endif
+
+        ypos                         = 58;
+        static uint16_t last_keycode = 0xFFFF;
+        if (hue_redraw || last_keycode != userspace_runtime_state.last_keycode) {
+            last_keycode = userspace_runtime_state.last_keycode;
+            xpos         = 212;
+            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Last keycode:", curr_hsv.primary.h, curr_hsv.primary.s,
+                                curr_hsv.primary.v, 0, 0, 0);
+            ypos += font_oled->line_height + 4;
+            snprintf(buf, 18, "%17s", get_keycode_string(last_keycode));
+            qp_drawtext_recolor(display, xpos + 3, ypos, font_oled, buf, curr_hsv.secondary.h, curr_hsv.secondary.s,
+                                curr_hsv.secondary.v, 0, 0, 0);
+        }
+
+        static keyevent_t last_event = {0};
+        if (hue_redraw || memcmp(&last_event, &userspace_runtime_state.last_key_event, sizeof(keyevent_t))) {
+            memcpy(&last_event, &userspace_runtime_state.last_key_event, sizeof(keyevent_t));
+            ypos = 83;
+            xpos = 212;
+            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Last keyevent:", curr_hsv.primary.h,
+                                curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
+            ypos += font_oled->line_height + 4;
+            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Row:", curr_hsv.primary.h, curr_hsv.primary.s,
+                                curr_hsv.primary.v, 0, 0, 0);
+
+            snprintf(buf, 4, "%3s", get_u8_str(last_event.key.row, ' '));
+            qp_drawtext_recolor(display, 320 - (4 + qp_textwidth(font_oled, buf)), ypos, font_oled, buf,
+                                curr_hsv.secondary.h, curr_hsv.secondary.s, curr_hsv.secondary.v, 0, 0, 0);
+            ypos += font_oled->line_height + 4;
+            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Column:", curr_hsv.primary.h, curr_hsv.primary.s,
+                                curr_hsv.primary.v, 0, 0, 0);
+
+            snprintf(buf, 4, "%3s", get_u8_str(last_event.key.col, ' '));
+            qp_drawtext_recolor(display, 320 - (4 + qp_textwidth(font_oled, buf)), ypos, font_oled, buf,
+                                curr_hsv.secondary.h, curr_hsv.secondary.s, curr_hsv.secondary.v, 0, 0, 0);
+        }
+
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
         painter_render_menu_block(menu_surface, font_oled, 0, 0, SURFACE_MENU_WIDTH - 1, SURFACE_MENU_HEIGHT,
                                   hue_redraw, &curr_hsv, is_keyboard_left(), true);

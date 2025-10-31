@@ -67,7 +67,7 @@ void painter_render_lock_state(painter_device_t device, painter_font_handle_t fo
 void painter_render_wpm(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y, bool force_redraw,
                         dual_hsv_t* curr_hsv);
 void painter_render_wpm_graph(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                              bool force_redraw, dual_hsv_t* curr_hsv);
+                              uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t* curr_hsv);
 void painter_render_haptic(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                            bool force_redraw, dual_hsv_t* curr_hsv);
 void painter_render_totp(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y, uint16_t width,

@@ -417,7 +417,7 @@ void painter_render_wpm(painter_device_t device, painter_font_handle_t font, uin
  * @param curr_hsv painter colors
  */
 void painter_render_wpm_graph(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
-                              bool force_redraw, dual_hsv_t *curr_hsv) {
+                              uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
 #if defined(WPM_ENABLE) && defined(COMMUNITY_MODULE_QP_HELPERS_ENABLE)
     static uint16_t wpm_timer = 0;
 
@@ -437,7 +437,7 @@ void painter_render_wpm_graph(painter_device_t device, painter_font_handle_t fon
         const graph_config_t config = {
             .device      = device,
             .start       = {.x = x, .y = y},
-            .size        = {.x = WPM_PAINTER_GRAPH_WIDTH, .y = WPM_PAINTER_GRAPH_HEIGHT},
+            .size        = {.x = width, .y = height},
             .axis        = curr_hsv->primary,
             .background  = {.h = 0, .s = 0, .v = 0},
             .data_points = WPM_GRAPH_SAMPLES,

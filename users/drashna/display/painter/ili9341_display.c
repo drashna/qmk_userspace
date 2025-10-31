@@ -607,13 +607,13 @@ __attribute__((weak)) void ili9341_draw_user(void) {
             painter_render_wpm(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
             ypos += font_oled->line_height + 2 * 4;
 #        if defined(QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE) && !defined(WPM_NO_SURFACE)
-            painter_render_wpm_graph(wpm_graph_surface, font_oled, 0, 0, hue_redraw, &curr_hsv);
+            painter_render_wpm_graph(wpm_graph_surface, font_oled, 0, 0, WPM_PAINTER_GRAPH_WIDTH,
+                                     WPM_PAINTER_GRAPH_HEIGHT, hue_redraw, &curr_hsv);
             qp_surface_draw(wpm_graph_surface, display, xpos, ypos, false);
 #        else
-            painter_render_wpm_graph(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
+            painter_render_wpm_graph(display, font_oled, xpos, ypos, WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT,
+                                     hue_redraw, &curr_hsv);
 #        endif
-
-            painter_render_wpm_graph(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
 #    endif
 
             ypos                         = 84;
