@@ -204,16 +204,33 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         qp_line(display, 208, 54, 318, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // vertical lines next to scan rate + wpm + pointing
-        qp_line(display, 80, 16, 80, 155, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(display, 80, 16, 80, 159, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below pointing devices
         qp_line(display, 2, 105, 80, 105, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // wpm horizontal line
-        qp_line(display, 2, 120, 80, 120, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(display, 236, 133, 317, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below keymap config
         qp_line(display, 80, 118, 208, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
+        // horizontal line between last keyevents
+        qp_line(display, 208, 80, 318, 80, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
+        // horizontal line below last keyevents
+        qp_line(display, 208, 118, 318, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
+        // horizontal line below modifiers
+        qp_line(display, 80, 133, 236, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        // vertical line below modifiers
+        qp_line(display, 236, 118, 236, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
+        // horizontal line below keylogger
+        qp_line(display, 80, 160, 236, 160, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
+        // wpm horizontal line
+        qp_line(display, 236, 133, 317, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // line above menu block
         qp_line(display, 2, 304, 317, 304, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
@@ -256,6 +273,42 @@ __attribute__((weak)) void ili9488_draw_user(void) {
                            "RGB Matrix Config:", rgb_matrix_get_effect_name, rgb_matrix_get_hsv,
                            rgb_matrix_is_enabled(), RGB_MATRIX_MAXIMUM_BRIGHTNESS);
 #endif // RGB_MATRIX_ENABLE
+
+#ifdef OS_DETECTION_ENABLE
+        ypos = 20;
+        xpos = 210;
+        painter_render_os_detection(display, font_oled, xpos, ypos, 80, hue_redraw, &curr_hsv);
+#endif // OS_DETECTION_ENABLE
+
+#ifdef CUSTOM_UNICODE_ENABLE
+        ypos                             = 32;
+        static uint8_t last_unicode_mode = UNICODE_MODE_COUNT;
+        if (hue_redraw || last_unicode_mode != get_unicode_input_mode()) {
+            last_unicode_mode   = get_unicode_input_mode();
+            xpos                = 212;
+            uint8_t xpos_offset = xpos +
+                                  qp_drawtext_recolor(display, xpos, ypos, font_oled, "Unicode", curr_hsv.primary.h,
+                                                      curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0) +
+                                  4;
+            switch (last_unicode_mode) {
+                case UNICODE_MODE_WINCOMPOSE:
+                case UNICODE_MODE_WINDOWS:
+                    qp_drawimage(display, xpos_offset, ypos + 2, windows_logo);
+                    break;
+                case UNICODE_MODE_MACOS:
+                    qp_drawimage(display, xpos_offset, ypos + 2, apple_logo);
+                    break;
+                case UNICODE_MODE_LINUX:
+                case UNICODE_MODE_BSD:
+                case UNICODE_MODE_EMACS:
+                    qp_drawimage(display, xpos_offset, ypos + 2, linux_logo);
+                    break;
+            }
+            ypos += font_oled->line_height + 4;
+            qp_drawtext_recolor(display, xpos + 8, ypos, font_oled, "Mode", curr_hsv.primary.h, curr_hsv.primary.s,
+                                curr_hsv.primary.v, 0, 0, 0);
+        }
+#endif // CUSTOM_UNICODE_ENABLE
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // LED Lock indicator(text)
@@ -348,8 +401,10 @@ __attribute__((weak)) void ili9488_draw_user(void) {
                                     last_user_state.internals.swap_hands ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
         }
 
+        painter_render_modifiers(display, font_oled, 84, 122, 150, hue_redraw, &curr_hsv, disabled_val);
+
 #ifdef DISPLAY_KEYLOGGER_ENABLE
-        painter_render_keylogger(display, font_oled, 84, 128, 150, hue_redraw, &curr_hsv);
+        painter_render_keylogger(display, font_oled, 84, 137, 150, hue_redraw, &curr_hsv);
 #endif // DISPLAY_KEYLOGGER_ENABLE
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -465,9 +520,10 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         }
 #endif // POINTING_DEVICE_ENABLE
 
-        ypos += font_oled->line_height + 1;
-        xpos = 1;
-        ypos = 105;
+        // xpos = 1;
+        // ypos = 105;
+        xpos = 236;
+        ypos = 118;
 #ifdef WPM_ENABLE
         painter_render_wpm(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
         ypos += font_oled->line_height + 2 * 4;
@@ -497,7 +553,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         static keyevent_t last_event = {0};
         if (hue_redraw || memcmp(&last_event, &userspace_runtime_state.last_key_event, sizeof(keyevent_t))) {
             memcpy(&last_event, &userspace_runtime_state.last_key_event, sizeof(keyevent_t));
-            ypos = 83;
+            ypos = 84;
             xpos = 212;
             qp_drawtext_recolor(display, xpos, ypos, font_oled, "Last keyevent:", curr_hsv.primary.h,
                                 curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
