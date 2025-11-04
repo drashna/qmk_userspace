@@ -229,6 +229,11 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         // horizontal line below keylogger
         qp_line(display, 80, 160, 236, 160, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
+        // horizontal line below haptic
+        qp_line(display, 80, 186, 236, 186, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
+        qp_line(display, 80, 160, 80, 186, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+
         // wpm horizontal line
         qp_line(display, 236, 133, 317, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
@@ -518,7 +523,25 @@ __attribute__((weak)) void ili9488_draw_user(void) {
                                         last_jiggle_enabled ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                         last_jiggle_enabled ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
         }
-#endif // POINTING_DEVICE_ENABLE
+
+        xpos = 1;
+        ypos = 107;
+#    ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
+        static bool last_accel_state2 = false;
+        if (last_accel_state2 != pointing_device_accel_get_enabled()) {
+            last_accel_state2 = pointing_device_accel_get_enabled();
+            if (last_accel_state2) {
+                painter_render_pd_accel_graph(display, xpos, ypos, 78, 54, hue_redraw, &curr_hsv);
+            } else {
+                qp_rect(display, xpos + 1, ypos, xpos + 78, ypos + 54 - 1, 0, 0, 0, true);
+                qp_line(display, xpos + 1, ypos + 10, xpos + 78, ypos + 10, curr_hsv.secondary.h, curr_hsv.secondary.s,
+                        curr_hsv.secondary.v);
+                qp_line(display, xpos + 1, ypos + 54 - 1, xpos + 78, ypos + 54 - 1, curr_hsv.primary.h,
+                        curr_hsv.primary.s, curr_hsv.primary.v);
+            }
+        }
+#    endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABL7,E
+#endif     // POINTING_DEVICE_ENABLE
 
         // xpos = 1;
         // ypos = 105;
@@ -572,6 +595,8 @@ __attribute__((weak)) void ili9488_draw_user(void) {
             qp_drawtext_recolor(display, 320 - (4 + qp_textwidth(font_oled, buf)), ypos, font_oled, buf,
                                 curr_hsv.secondary.h, curr_hsv.secondary.s, curr_hsv.secondary.v, 0, 0, 0);
         }
+
+        painter_render_haptic(display, font_oled, 82, 164, hue_redraw, &curr_hsv);
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
         painter_render_menu_block(menu_surface, font_oled, 0, 0, SURFACE_MENU_WIDTH - 1, SURFACE_MENU_HEIGHT,
