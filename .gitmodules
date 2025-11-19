@@ -21,3 +21,6 @@
 [submodule "modules/dave-thompson"]
     path = modules/dave-thompson
     url = https://github.com/dave-thompson/qmk-modules.git
+[submodule "modules/dmyoung9"]
+    path = modules/dmyoung9
+    url = https://github.com/dmyoung9/qmk_modules.git
