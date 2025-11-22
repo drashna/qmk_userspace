@@ -65,8 +65,14 @@ endif
 ifeq ($(strip $(HARDWARE_DEBUG_ENABLE)), yes)
     LTO_ENABLE := no
     OPT := 0
-    OPT_DEFS += -g
+    OPT_DEFS += -g -O0
     SEGGER_RTT_DRIVER_REQUIRED = yes
+    TOP_SYMBOLS = 200
+    EXTRALDFLAGS = -Xlinker -Map=$(BUILD_DIR)/$(TARGET).map
+    ifeq ($(PLATFORM_KEY),chibios)
+        EXTRAFLAGS = -fstack-usage
+        EXTRALDFLAGS += -Wl,--print-memory-usage
+    endif
 endif
 
 ifeq ($(strip $(HEAVY_OPTIMIZATION_ENABLE)), yes)
