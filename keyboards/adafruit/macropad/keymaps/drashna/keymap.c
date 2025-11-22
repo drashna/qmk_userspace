@@ -24,7 +24,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         CK_TOGG, AU_TOGG, _______,
         _______, _______, _______,
         _______, _______, _______,
-        _______, _______, _______
+        QK_BOOT, _______, _______
     ),
 };
 // clang-format on
