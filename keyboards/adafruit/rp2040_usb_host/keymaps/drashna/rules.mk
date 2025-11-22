@@ -1,0 +1,16 @@
+OLED_ENABLE         = no
+OLED_TRANSPORT      = spi
+
+AUTOCORRECT_ENABLE  = yes
+HAPTIC_ENABLE       = yes
+HAPTIC_DRIVER       = drv2605l
+WPM_ENABLE          = yes
+VIA_ENABLE          = yes
+
+QUANTUM_PAINTER_ENABLE                         = no
+CUSTOM_QUANTUM_PAINTER_ST7789_170X320          = yes
+QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE = no
+DISPLAY_KEYLOGGER_ENABLE                       = yes
+
+BACKLIGHT_ENABLE = yes
+BACKLIGHT_DRIVER = pwm
