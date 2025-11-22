@@ -1,0 +1,13 @@
+{
+    "modules": [
+        "drashna/console_keylogging",
+        "drashna/display_menu",
+        "drashna/i2c_scanner",
+        "drashna/layer_map",
+        "drashna/qp_helpers",
+        "drashna/unicode_typing",
+        "drashna/watchdog",
+        "getreuer/sentence_case",
+        "tzarc/konami_code"
+    ]
+}
