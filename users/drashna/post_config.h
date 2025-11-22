@@ -123,10 +123,9 @@
 // #    define USB_SUSPEND_WAKEUP_DELAY 500
 // #endif
 
-#if (defined(XAP_ENABLE) || defined(VIA_ENABLE)) && !defined(__AVR__)
-#    undef DYNAMIC_KEYMAP_LAYER_COUNT
+#if !defined(DYNAMIC_KEYMAP_LAYER_COUNT) && (defined(XAP_ENABLE) || defined(VIA_ENABLE)) && !defined(__AVR__)
 #    define DYNAMIC_KEYMAP_LAYER_COUNT 12
-#endif // XAP_ENABLE
+#endif
 
 #ifndef EECONFIG_USER_DATA_SIZE
 #    define EECONFIG_USER_DATA_SIZE 64
