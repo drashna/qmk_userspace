@@ -46,7 +46,7 @@
 static painter_device_t st7789_display;
 #ifdef QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
 static painter_device_t st7789_170x320_surface_display;
-static uint8_t          display_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(170, 320, 16)];
+static uint8_t          display_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(240, 320, 16)];
 #else
 #    define st7789_170x320_surface_display st7789_display
 #endif // QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
@@ -55,7 +55,8 @@ static bool has_run = false, forced_reinit = false;
 
 void init_display_st7789_170x320_inversion(void) {
     qp_comms_start(st7789_display);
-    qp_comms_command(st7789_display, userspace_config.display.inverted ? ST77XX_CMD_INVERT_OFF : ST77XX_CMD_INVERT_ON);
+    qp_comms_command(st7789_display,
+                     userspace_config.display.painter.left.inverted ? ST77XX_CMD_INVERT_OFF : ST77XX_CMD_INVERT_ON);
     qp_comms_stop(st7789_display);
     if (has_run) {
         forced_reinit = true;
@@ -66,7 +67,7 @@ void init_display_st7789_170x320_rotation(void) {
     uint16_t width;
     uint16_t height;
 
-    qp_init(st7789_display, userspace_config.display.rotation ? QP_ROTATION_0 : QP_ROTATION_180);
+    qp_init(st7789_display, userspace_config.display.painter.left.rotation ? QP_ROTATION_0 : QP_ROTATION_180);
     // qp_set_viewport_offsets(st7789_display, 35, 0);
     qp_get_geometry(st7789_display, &width, &height, NULL, NULL, NULL);
     qp_clear(st7789_display);
@@ -96,13 +97,13 @@ void init_display_st7789_170x320(void) {
 #ifdef QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
     qp_init(st7789_170x320_surface_display, QP_ROTATION_0);
 
-    qp_rect(st7789_170x320_surface_display, 0, 0, 170 - 1, 320 - 1, HSV_BLACK, true);
+    qp_rect(st7789_170x320_surface_display, 0, 0, 240 - 1, 320 - 1, HSV_BLACK, true);
     qp_surface_draw(st7789_170x320_surface_display, st7789_display, 0, 0, 0);
 #else
-    qp_rect(st7789_display, 0, 0, 170 - 1, 320 - 1, 0, 0, 0, true);
+    qp_rect(st7789_display, 0, 0, 240 - 1, 320 - 1, 0, 0, 0, true);
 #endif
 
-    qp_flush(st7789_display);
+    st7789_170x320_draw_user();
 }
 
 void st7789_170x320_display_power(bool on) {
@@ -124,8 +125,8 @@ __attribute__((weak)) void st7789_170x320_draw_user(void) {
 #endif // COMMUNITY_MODULE_DISPLAY_MENU_ENABLE
     {
         static uint8_t display_logo     = 0xFF;
-        const uint8_t  display_logo_ref = is_keyboard_left() ? userspace_config.display.painter.display_logo_left
-                                                             : userspace_config.display.painter.display_logo_right;
+        const uint8_t  display_logo_ref = is_keyboard_left() ? userspace_config.display.painter.left.display_logo
+                                                             : userspace_config.display.painter.right.display_logo;
 
         if (display_logo != display_logo_ref) {
             display_logo = display_logo_ref;
@@ -135,7 +136,11 @@ __attribute__((weak)) void st7789_170x320_draw_user(void) {
             painter_image_handle_t screen_saver = qp_load_image_mem(screen_saver_image[display_logo].data);
 
             if (screen_saver != NULL) {
+#ifdef QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
                 qp_drawimage(st7789_170x320_surface_display, 0, 0, screen_saver);
+#else  // QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
+                qp_drawimage(st7789_display, 0, 0, screen_saver);
+#endif // QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
                 qp_close_image(screen_saver);
             }
             force_redraw = false;
