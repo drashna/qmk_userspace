@@ -43,16 +43,21 @@
 #    endif // DISPLAY_SPI_MODE
 #endif     // ST7789_SPI_MODE
 
-static painter_device_t st7789_display;
-painter_image_handle_t  screen_saver;
+static painter_device_t st7789_170x320_display;
+#ifdef QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
+static painter_device_t st7789_170x320_surface_display;
+static uint8_t          display_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(170, 320, 16)];
+#else
+#    define st7789_170x320_surface_display st7789_170x320_display
+#endif // QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
 
 static bool has_run = false, forced_reinit = false;
 
 void init_display_st7789_170x320_inversion(void) {
-    qp_comms_start(st7789_display);
-    qp_comms_command(st7789_display,
+    qp_comms_start(st7789_170x320_display);
+    qp_comms_command(st7789_170x320_display,
                      userspace_config.display.painter.left.inverted ? ST77XX_CMD_INVERT_OFF : ST77XX_CMD_INVERT_ON);
-    qp_comms_stop(st7789_display);
+    qp_comms_stop(st7789_170x320_display);
     if (has_run) {
         forced_reinit = true;
     }
@@ -62,17 +67,16 @@ void init_display_st7789_170x320_rotation(void) {
     uint16_t width;
     uint16_t height;
 
-    qp_init(st7789_display, userspace_config.display.painter.left.rotation ? QP_ROTATION_0 : QP_ROTATION_180);
-    // qp_set_viewport_offsets(st7789_display, 35, 0);
-    qp_get_geometry(st7789_display, &width, &height, NULL, NULL, NULL);
-    qp_clear(st7789_display);
-    qp_rect(st7789_display, 0, 0, width - 1, height - 1, 0, 0, 0, true);
-
+    qp_init(st7789_170x320_display, userspace_config.display.painter.left.rotation ? QP_ROTATION_0 : QP_ROTATION_180);
+    qp_set_viewport_offsets(st7789_170x320_display, 35, 0);
+    qp_get_geometry(st7789_170x320_display, &width, &height, NULL, NULL, NULL);
+    qp_clear(st7789_170x320_display);
+    qp_rect(st7789_170x320_display, 0, 0, width - 1, height - 1, 0, 0, 0, true);
     // if needs inversion, run it only after the clear and rect functions or otherwise it won't work
     init_display_st7789_170x320_inversion();
 
-    qp_power(st7789_display, true);
-    qp_flush(st7789_display);
+    qp_power(st7789_170x320_display, true);
+    qp_flush(st7789_170x320_display);
     if (has_run) {
         forced_reinit = true;
     }
@@ -80,77 +84,40 @@ void init_display_st7789_170x320_rotation(void) {
 }
 
 void init_display_st7789_170x320(void) {
-    st7789_display = qp_st7789_make_spi_device(240, 320, ST7789_CS_PIN, ST7789_DC_PIN, ST7789_RST_PIN,
-                                               ST7789_SPI_DIVIDER, ST7789_SPI_MODE);
+    st7789_170x320_display = qp_st7789_make_spi_device(170, 320, ST7789_CS_PIN, ST7789_DC_PIN, ST7789_RST_PIN,
+                                                       ST7789_SPI_DIVIDER, ST7789_SPI_MODE);
+
+#ifdef QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
+    st7789_170x320_surface_display = qp_make_rgb565_surface(170, 320, display_buffer);
+#endif
+
+#ifdef QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
+    qp_init(st7789_170x320_surface_display, QP_ROTATION_0);
+#endif
+
     init_display_st7789_170x320_rotation();
-
-    qp_rect(st7789_display, 0, 0, 240 - 1, 320 - 1, 0, 0, 0, true);
-
-    st7789_170x320_draw_user();
 }
 
 void st7789_170x320_display_power(bool on) {
-    qp_power(st7789_display, on);
+    qp_power(st7789_170x320_display, on);
 }
 
 __attribute__((weak)) void st7789_170x320_draw_user(void) {
     uint16_t width;
     uint16_t height;
-    qp_get_geometry(st7789_display, &width, &height, NULL, NULL, NULL);
 
-    static bool force_redraw = false;
-#ifdef COMMUNITY_MODULE_DISPLAY_MENU_ENABLE
-    if (painter_render_menu(st7789_display, font_oled, 0, 0, width, height, false,
-                            userspace_config.display.painter.hsv.primary,
-                            userspace_config.display.painter.hsv.secondary)) {
-        force_redraw = true;
-    } else
-#endif // COMMUNITY_MODULE_DISPLAY_MENU_ENABLE
-    {
-        static uint16_t screen_saver_timer  = 0;
-        static bool     screen_saver_redraw = true;
-        static uint8_t  display_mode_ref    = 0;
-        uint8_t         display_logo_index  = 0;
-        bool            display_logo_cycle  = false;
-        if (is_keyboard_left()) {
-            display_logo_index = userspace_config.display.painter.left.display_logo;
-            display_logo_cycle = userspace_config.display.painter.left.display_logo_cycle;
-        } else {
-            display_logo_index = userspace_config.display.painter.right.display_logo;
-            display_logo_cycle = userspace_config.display.painter.right.display_logo_cycle;
-        }
+    qp_get_geometry(st7789_170x320_display, &width, &height, NULL, NULL, NULL);
+    // painter_render_frame(st7789_170x320_surface_display, font_thintel, painter_render_side(), 0, true);
+    painter_render_frame_box(st7789_170x320_display, (hsv_t){.h = 128, .s = 255, .v = 255}, 0, 0, 0, 0, true, false);
 
-        if (display_logo_cycle && timer_elapsed(screen_saver_timer) > 5000) {
-            static uint8_t last_display_mode = 0;
-            if (last_display_mode != display_logo_index) {
-                last_display_mode = display_logo_index;
-                display_mode_ref  = 0; // reset the reference
-            } else {
-                display_mode_ref++;
-            }
-            screen_saver_redraw = true;
-            screen_saver_timer  = timer_read();
-        } else if (!display_logo_cycle) {
-            display_mode_ref = 0; // reset the reference
-            // xprintf("Screen saver: %d, reset at %u\n", display_mode_ref, screen_saver_timer);
-        }
-        if (force_redraw || screen_saver_redraw) {
-            screen_saver_redraw = force_redraw = false;
-            screen_saver                       = qp_load_image_mem(
-                screen_saver_image[(display_logo_index + display_mode_ref) % screensaver_image_size].data);
-            if (screen_saver != NULL) {
-                qp_drawimage(st7789_display, 0, 0, screen_saver);
-                qp_close_image(screen_saver);
-            } else {
-                qp_rect(st7789_display, 0, 0, width - 1, height - 1, 0, 0, 0, true);
-            }
-        }
-    }
+#ifdef QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
+    /// qp_surface_draw(st7789_170x320_surface_display, st7789_170x320_display, 0, 0, false);
+#endif // QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
 
-    qp_flush(st7789_display);
+    qp_flush(st7789_170x320_display);
 }
 
 void st7789_170x320_display_shutdown(bool jump_to_bootloader) {
     st7789_170x320_display_power(true);
-    painter_render_shutdown(st7789_display, jump_to_bootloader);
+    painter_render_shutdown(st7789_170x320_display, jump_to_bootloader);
 }
