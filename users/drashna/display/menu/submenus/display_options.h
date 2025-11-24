@@ -2,9 +2,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Display options
 
-#ifdef SPLIT_KEYBOARD
 void display_rotate_screen(bool clockwise, bool is_left);
 
+#ifdef SPLIT_KEYBOARD
 bool menu_handler_display_menu_location(menu_input_t input) {
     switch (input) {
         case menu_input_left:
