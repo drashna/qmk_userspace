@@ -103,7 +103,7 @@ bool oled_task_keymap(void) {
     oled_write_raw_P(footer_image2, sizeof(footer_image2));
 #    ifdef DISPLAY_KEYLOGGER_ENABLE
     oled_set_cursor(4, 15);
-    oled_write(display_keylogger_string, true);
+    oled_write(get_oled_keylogger_str(), true);
 #    endif
     return false;
 }
