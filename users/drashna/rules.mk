@@ -58,9 +58,7 @@ ifeq ($(strip $(WPM_ENABLE)), yes)
     SRC += $(USER_PATH)/wpm.c
 endif
 
-ifeq ($(strip $(AUTOCORRECT_ENABLE)), yes)
-    SRC += $(USER_PATH)/autocorrect.c
-endif
+SRC += $(USER_PATH)/autocorrect.c
 
 ifeq ($(strip $(HARDWARE_DEBUG_ENABLE)), yes)
     LTO_ENABLE := no

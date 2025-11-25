@@ -2,30 +2,31 @@
 // Copyright 2025 Christopher Courtney, aka Drashna Jael're  (@drashna) <drashna@live.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <quantum.h>
-#include "drashna_names.h"
-#include "drashna_util.h"
-#include "drashna_runtime.h"
+#if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
+#    include <quantum.h>
+#    include "drashna_names.h"
+#    include "drashna_util.h"
+#    include "drashna_runtime.h"
 
-#if defined(AUDIO_ENABLE)
-#    ifdef USER_SONG_LIST
+#    if defined(AUDIO_ENABLE)
+#        ifdef USER_SONG_LIST
 float autocorrect_song[][2] = SONG(MARIO_GAMEOVER);
-#    else  // USER_SONG_LIST
+#        else  // USER_SONG_LIST
 float autocorrect_song[][2] = SONG(PLOVER_GOODBYE_SOUND);
-#    endif // USER_SONG_LIST
-#endif
+#        endif // USER_SONG_LIST
+#    endif
 
 // 2 strings, 2q chars each + null terminator. max autocorrect length is 19 chars but 128px/6 supports 21 chars
 char autocorrected_str[2][21]     = {"    automatically\0", "      corrected\0"};
 char autocorrected_str_raw[2][21] = {"automatically\0", "corrected\0"};
 bool autocorrect_str_has_changed  = false;
 
-#if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
-#    include "users/drashna/display/painter/keylogger.h"
-#    include <send_string.h>
-#    include <ctype.h>
+#    if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
+#        include "users/drashna/display/painter/keylogger.h"
+#        include <send_string.h>
+#        include <ctype.h>
 
-#    define PGM_LOADBIT(mem, pos) ((pgm_read_byte(&((mem)[(pos) / 8])) >> ((pos) % 8)) & 0x01)
+#        define PGM_LOADBIT(mem, pos) ((pgm_read_byte(&((mem)[(pos) / 8])) >> ((pos) % 8)) & 0x01)
 char send_string_get_next_ram(void *arg);
 
 typedef struct send_string_memory_state_t {
@@ -91,7 +92,7 @@ static void update_keylogger_string(char (*getter)(void *), void *arg) {
         }
     }
 }
-#endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
+#    endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
 
 bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *correct) {
     if (is_gaming_layer_active(layer_state)) {
@@ -106,16 +107,16 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
     // printf("Autocorrected %s to %s (original: %s)\n", typo, correct, str);
     autocorrect_str_has_changed = true;
     for (uint8_t i = 0; i <= backspaces; ++i) {
-#if defined(WPM_ENABLE) && defined(WPM_ALLOW_COUNT_REGRESSION)
+#    if defined(WPM_ENABLE) && defined(WPM_ALLOW_COUNT_REGRESSION)
         update_wpm(KC_BSPC);
-#endif // WPM_ENABLE
+#    endif // WPM_ENABLE
 
-#if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
+#    if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
         keylog_shift_right();
-#endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
+#    endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
     }
 
-#if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
+#    if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
     send_string_memory_state_t state = {str};
     update_keylogger_string(send_string_get_next_ram, &state);
 
@@ -124,11 +125,12 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
         // so that it doesn't look like the autocorrected word is the first word in the sentence.
         add_autocorrect_char_to_keylogger_str(' ');
     }
-#endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
+#    endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
 
-#if defined(AUDIO_ENABLE)
+#    if defined(AUDIO_ENABLE)
     audio_play_melody(&autocorrect_song, NOTE_ARRAY_SIZE(autocorrect_song), false);
-#endif // AUDIO_ENABLE
+#    endif // AUDIO_ENABLE
 
     return true;
 }
+#endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE

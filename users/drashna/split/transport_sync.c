@@ -88,7 +88,7 @@ void recv_wpm_graph_data(const uint8_t* data, uint8_t size) {
 #endif
 }
 
-#ifdef AUTOCORRECT_ENABLE
+#if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
 extern char autocorrected_str[2][21];
 extern char autocorrected_str_raw[2][21];
 extern bool autocorrect_str_has_changed;
@@ -96,17 +96,17 @@ _Static_assert(sizeof(autocorrected_str) <= RPC_EXTENDED_TRANSACTION_BUFFER_SIZE
                "Autocorrect array larger than buffer size!");
 _Static_assert(sizeof(autocorrected_str_raw) <= RPC_EXTENDED_TRANSACTION_BUFFER_SIZE,
                "Autocorrect array larger than buffer size!");
-#endif
+#endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 
 void recv_autocorrect_string(const uint8_t* data, uint8_t size) {
-#ifdef AUTOCORRECT_ENABLE
+#if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
     if (memcmp(data, autocorrected_str_raw, size) != 0) {
         memcpy(autocorrected_str_raw, data, size);
         center_text(autocorrected_str_raw[0], autocorrected_str[0], sizeof(autocorrected_str[0]) - 1);
         center_text(autocorrected_str_raw[1], autocorrected_str[1], sizeof(autocorrected_str[1]) - 1);
         autocorrect_str_has_changed = true;
     }
-#endif
+#endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 }
 
 #if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
@@ -513,7 +513,7 @@ void sync_keylogger_string(void) {
 }
 #endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE
 
-#if defined(AUTOCORRECT_ENABLE)
+#if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
 static char temp_autocorrected_str[2][21] = {0};
 _Static_assert(sizeof(temp_autocorrected_str) == sizeof(autocorrected_str_raw),
                "Size mismatch for autocorrect string syncing!");
@@ -545,7 +545,7 @@ void sync_autocorrect_string(void) {
         }
     }
 }
-#endif // AUTOCORRECT_ENABLE
+#endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 
 #ifdef WPM_ENABLE
 void sync_wpm_graph_data(void) {
@@ -721,9 +721,9 @@ void housekeeping_task_transport_sync(void) {
 #ifdef WPM_ENABLE
         sync_wpm_graph_data();
 #endif // WPM_ENABLE
-#ifdef AUTOCORRECT_ENABLE
+#if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
         sync_autocorrect_string();
-#endif // AUTOCORRECT_ENABLE
+#endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 #if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE)
         sync_keylogger_string();
 #endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE
