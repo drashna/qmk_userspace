@@ -288,7 +288,7 @@ static void keylog_shift_left(uint8_t len) {
 static void keylog_append(const char *str) {
     // Convert UTF-8 string to Unicode code points
     uint8_t char_count = 0;
-    int32_t unicode_chars[8]; // Temporary buffer for conversion
+    int32_t unicode_chars[12]; // Temporary buffer for conversion
 
     const char *ptr = str;
     while (*ptr) {
