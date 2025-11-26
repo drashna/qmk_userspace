@@ -318,11 +318,10 @@ __attribute__((weak)) void ili9341_draw_user(void) {
                                             last_keymap_config.nkro ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                             last_keymap_config.nkro ? curr_hsv.primary.v : disabled_val, 0, 0, 0) +
                         5;
-                xpos += qp_drawtext_recolor(
-                            display, xpos, ypos, font_oled, "CRCT",
-                            last_keymap_config.autocorrect_enable ? curr_hsv.secondary.h : curr_hsv.primary.h,
-                            last_keymap_config.autocorrect_enable ? curr_hsv.secondary.s : curr_hsv.primary.s,
-                            last_keymap_config.autocorrect_enable ? curr_hsv.primary.v : disabled_val, 0, 0, 0) +
+                xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, "CRCT",
+                                            autocorrect_is_enabled() ? curr_hsv.secondary.h : curr_hsv.primary.h,
+                                            autocorrect_is_enabled() ? curr_hsv.secondary.s : curr_hsv.primary.s,
+                                            autocorrect_is_enabled() ? curr_hsv.primary.v : disabled_val, 0, 0, 0) +
                         5;
                 xpos += qp_drawtext_recolor(
                             display, xpos, ypos, font_oled, "1SHT",
