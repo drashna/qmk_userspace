@@ -176,8 +176,7 @@ bool menu_handler_keycode_autocorrect(menu_input_t input) {
         case menu_input_left:
         case menu_input_right:
         case menu_input_enter:
-            keymap_config.autocorrect_enable = !keymap_config.autocorrect_enable;
-            eeconfig_update_keymap(&keymap_config);
+            autocorrect_toggle();
             return false;
         default:
             return true;
@@ -185,7 +184,7 @@ bool menu_handler_keycode_autocorrect(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_keycode_autocorrect(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%s", keymap_config.autocorrect_enable ? "on" : "off");
+    snprintf(text_buffer, buffer_len - 1, "%s", autocorrect_is_enabled() ? "on" : "off");
 }
 #endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 
