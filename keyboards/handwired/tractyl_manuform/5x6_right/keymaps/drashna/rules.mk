@@ -40,6 +40,11 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405)
     CUSTOM_QUANTUM_PAINTER_ST7789_76X284  = no
     WEAR_LEVELING_DRIVER                  = spi_flash
     USE_USB_OTG_HS_PORT                   = no
+    ifeq ($(strip $(PORTSCAN_MATRIX_ENABLE)), yes)
+        CUSTOM_MATRIX = lite
+        SRC += portscan_matrix.c
+        OPT_DEFS += -DPAL_USE_WAIT=TRUE -DPORTSCAN_MATRIX_ENABLE
+    endif
 endif
 
 ifeq ($(strip $(OVERLOAD_FEATURES)), yes)

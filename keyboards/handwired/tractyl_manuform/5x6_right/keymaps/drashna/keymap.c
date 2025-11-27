@@ -48,6 +48,16 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 #endif
 // clang-format on
 
+void housekeeping_task_keymap(void) {
+#ifdef PORTSCAN_MATRIX_ENABLE
+    void matrix_wait_for_interrupt(void);
+    // Go into low-scan interrupt-based mode if we haven't had any matrix activity in the last 250 milliseconds
+    if (last_input_activity_elapsed() > 250) {
+        matrix_wait_for_interrupt();
+    }
+#endif
+}
+
 #ifdef OLED_ENABLE
 void render_oled_title(bool side) {
     oled_write_P(side ? PSTR("   Tractyl   ") : PSTR("   Manuform  "), true);
