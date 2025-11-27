@@ -41,6 +41,9 @@ extern uint8_t wpm_graph_samples[WPM_GRAPH_SAMPLES];
 #        include "display/oled/oled_stuff.h"
 #    endif // OLED_ENABLE
 #endif     // DISPLAY_DRIVER_ENABLE
+#if defined(WPM_ENABLE) && defined(COMMUNITY_MODULE_WPM_STATS_ENABLE)
+#    include "wpm_stats.h"
+#endif // WPM_ENABLE && COMMUNITY_MODULE_WPM_STATS_ENABLE
 #ifndef FORCED_SYNC_THROTTLE_MS
 #    define FORCED_SYNC_THROTTLE_MS 100
 #endif // FORCED_SYNC_THROTTLE_MS
@@ -58,6 +61,7 @@ typedef enum PACKED extended_id_t {
     RPC_ID_EXTENDED_SUSPEND_STATE,
     RPC_ID_EXTENDED_OLED_KEYLOGGER_STR,
     RPC_ID_EXTENDED_RTC_CONFIG,
+    RPC_ID_EXTENDED_WPM_STAT_CONFIG,
     NUM_EXTENDED_IDS,
 } extended_id_t;
 
@@ -269,6 +273,25 @@ void recv_rtc_config(const uint8_t* data, uint8_t size) {
 #endif // COMMUNITY_MODULE_RTC_ENABLE
 }
 
+#if defined(WPM_ENABLE) && defined(COMMUNITY_MODULE_WPM_STATS_ENABLE)
+typedef struct wpm_stat_config_t {
+    uint16_t max_wpm;
+    uint32_t wpm_sum;
+    uint16_t wpm_count;
+} wpm_stat_config_t;
+#endif
+
+void recv_wpm_state_config(const uint8_t* data, uint8_t size) {
+#if defined(WPM_ENABLE) && defined(COMMUNITY_MODULE_WPM_STATS_ENABLE)
+#    include "wpm_stats.h"
+    static wpm_stat_config_t wpm_stat_config;
+    if (memcmp(data, &wpm_stat_config, sizeof(wpm_stat_config_t)) != 0) {
+        memcpy(&wpm_stat_config, data, sizeof(wpm_stat_config_t));
+        wpm_stats_set_split(&wpm_stat_config.max_wpm, &wpm_stat_config.wpm_sum, &wpm_stat_config.wpm_count);
+    }
+#endif // WPM_ENABLE && COMMUNITY_MODULE_WPM_STATS_ENABLE
+}
+
 static const handler_fn_t handlers[NUM_EXTENDED_IDS] = {
     [RPC_ID_EXTENDED_WPM_GRAPH_DATA]          = recv_wpm_graph_data,
     [RPC_ID_EXTENDED_AUTOCORRECT_STR]         = recv_autocorrect_string,
@@ -280,6 +303,7 @@ static const handler_fn_t handlers[NUM_EXTENDED_IDS] = {
     [RPC_ID_EXTENDED_SUSPEND_STATE]           = recv_device_suspend_state,
     [RPC_ID_EXTENDED_OLED_KEYLOGGER_STR]      = recv_oled_keylogger_string_sync,
     [RPC_ID_EXTENDED_RTC_CONFIG]              = recv_rtc_config,
+    [RPC_ID_EXTENDED_WPM_STAT_CONFIG]         = recv_wpm_state_config,
 };
 
 /**
@@ -686,6 +710,34 @@ void sync_rtc_config(void) {
 }
 #endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
 
+#if defined(WPM_ENABLE) && defined(COMMUNITY_MODULE_WPM_STATS_ENABLE)
+/**
+ * @brief Synchronizes the WPM statistics configuration between split keyboard halves.
+ *
+ * This function ensures that the WPM statistics configuration is consistent across both halves of a split keyboard.
+ */
+void sync_wpm_stats_config(void) {
+    static wpm_stat_config_t last_wpm_stat_config    = {0};
+    wpm_stat_config_t        current_wpm_stat_config = {0};
+    bool                     needs_sync              = false;
+
+    wpm_stats_get_split(&current_wpm_stat_config.max_wpm, &current_wpm_stat_config.wpm_sum,
+                        &current_wpm_stat_config.wpm_count);
+
+    if (memcmp(&current_wpm_stat_config, &last_wpm_stat_config, sizeof(wpm_stat_config_t)) != 0) {
+        needs_sync = true;
+        memcpy(&last_wpm_stat_config, &current_wpm_stat_config, sizeof(wpm_stat_config_t));
+    }
+
+    if (needs_sync) {
+        if (send_extended_message_handler(RPC_ID_EXTENDED_WPM_STAT_CONFIG, &current_wpm_stat_config,
+                                          sizeof(wpm_stat_config_t))) {
+            // Successfully sent
+        }
+    }
+}
+#endif
+
 /**
  * @brief Initialize the transport sync
  *
@@ -737,5 +789,8 @@ void housekeeping_task_transport_sync(void) {
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
         sync_rtc_config();
 #endif // COMMUNITY_MODULE_RTC_ENABLE
+#if defined(WPM_ENABLE) && defined(COMMUNITY_MODULE_WPM_STATS_ENABLE)
+        sync_wpm_stats_config();
+#endif // WPM_ENABLE && COMMUNITY_MODULE_WPM_STATS_ENABLE
     }
 }
