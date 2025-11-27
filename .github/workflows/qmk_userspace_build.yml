@@ -26,7 +26,7 @@ jobs:
   build:
     name: Build Userspace Firmware
     runs-on: ubuntu-latest
-    container: drashna/qmk_base_container
+    container: ghcr.io/qmk/qmk_cli:latest
 
     steps:
       - name: Checkout Userspace
