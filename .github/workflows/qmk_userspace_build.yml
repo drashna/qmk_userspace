@@ -51,10 +51,11 @@ jobs:
           ref: ${{ inputs.qmk_ref || 'master' }}
           submodules: recursive
 
-      - name: Install QMK CLI
+      - name: Install QMK CLI dependencies
         run: |
-          python3 -m pip install --upgrade qmk --break-system-packages
-          python3 -m pip install -r qmk_firmware/requirements.txt --break-system-packages
+          echo '$PATH'
+          echo $PATH | tr ':' '\n' | sed -e 's/^/ - /g'
+          pip install -r qmk_firmware/requirements.txt
 
       - name: Configure QMK CLI
         run: |

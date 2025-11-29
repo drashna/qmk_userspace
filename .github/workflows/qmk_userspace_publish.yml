@@ -19,18 +19,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # - name: Prune Previous Releases
-      #   uses: dev-drprasad/delete-tag-and-release@v1.0.1
-      #   if: always() && !cancelled()
-      #   with:
-      #     github_token: ${{ github.token }}
-      #     tag_name: latest_${{ inputs.qmk_ref }}
-      #     delete_release: true
-      #     repo: drashna/qmk_userspace
-
       - name: Download binaries
         if: always() && !cancelled()
         uses: actions/download-artifact@v4
+        with:
+          name: Firmware
+
+      - name: Delete release
+        run: gh release delete ${{ inputs.release_name || 'latest' }} --cleanup-tag || true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Generate Release
         uses: softprops/action-gh-release@v2
