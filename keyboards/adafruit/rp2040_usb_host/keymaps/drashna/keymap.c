@@ -57,40 +57,90 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #ifdef OLED_ENABLE
 #    include "display/oled/oled_stuff.h"
+#    ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
+#        include "layer_map.h"
+#    endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
+#    ifdef COMMUNITY_MODULE_DISPLAY_MENU_ENABLE
+#        include "oled_render_menu.h"
+#    endif // COMMUNITY_MODULE_DISPLAY_MENU_ENABLE
 
 extern bool is_oled_enabled;
 
-bool oled_task_keymap(void) {
-    // No right side oled, so just exit.
-    if (!is_keyboard_left()) {
-        return false;
-    }
+static const char PROGMEM code_to_name[256] = {
+    // clang-format off
+//   0    1    2    3    4    5    6    7    8    9    A    B    c    D    E    F
+    ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  // 0x
+    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2',  // 1x
+    '3', '4', '5', '6', '7', '8', '9', '0',  20,  19,0xC6,  26,  22, '-', '=', '[',  // 2x
+    ']','\\', '#', ';','\'', '`', ',', '.', '/',0xC9,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,  // 3x
+   0xDB,0xDC,0xDD,0xDE,0XDF,0xFC, 'P',0xCB,  19, 'I',  17,  30,0xC7,  16,  31,  26,  // 4x
+     27,  25,  24, 'N', '/', '*', '-', '+',  23, '1', '2', '3', '4', '5', '6', '7',  // 5x
+    '8', '9', '0', '.','\\',0xC8,   0, '=', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 6x
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',0xCD,  // 7x
+   0xCE,0xCF,0xC9,0xCA,0xCB, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 8x
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // 9x
+    ' ', ' ', ' ', ' ', ' ',   0, ' ', ' ',0xCD,0xCE,0xCF,0xD0,0xD1,0xD2,0xD3, ' ',  // Ax
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  // Bx
+    ' ',0x9E,0x9E, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',0x80,0x80,0x80,0x80,  // Cx
+   0x80,0x81,0x82,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,0x80,  // Dx
+    'C', 'S', 'A', 'G', 'C', 'S', 'A', 'G', ' ', ' ', ' ', ' ', ' ',  24,  26,  24,  // Ex
+     25, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',  24,  25,  27,  26, ' ', ' ', ' '   // Fx
+    // clang-format on
+};
 
+bool oled_task_keymap(void) {
     oled_write_raw_P(header_image, sizeof(header_image));
     oled_set_cursor(4, 0);
-    oled_write_P(PSTR(" Dilemma Max"), true);
+    oled_write_P(PSTR("USB Converter"), true);
 
-    render_default_layer_state(1, 1);
-    render_layer_state(1, 2);
-    render_pet(0, 5);
-    render_wpm(1, 7, 5);
-    // #    if defined(POINTING_DEVICE_ENABLE)
-    // render_pointing_dpi_status(
-    //     dilemma_get_pointer_sniping_enabled() ? dilemma_get_pointer_sniping_dpi() :
-    //     dilemma_get_pointer_default_dpi(), 1, 7, 6);
-    // render_mouse_mode(17, 6);
-    // #    else
-    render_matrix_scan_rate(1, 7, 6);
+    render_pet(0, 1);
+    render_wpm(1, 7, 1);
+    render_matrix_scan_rate(1, 7, 2);
     // #    endif
-    render_bootmagic_status(7, 7);
-    render_user_status(1, 9);
+    render_bootmagic_status(7, 3);
+    render_user_status(1, 5);
 
-    render_mod_status(get_mods() | get_oneshot_mods(), 1, 10);
-    render_keylock_status(host_keyboard_led_state(), 1, 11);
-    render_unicode_mode(1, 12);
+    render_mod_status(get_mods() | get_oneshot_mods(), 1, 6);
+    render_keylock_status(host_keyboard_led_state(), 1, 7);
+    render_os(1, 8);
 
-    render_os(1, 13);
-    render_rgb_mode(1, 14);
+#    if defined(COMMUNITY_MODULE_DISPLAY_MENU_ENABLE)
+    if (!oled_render_menu(0, 7, 8, true))
+#    endif
+    {
+#    ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
+
+        for (uint8_t i = 0; i < LAYER_MAP_ROWS; i++) {
+            oled_set_cursor(1, 9 + i);
+            for (uint8_t j = 0; j < LAYER_MAP_COLS; j++) {
+                uint16_t keycode = extract_basic_keycode(layer_map[i][j], NULL, false);
+                if (j > oled_max_chars() - 2) {
+                    break;
+                }
+                char code = 0;
+                if (keycode > 0xFF) {
+                    if (keycode == UC_IRNY) {
+                        code = 0xFD;
+                    } else if (keycode == UC_CLUE) {
+                        code = 0xFE;
+                    } else if (keycode == DISPLAY_MENU) {
+                        code = 0xC8;
+                    } else {
+                        keycode = 0;
+                    }
+                }
+                if (keycode < ARRAY_SIZE(code_to_name)) {
+                    code = pgm_read_byte(&code_to_name[keycode]);
+                }
+
+                oled_write_char(code, peek_matrix_layer_map(i, j));
+            }
+        }
+#    else
+        render_autocorrected_info(1, 9);
+#    endif
+    }
+    // nrender_autocorrected_info(1, 9);
 
     for (uint8_t i = 1; i < 15; i++) {
         oled_set_cursor(0, i);
@@ -107,6 +157,18 @@ bool oled_task_keymap(void) {
 #    endif
     return false;
 }
+#endif
+
+#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
+// clang-format off
+keypos_t layer_remap[LAYER_MAP_ROWS][LAYER_MAP_COLS] = {
+    { { .row =   5, .col =   1 }, { .row =   7, .col =   2 }, { .row =   7, .col =   3 }, { .row =   7, .col =   4 }, { .row =   7, .col =   5 }, { .row = 255, .col = 255 }, { .row =   7, .col =   6 }, { .row =   7, .col =   7 }, { .row =   8, .col =   0 }, { .row =   8, .col =   1 }, { .row = 255, .col = 255 }, { .row =   8, .col =   2 }, { .row =   8, .col =   3 }, { .row =   8, .col =   4 }, { .row =   8, .col =   5 }, { .row = 255, .col = 255 }, { .row =   8, .col =   6 }, { .row =   8, .col =   7 }, { .row =   9, .col =   0 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 } },
+    { { .row =   6, .col =   5 }, { .row =   3, .col =   6 }, { .row =   3, .col =   7 }, { .row =   4, .col =   0 }, { .row =   4, .col =   1 }, { .row =   4, .col =   2 }, { .row =   4, .col =   3 }, { .row =   4, .col =   4 }, { .row =   4, .col =   5 }, { .row =   4, .col =   6 }, { .row =   4, .col =   7 }, { .row =   5, .col =   5 }, { .row =   5, .col =   6 }, { .row =   5, .col =   2 }, { .row =   5, .col =   2 }, { .row = 255, .col = 255 }, { .row =   9, .col =   1 }, { .row =   9, .col =   2 }, { .row =   9, .col =   3 }, { .row = 255, .col = 255 }, { .row =  10, .col =   3 }, { .row =  10, .col =   4 }, { .row =  10, .col =   5 }, { .row =  10, .col =   6 } },
+    { { .row =   5, .col =   3 }, { .row =   2, .col =   4 }, { .row =   3, .col =   2 }, { .row =   1, .col =   0 }, { .row =   2, .col =   5 }, { .row =   2, .col =   7 }, { .row =   3, .col =   4 }, { .row =   3, .col =   0 }, { .row =   1, .col =   4 }, { .row =   2, .col =   2 }, { .row =   2, .col =   3 }, { .row =   5, .col =   7 }, { .row =   6, .col =   0 }, { .row =   6, .col =   1 }, { .row =   6, .col =   1 }, { .row = 255, .col = 255 }, { .row =   9, .col =   4 }, { .row =   9, .col =   5 }, { .row =   9, .col =   6 }, { .row = 255, .col = 255 }, { .row =  11, .col =   7 }, { .row =  12, .col =   0 }, { .row =  12, .col =   1 }, { .row =  10, .col =   7 } },
+    { { .row =   7, .col =   1 }, { .row =   0, .col =   4 }, { .row =   2, .col =   6 }, { .row =   0, .col =   7 }, { .row =   1, .col =   1 }, { .row =   1, .col =   2 }, { .row =   1, .col =   3 }, { .row =   1, .col =   4 }, { .row =   1, .col =   5 }, { .row =   1, .col =   6 }, { .row =   1, .col =   7 }, { .row =   6, .col =   3 }, { .row =   6, .col =   4 }, { .row =   5, .col =   0 }, { .row =   5, .col =   0 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 }, { .row =  11, .col =   4 }, { .row =  11, .col =   5 }, { .row =  11, .col =   6 }, { .row =  10, .col =   7 } },
+    { { .row =  28, .col =   1 }, { .row =  28, .col =   1 }, { .row =   3, .col =   5 }, { .row =   3, .col =   3 }, { .row =   0, .col =   6 }, { .row =   3, .col =   1 }, { .row =   0, .col =   5 }, { .row =   2, .col =   1 }, { .row =   2, .col =   0 }, { .row =   6, .col =   6 }, { .row =   6, .col =   7 }, { .row =   7, .col =   0 }, { .row =  28, .col =   5 }, { .row =  28, .col =   5 }, { .row =  28, .col =   5 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 }, { .row =  10, .col =   2 }, { .row = 255, .col = 255 }, { .row = 255, .col = 255 }, { .row =  11, .col =   1 }, { .row =  11, .col =   2 }, { .row =  11, .col =   3 }, { .row =  11, .col =   0 } },
+    { { .row =  28, .col =   0 }, { .row =  28, .col =   3 }, { .row =  28, .col =   2 }, { .row =   5, .col =   4 }, { .row =   5, .col =   4 }, { .row =   5, .col =   4 }, { .row =   5, .col =   4 }, { .row =   5, .col =   4 }, { .row =   5, .col =   4 }, { .row =   5, .col =   4 }, { .row =   5, .col =   4 }, { .row =  28, .col =   6 }, { .row =  28, .col =   7 }, { .row =  12, .col =   5 }, { .row =  28, .col =   4 }, { .row = 255, .col = 255 }, { .row =  10, .col =   0 }, { .row =  10, .col =   1 }, { .row =   9, .col =   7 }, { .row = 255, .col = 255 }, { .row =  12, .col =   2 }, { .row =  12, .col =   2 }, { .row =  12, .col =   3 }, { .row =  11, .col =   0 } },
+};
 #endif
 
 void keyboard_post_init_keymap(void) {
