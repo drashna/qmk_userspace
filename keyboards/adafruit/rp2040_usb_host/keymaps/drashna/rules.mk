@@ -1,7 +1,7 @@
 OLED_ENABLE         = yes
 OLED_TRANSPORT      = i2c
 
-AUTOCORRECT_ENABLE  = no
+AUTOCORRECT_ENABLE  = yes
 HAPTIC_ENABLE       = yes
 HAPTIC_DRIVER       = drv2605l
 WPM_ENABLE          = yes
