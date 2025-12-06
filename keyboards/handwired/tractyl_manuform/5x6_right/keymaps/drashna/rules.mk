@@ -38,8 +38,6 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405)
     CUSTOM_QUANTUM_PAINTER_ST7789_170X320 = no
     CUSTOM_QUANTUM_PAINTER_ST7789_135X240 = no
     CUSTOM_QUANTUM_PAINTER_ST7789_76X284  = no
-    MULTITHREADED_LIGHTING_ENABLE         = yes
-    MULTITHREADED_PAINTER_ENABLE          = yes
     WEAR_LEVELING_DRIVER                  = spi_flash
     USE_USB_OTG_HS_PORT                   = no
     ifeq ($(strip $(PORTSCAN_MATRIX_ENABLE)), yes)
