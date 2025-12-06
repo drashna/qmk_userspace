@@ -145,4 +145,7 @@ ifeq ($(strip $(DISPLAY_DRIVER_REQUIRED)), yes)
     ifeq ($(strip $(DISPLAY_MENU_ENABLED_DEFAULT)), yes)
         OPT_DEFS += -DDISPLAY_MENU_ENABLED_DEFAULT
     endif
+    ifeq ($(strip $(WPM_NO_SURFACE)), yes)
+        OPT_DEFS += -DWPM_NO_SURFACE
+    endif
 endif
