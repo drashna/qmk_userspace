@@ -20,7 +20,7 @@ static uint32_t hypno_timer;
 rgb_t           rgb_matrix_hsv_to_rgb(hsv_t hsv);
 
 void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode, uint8_t speed, uint8_t led_type,
-                             led_index_t led_min, led_index_t led_max) {
+                             uint8_t led_min, uint8_t led_max) {
     hsv_t   hsv  = {hue, sat, val};
     rgb_t   rgb  = {0};
     uint8_t time = scale16by8(g_rgb_timer, qadd8(speed / 4, 1));
@@ -30,7 +30,7 @@ void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode
 
     switch (mode) {
         case 1: // breathing
-            for (led_index_t i = led_min; i < led_max; i++) {
+            for (uint8_t i = led_min; i < led_max; i++) {
                 if (HAS_FLAGS(g_led_config.flags[i], led_type)) {
                     hsv.v     = scale8(abs8(sin8(time) - 128) * 2, hsv.v);
                     rgb_t rgb = rgb_matrix_hsv_to_rgb(hsv);
@@ -39,7 +39,7 @@ void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode
             }
             break;
         case 2: // Rainbow Mood
-            for (led_index_t i = led_min; i < led_max; i++) {
+            for (uint8_t i = led_min; i < led_max; i++) {
                 hsv.h = time;
                 if (HAS_FLAGS(g_led_config.flags[i], led_type)) {
                     rgb = rgb_matrix_hsv_to_rgb(hsv);
@@ -48,7 +48,7 @@ void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode
             }
             break;
         case 3: // Rainbow Swirl
-            for (led_index_t i = led_min; i < led_max; i++) {
+            for (uint8_t i = led_min; i < led_max; i++) {
                 if (HAS_FLAGS(g_led_config.flags[i], led_type)) {
                     hsv.h = g_led_config.point[i].x - time;
                     rgb   = rgb_matrix_hsv_to_rgb(hsv);
@@ -57,7 +57,7 @@ void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode
             }
             break;
         case 4: // Snek
-            for (led_index_t i = led_min; i < led_max; i++) {
+            for (uint8_t i = led_min; i < led_max; i++) {
                 if (HAS_FLAGS(g_led_config.flags[i], led_type)) {
                     int16_t v = hsv.v - abs(scale8(g_led_config.point[i].x, 228) + 28 - time) * 8;
                     hsv.v     = scale8(v < 0 ? 0 : v, hsv.v);
@@ -67,7 +67,7 @@ void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode
             }
             break;
         default: // Solid Color
-            for (led_index_t i = led_min; i < led_max; i++) {
+            for (uint8_t i = led_min; i < led_max; i++) {
                 if (HAS_FLAGS(g_led_config.flags[i], led_type)) {
                     rgb_t rgb = rgb_matrix_hsv_to_rgb(hsv);
                     rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
@@ -172,10 +172,10 @@ const rgblight_driver_t rgblight_driver = {
 };
 #endif // RGBLIGHT_ENABLE && RGBLIGHT_CUSTOM
 
-__attribute__((weak)) bool rgb_matrix_indicators_advanced_keymap(led_index_t led_min, led_index_t led_max) {
+__attribute__((weak)) bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
     return true;
 }
-bool rgb_matrix_indicators_advanced_user(led_index_t led_min, led_index_t led_max) {
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (!rgb_matrix_indicators_advanced_keymap(led_min, led_max)) {
         return false;
     }
@@ -189,7 +189,7 @@ bool rgb_matrix_indicators_advanced_user(led_index_t led_min, led_index_t led_ma
  * @param led_min
  * @param led_max
  */
-void rgb_matrix_indicators_render_layer(led_index_t led_min, led_index_t led_max) {
+void rgb_matrix_indicators_render_layer(uint8_t led_min, uint8_t led_max) {
     if (userspace_config.rgb.layer_change) {
 #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
 #    if defined(SPLIT_KEYBOARD) && defined(SPLIT_LAYER_STATE_ENABLE)
@@ -203,7 +203,7 @@ void rgb_matrix_indicators_render_layer(led_index_t led_min, led_index_t led_max
             }
         }
 #    endif // SPLIT_KEYBOARD && SPLIT_LAYER_STATE_ENABLE
-        for (led_index_t i = 0; i < RGBLIGHT_LED_COUNT; i++) {
+        for (uint8_t i = 0; i < RGBLIGHT_LED_COUNT; i++) {
             RGB_MATRIX_INDICATOR_SET_COLOR(led_mapping[i], led_array[i].r, led_array[i].g, led_array[i].b);
         }
 #else  // RGBLIGHT_ENABLE && RGBLIGHT_CUSTOM
