@@ -38,6 +38,8 @@
 #    define RGBLIGHT_LIMIT_VAL 255
 #    undef RGB_MATRIX_MAXIMUM_BRIGHTNESS
 #    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 255
+#    undef SERIAL_USART_SPEED
+#    define SERIAL_USART_SPEED (2.5 * 1024 * 1024)
 #elif defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f411)
 #    undef SPLIT_HAND_PIN
 #    define SPLIT_HAND_PIN A9
