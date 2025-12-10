@@ -107,9 +107,6 @@ ifeq ($(strip $(QUANTUM_PAINTER_ENABLE)), yes)
         SRC += $(USER_PATH)/display/painter/painter.c \
                 $(USER_PATH)/display/painter/graphics.qgf.c
 
-        ifeq ($(strip $(MULTITHREADED_PAINTER_ENABLE)), yes)
-            OPT_DEFS += -DMULTITHREADED_PAINTER_ENABLE
-        endif
         ifeq ($(strip $(SCREENSAVER_TESTING_ENABLE)), yes)
             OPT_DEFS += -DSCREENSAVER_TESTING_ENABLE
         endif
