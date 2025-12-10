@@ -1521,6 +1521,18 @@ void painter_render_user(void) {
 #endif
 }
 
+#ifdef MULTITHREADED_PAINTER_ENABLE
+bool qp_thread_init_user(void) {
+    painter_init_user();
+    return true;
+}
+
+bool qp_thread_task_user(void) {
+    painter_render_user();
+    return true;
+}
+#endif // MULTITHREADED_PAINTER_ENABLE
+
 void housekeeping_task_display_menu_user(void) {
 #ifdef SPLIT_KEYBOARD
     if (!is_keyboard_master()) {
@@ -1544,12 +1556,14 @@ void housekeeping_task_display_menu_user(void) {
         rgb_redraw = true;
     }
 #endif
+#ifndef MULTITHREADED_PAINTER_ENABLE
     static uint32_t last_tick = 0;
     uint32_t        now       = timer_read32();
     if (TIMER_DIFF_32(now, last_tick) >= (QUANTUM_PAINTER_TASK_THROTTLE)) {
         painter_render_user();
         last_tick = now;
     }
+#endif // !MULTITHREADED_PAINTER_ENABLE
 #if (QUANTUM_PAINTER_DISPLAY_TIMEOUT) > 0
     if (is_keyboard_master() && (last_input_activity_elapsed() > QUANTUM_PAINTER_DISPLAY_TIMEOUT)) {
         qp_backlight_disable();
@@ -1576,7 +1590,9 @@ void keyboard_post_init_quantum_painter(void) {
     gpio_set_pin_output_push_pull(BACKLIGHT_PIN);
     gpio_write_pin_high(BACKLIGHT_PIN);
 #endif
+#ifndef MULTITHREADED_PAINTER_ENABLE
     painter_init_user();
+#endif // !MULTITHREADED_PAINTER_ENABLE
     if (userspace_config.display.painter.left.display_logo >= screensaver_image_size) {
         userspace_config.display.painter.left.display_logo = 0;
         eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
