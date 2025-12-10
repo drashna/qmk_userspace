@@ -160,7 +160,7 @@ __attribute__((weak)) bool screen_saver_sanity_checks(void) {
         return false;
     }
     // if time since firmware start has been less than 10 seconds, doubt.
-    if (timer_elapsed32(0) < 10000) {
+    if (sync_timer_elapsed32(0) < 10000) {
         return false;
     }
     // if the difference between the last tick and this one is more than 10 times the throttle, doubt.
@@ -208,7 +208,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
             display_logo_cycle = userspace_config.display.painter.right.display_logo_cycle;
         }
 #ifdef SCREENSAVER_TESTING_ENABLE
-        if (display_logo_cycle && timer_elapsed(screen_saver_timer) > 1000)
+        if (display_logo_cycle && sync_timer_elapsed(screen_saver_timer) > 1000)
 #else
         if (display_logo_cycle && timer_elapsed(screen_saver_timer) > 5000)
 #endif
