@@ -115,13 +115,3 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                      _______, _______,      KC_NUKE, _______
     ),
 };
-
-void matrix_output_unselect_delay(uint8_t line, bool key_pressed) {
-#ifdef HEAVY_OPTIMIZATION_ENABLE
-    wait_us(1);
-#else
-    for (uint8_t i = 0; i < 40; i++) {
-        __asm__ volatile("nop" ::: "memory");
-    }
-#endif
-}

@@ -58,6 +58,23 @@ void housekeeping_task_keymap(void) {
 #endif
 }
 
+#ifndef PORTSCAN_MATRIX_ENABLE
+void matrix_output_select_delay(void) {
+    for (uint8_t i = 0; i < 1; i++) {
+        __asm__ volatile("nop" ::: "memory");
+    }
+}
+void matrix_output_unselect_delay(uint8_t line, bool key_pressed) {
+#    ifdef HEAVY_OPTIMIZATION_ENABLE
+    wait_us(1);
+#    else
+    for (uint8_t i = 0; i < 20; i++) {
+        __asm__ volatile("nop" ::: "memory");
+    }
+#    endif // HEAVY_OPTIMIZATION_ENABLE
+}
+#endif // PORTSCAN_MATRIX_ENABLE
+
 #ifdef OLED_ENABLE
 void render_oled_title(bool side) {
     oled_write_P(side ? PSTR("   Tractyl   ") : PSTR("   Manuform  "), true);
