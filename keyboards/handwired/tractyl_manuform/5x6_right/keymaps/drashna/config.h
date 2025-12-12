@@ -37,7 +37,9 @@
 #if defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f405)
 #    define RGBLIGHT_LIMIT_VAL 255
 #    undef RGB_MATRIX_MAXIMUM_BRIGHTNESS
-#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 255
+#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS    255
+#    define MATRIX_OUTPUT_SELECT_DELAY_NOP   1
+#    define MATRIX_OUTPUT_UNSELECT_DELAY_NOP 25
 #    undef SERIAL_USART_SPEED
 #    define SERIAL_USART_SPEED (2 * 1024 * 1024)
 #elif defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f411)

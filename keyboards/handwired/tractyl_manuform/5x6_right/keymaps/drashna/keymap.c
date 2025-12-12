@@ -59,20 +59,24 @@ void housekeeping_task_keymap(void) {
 }
 
 #ifndef PORTSCAN_MATRIX_ENABLE
+#    if MATRIX_OUTPUT_SELECT_DELAY_NOP > 0
 void matrix_output_select_delay(void) {
-    for (uint8_t i = 0; i < 1; i++) {
+    for (uint8_t i = 0; i < MATRIX_OUTPUT_SELECT_DELAY_NOP; i++) {
         __asm__ volatile("nop" ::: "memory");
     }
 }
+#    endif // MATRIX_OUTPUT_SELECT_DELAY_NOP > 0
+#    if defined(MATRIX_OUTPUT_UNSELECT_DELAY_NOP) || defined(HEAVY_OPTIMIZATION_ENABLE)
 void matrix_output_unselect_delay(uint8_t line, bool key_pressed) {
-#    ifdef HEAVY_OPTIMIZATION_ENABLE
+#        ifdef HEAVY_OPTIMIZATION_ENABLE
     wait_us(1);
-#    else
-    for (uint8_t i = 0; i < 20; i++) {
+#        elif MATRIX_OUTPUT_UNSELECT_DELAY_NOP > 0
+    for (uint8_t i = 0; i < MATRIX_OUTPUT_UNSELECT_DELAY_NOP; i++) {
         __asm__ volatile("nop" ::: "memory");
     }
-#    endif // HEAVY_OPTIMIZATION_ENABLE
+#        endif // HEAVY_OPTIMIZATION_ENABLE
 }
+#    endif
 #endif // PORTSCAN_MATRIX_ENABLE
 
 #ifdef OLED_ENABLE
