@@ -62,7 +62,7 @@
         {
             "label": "userspace-terminal",
             "type": "shell",
-            "command": "/bin/zsh",
+            "command": "/usr/bin/tmux new -A -s qmk_userspace",
             "options": {
                 "cwd": "${workspaceFolder:qmk_userspace}"
             },
@@ -82,7 +82,7 @@
         {
             "label": "firmware-terminal",
             "type": "shell",
-            "command": "/bin/zsh",
+            "command": "/usr/bin/tmux new -A -s qmk_firmware",
             "options": {
                 "cwd": "${workspaceFolder:qmk_firmware}"
             },
