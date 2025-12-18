@@ -1,0 +1,9 @@
+{
+    "module_name": "Startup RGB Animation",
+    "maintainer": "josh@windowoffire.com",
+    "license": "GPL-2.0-or-later",
+    "features": {
+        "rgblight" : true,
+        "deferred_exec" : true
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "module_name": "Better Debug",
+    "maintainer": "josh@windowoffire.com",
+    "license": "GPL-2.0-or-later",
+    "features": {
+        "console": true,
+        "deferred_exec": true
+    }
+}

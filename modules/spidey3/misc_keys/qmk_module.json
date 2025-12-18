@@ -1,0 +1,12 @@
+{
+    "module_name": "Miscellaneous Keys",
+    "maintainer": "josh@windowoffire.com",
+    "license": "GPL-2.0-or-later",
+    "features": {
+        "console": true,
+        "os_detection": true
+    },
+    "keycodes": [
+        { "key": "MISC_KEYS_00", "aliases": ["MK_00"] }
+    ]
+}

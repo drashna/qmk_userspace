@@ -1,0 +1,17 @@
+{
+    "module_name": "Glyph Replacement",
+    "maintainer": "josh@windowoffire.com",
+    "license": "GPL-2.0-or-later",
+    "keycodes": [
+        { "key": "GLYPH_REPLACE_MODE_NORMAL", "aliases": ["GR_NORM"] },
+        { "key": "GLYPH_REPLACE_MODE_WIDE",   "aliases": ["GR_WIDE"] },
+        { "key": "GLYPH_REPLACE_MODE_SCRIPT", "aliases": ["GR_SCRI"] },
+        { "key": "GLYPH_REPLACE_MODE_BLOCKS", "aliases": ["GR_BLOC"] },
+        { "key": "GLYPH_REPLACE_MODE_CIRCLE", "aliases": ["GR_CIRC"] },
+        { "key": "GLYPH_REPLACE_MODE_SQUARE", "aliases": ["GR_SQUA"] },
+        { "key": "GLYPH_REPLACE_MODE_PARENS", "aliases": ["GR_PARE"] },
+        { "key": "GLYPH_REPLACE_MODE_FRAKTR", "aliases": ["GR_FRAK"] },
+        { "key": "GLYPH_REPLACE_MODE_BOLD",   "aliases": ["GR_BOLD"] },
+        { "key": "GLYPH_REPLACE_MODE_MATH",   "aliases": ["GR_MATH"] }
+    ]
+}

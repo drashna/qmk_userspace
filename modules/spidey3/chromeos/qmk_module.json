@@ -1,0 +1,10 @@
+{
+    "module_name": "ChromeOS Goodies",
+    "maintainer": "josh@windowoffire.com",
+    "license": "GPL-2.0-or-later",
+    "features": {},
+    "keycodes": [
+        { "key": "CHROMEOS_SUSPEND",       "aliases": ["CH_SUSP"] },
+        { "key": "CHROMEOS_GUI_FKEY_LOCK", "aliases": ["CH_GFLK"] }
+    ]
+}
