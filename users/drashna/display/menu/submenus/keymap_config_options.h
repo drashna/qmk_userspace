@@ -171,13 +171,14 @@ __attribute__((weak)) void display_handler_keycode_oneshot(char *text_buffer, si
 }
 
 #if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
+#    include "autocorrect.h"
+
 bool menu_handler_keycode_autocorrect(menu_input_t input) {
     switch (input) {
         case menu_input_left:
         case menu_input_right:
         case menu_input_enter:
-            keymap_config.autocorrect_enable = !keymap_config.autocorrect_enable;
-            eeconfig_update_keymap(&keymap_config);
+            autocorrect_enable();
             return false;
         default:
             return true;
@@ -185,7 +186,25 @@ bool menu_handler_keycode_autocorrect(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_keycode_autocorrect(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%s", keymap_config.autocorrect_enable ? "on" : "off");
+    snprintf(text_buffer, buffer_len - 1, "%s", autocorrect_is_enabled() ? "on" : "off");
+}
+
+bool menu_handler_keycode_autocorrect_dict(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+            autocorrect_dict_cycle(false);
+            return false;
+        case menu_input_right:
+            autocorrect_dict_cycle(true);
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_keycode_autocorrect_dict(char *text_buffer, size_t buffer_len) {
+    uint8_t dict_index = autocorrect_get_current_dictionary();
+    snprintf(text_buffer, buffer_len - 1, "Dict %d/%d", dict_index + 1, autocorrect_get_number_of_dictionaries());
 }
 #endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 
@@ -200,5 +219,6 @@ menu_entry_t keymap_config_entries[] = {
     MENU_ENTRY_CHILD("Oneshot Keys", "1SHOT", keycode_oneshot),
 #if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
     MENU_ENTRY_CHILD("Autocorrect", "AutoCorr", keycode_autocorrect),
+    MENU_ENTRY_CHILD("Autocorrect Dictionary", "AutoDict", keycode_autocorrect_dict),
 #endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 };
