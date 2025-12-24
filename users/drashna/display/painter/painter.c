@@ -879,7 +879,7 @@ void painter_render_keylogger(painter_device_t device, painter_font_handle_t fon
  */
 void painter_render_autocorrect(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                                 uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
-#ifdef AUTOCORRECT_ENABLE
+#if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
     extern bool autocorrect_str_has_changed;
     extern char autocorrected_str_raw[2][21];
     char        buf[50] = {0};

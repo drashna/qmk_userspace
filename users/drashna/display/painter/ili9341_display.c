@@ -570,13 +570,13 @@ __attribute__((weak)) void ili9341_draw_user(void) {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Autocorrection values
 
-#ifdef AUTOCORRECT_ENABLE
+#if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
             ypos = 122 + 4;
 
             painter_render_autocorrect(display, font_oled, 5, ypos, width, hue_redraw, &curr_hsv);
             ypos += (font_oled->line_height + 4) * 3;
 
-#endif // AUTOCORRECT_ENABLE
+#endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 
             ypos += font_oled->line_height + 1;
 
