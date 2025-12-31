@@ -20,7 +20,7 @@ extern const uint16_t PROGMEM pointing_mode_maps[POINTING_MODE_MAP_COUNT][POINTI
 #endif // POINTING_MODE_MAP_ENABLE
 
 #ifndef AUTO_MOUSE_TIME
-#    define AUTO_MOUSE_TIME 650
+#    define AUTO_MOUSE_TIME 1250
 #endif
 #ifndef AUTO_MOUSE_DEBOUNCE
 #    define AUTO_MOUSE_DEBOUNCE 25
