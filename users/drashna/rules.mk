@@ -94,3 +94,10 @@ include $(USER_PATH)/keyrecords/keyrecords.mk
 include $(USER_PATH)/features/common.mk
 # Ignore if not found
 -include $(KEYMAP_PATH)/post_rules.mk
+
+ifeq ($(strip $(HOME_ROW_MODS_ENABLE)), yes)
+    # Add define name for easier checking/filtering
+    OPT_DEFS += -DHOME_ROW_MODS_ENABLE
+    # enable all the options for homerow mods
+    OPT_DEFS += -DTAPPING_TERM=250 -DFLOW_TAP_TERM=150 -DPERMISSIVE_HOLD -DCHORDAL_HOLD -DSPECULATIVE_HOLD
+endif
