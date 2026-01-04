@@ -139,6 +139,7 @@ typedef struct PACKED {
     struct {
         menu_state_t         menu_state;
         menu_state_runtime_t menu_state_runtime;
+        uint8_t              screensaver_offset;
     } display;
     struct {
         struct {

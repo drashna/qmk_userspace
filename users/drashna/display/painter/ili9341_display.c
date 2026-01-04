@@ -196,7 +196,6 @@ __attribute__((weak)) void ili9341_draw_user(void) {
 
     if (screen_saver_sanity_checks()) {
         static uint16_t screen_saver_timer = 0;
-        static uint8_t  display_mode_ref   = 0;
         uint8_t         display_logo_index = 0;
         bool            display_logo_cycle = false;
 
@@ -210,26 +209,28 @@ __attribute__((weak)) void ili9341_draw_user(void) {
 #ifdef SCREENSAVER_TESTING_ENABLE
         if (display_logo_cycle && sync_timer_elapsed(screen_saver_timer) > 1000)
 #else
-        if (display_logo_cycle && timer_elapsed(screen_saver_timer) > 5000)
+        if (display_logo_cycle && sync_timer_elapsed(screen_saver_timer) > 5000)
 #endif
         {
             static uint8_t last_display_mode = 0;
             if (last_display_mode != display_logo_index) {
-                last_display_mode = display_logo_index;
-                display_mode_ref  = 0; // reset the reference
+                last_display_mode                                  = display_logo_index;
+                userspace_runtime_state.display.screensaver_offset = 0; // reset the reference
             } else {
-                display_mode_ref++;
+                userspace_runtime_state.display.screensaver_offset++;
             }
             screen_saver_redraw = false;
-            screen_saver_timer  = timer_read();
+            screen_saver_timer  = sync_timer_read();
         } else if (!display_logo_cycle) {
-            display_mode_ref = 0; // reset the reference
+            userspace_runtime_state.display.screensaver_offset = 0; // reset the reference
             // xprintf("Screen saver: %d, reset at %u\n", display_mode_ref, screen_saver_timer);
         }
         if (screen_saver_redraw == false) {
             screen_saver_redraw = true;
             screen_saver        = qp_load_image_mem(
-                screen_saver_image[(display_logo_index + display_mode_ref) % screensaver_image_size].data);
+                screen_saver_image[(display_logo_index + userspace_runtime_state.display.screensaver_offset) %
+                                   screensaver_image_size]
+                    .data);
             if (screen_saver != NULL) {
                 qp_drawimage(display, 0, 0, screen_saver);
                 qp_close_image(screen_saver);
