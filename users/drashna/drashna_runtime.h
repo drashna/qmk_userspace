@@ -21,7 +21,7 @@ typedef struct {
     // 3 bits gets 8 modes, 4 bits gets 16, etc
     bool    inverted           : 1;
     uint8_t rotation           : 2;
-    uint8_t display_mode       : 3;
+    uint8_t display_mode       : 4;
     uint8_t display_logo       : 4;
     bool    display_logo_cycle : 1;
 } painter_options_t;
