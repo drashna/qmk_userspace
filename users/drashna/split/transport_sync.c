@@ -631,61 +631,6 @@ void sync_debug_config(void) {
     }
 }
 
-#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
-#    include "layer_map.h"
-typedef struct PACKED layer_map_msg_t {
-    uint8_t  row;
-    uint16_t layer_map[LAYER_MAP_COLS];
-} layer_map_msg_t;
-
-_Static_assert(sizeof(layer_map_msg_t) <= RPC_M2S_BUFFER_SIZE, "Layer map message size exceeds buffer size!");
-#endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
-
-void layer_map_sync_handler(uint8_t initiator2target_buffer_size, const void* initiator2target_buffer,
-                            uint8_t target2initiator_buffer_size, void* target2initiator_buffer) {
-#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
-    layer_map_msg_t msg = {0};
-    memcpy(&msg, initiator2target_buffer, initiator2target_buffer_size);
-    if (msg.row >= LAYER_MAP_ROWS) {
-        xprintf("Layer Map row out of bounds: %d (Valid range: 0-%d)\n", msg.row, LAYER_MAP_ROWS - 1);
-        return;
-    }
-    if (memcmp(msg.layer_map, layer_map[msg.row], sizeof(msg.layer_map)) != 0) {
-        memcpy(layer_map[msg.row], msg.layer_map, sizeof(msg.layer_map));
-        set_layer_map_has_updated(true);
-    }
-#endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
-}
-
-#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
-/**
- * @brief Synchronizes the layer map between split keyboard halves.
- *
- * This function ensures that the layer map is consistent across both halves of a split keyboard.
- * It checks for differences between the current layer map and the last synchronized state.
- * If differences are detected, it sends the updated layer map to the other half.
- */
-void sync_layer_map(void) {
-    static uint16_t last_layer_map[LAYER_MAP_ROWS][LAYER_MAP_COLS] = {0};
-    static uint16_t last_sync_time                                 = 0;
-
-    if (memcmp(layer_map, last_layer_map, sizeof(last_layer_map)) != 0 || timer_elapsed(last_sync_time) >= 1000) {
-        memcpy(last_layer_map, layer_map, sizeof(last_layer_map));
-        for (uint8_t i = 0; i < LAYER_MAP_ROWS; i++) {
-            layer_map_msg_t msg = {
-                .row       = i,
-                .layer_map = {0},
-            };
-            memcpy(msg.layer_map, layer_map[i], sizeof(msg.layer_map));
-            if (transaction_rpc_send(RPC_ID_LAYER_MAP_SYNC, sizeof(layer_map_msg_t), &msg)) {
-                continue;
-            }
-        }
-        last_sync_time = timer_read();
-    }
-}
-#endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
-
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
 /**
  * @brief Synchronizes the RTC date and time between split keyboard halves.
@@ -745,7 +690,6 @@ void sync_wpm_stats_config(void) {
 void keyboard_post_init_transport_sync(void) {
     // Register keyboard state sync split transaction
     transaction_register_rpc(RPC_ID_EXTENDED_SYNC_TRANSPORT, extended_message_handler);
-    transaction_register_rpc(RPC_ID_LAYER_MAP_SYNC, layer_map_sync_handler);
 }
 
 /**
@@ -783,9 +727,6 @@ void housekeeping_task_transport_sync(void) {
         sync_debug_config();
         sync_userspace_runtime_state();
         sync_userspace_config();
-#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
-        sync_layer_map();
-#endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
         sync_rtc_config();
 #endif // COMMUNITY_MODULE_RTC_ENABLE
