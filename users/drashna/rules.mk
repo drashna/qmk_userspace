@@ -101,3 +101,6 @@ ifeq ($(strip $(HOME_ROW_MODS_ENABLE)), yes)
     # enable all the options for homerow mods
     OPT_DEFS += -DTAPPING_TERM=250 -DFLOW_TAP_TERM=150 -DPERMISSIVE_HOLD -DCHORDAL_HOLD -DSPECULATIVE_HOLD
 endif
+
+
+LDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref
