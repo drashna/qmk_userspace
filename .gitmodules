@@ -24,3 +24,6 @@
 [submodule "modules/dmyoung9"]
     path = modules/dmyoung9
     url = https://github.com/dmyoung9/qmk_modules.git
+[submodule "modules/plodah"]
+    path = modules/plodah
+    url = https://github.com/plodah/qmk_modules.git
