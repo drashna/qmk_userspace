@@ -104,3 +104,4 @@ endif
 
 
 LDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref
+CFLAGS += -fno-common
