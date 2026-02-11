@@ -26,5 +26,6 @@
     "[json]": {
         "editor.formatOnSave": false
     },
-    "clangd.arguments": ["--header-insertion=never"]
+    "clangd.arguments": ["--header-insertion=never"],
+    "task.allowAutomaticTasks": "on"
 }

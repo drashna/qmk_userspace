@@ -40,26 +40,6 @@
             }
         },
         {
-            "label": "Create terminals on startup",
-            "dependsOn": ["userspace-terminal", "firmware-terminal"],
-            "group": {
-                "kind": "none"
-            },
-            "runOptions": {
-                "runOn": "folderOpen"
-            },
-            "presentation": {
-                "echo": false,
-                "reveal": "always",
-                "focus": true,
-                "panel": "dedicated",
-                "showReuseMessage": false,
-                "clear": true,
-                "close": false
-            },
-            "problemMatcher": []
-        },
-        {
             "label": "userspace-terminal",
             "type": "shell",
             "command": "/usr/bin/tmux new -A -s qmk_userspace",
@@ -98,6 +78,29 @@
                 "clear": true,
                 "close": true
             }
-        }
+        },
+        {
+            "label": "Create terminals on startup",
+            "dependsOn": [
+                "userspace-terminal",
+                "firmware-terminal"
+            ],
+            "group": {
+                "kind": "none"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true,
+                "close": false
+            },
+            "problemMatcher": []
+        },
     ]
 }
