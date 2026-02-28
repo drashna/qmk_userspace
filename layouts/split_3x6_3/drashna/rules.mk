@@ -66,4 +66,5 @@ ifeq ($(strip $(USE_ARM_CONFIG)), yes)
     CUSTOM_OLED_DRIVER          = yes
     CUSTOM_RGB_MATRIX           = yes
     CUSTOM_RGBLIGHT             = yes
+    KEYMAP_JSON                 = $(MAIN_KEYMAP_PATH_5)/keymap_arm.json
 endif

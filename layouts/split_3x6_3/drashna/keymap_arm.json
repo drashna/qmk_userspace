@@ -2,8 +2,6 @@
     "modules": [
         "drashna/autocorrect",
         "drashna/keyboard_lock",
-        "drashna/pointing_device_accel",
-        "drashna/unicode_typing",
         "drashna/watchdog",
         "getreuer/sentence_case",
         "getreuer/lumino"
