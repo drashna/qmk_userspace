@@ -40,3 +40,16 @@ ifeq ($(strip $(MIRYOKU_KLUDGE_THUMBCOMBOS)),yes)
   COMBO_ENABLE = yes
   OPT_DEFS += -DMIRYOKU_KLUDGE_THUMBCOMBOS
 endif
+
+ifeq ($(PLATFORM_KEY),avr)
+    ifneq ($(strip $(LTO_SUPPORTED)), no)
+        LTO_ENABLE        = yes
+    endif
+    SPACE_CADET_ENABLE    ?= no
+    GRAVE_ESC_ENABLE      ?= no
+    MAGIC_ENABLE          ?= no
+    SEND_STRING_ENABLE    ?= no
+    CONSOLE_ENABLE        ?= no
+    COMMAND_ENABLE        ?= no
+    AVR_USE_MINIMAL_PRINTF = yes
+endif
