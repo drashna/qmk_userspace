@@ -64,7 +64,7 @@ const key_override_t *key_overrides[] = {
 const uint16_t PROGMEM thumbcombos_base_right[] = {LT(U_SYM, KC_ENT), LT(U_NUM, KC_BSPC), COMBO_END};
 const uint16_t PROGMEM thumbcombos_base_left[] = {LT(U_NAV, KC_SPC), LT(U_MOUSE, KC_TAB), COMBO_END};
 const uint16_t PROGMEM thumbcombos_nav[] = {KC_ENT, KC_BSPC, COMBO_END};
-const uint16_t PROGMEM thumbcombos_mouse[] = {KC_BTN2, KC_BTN1, COMBO_END};
+const uint16_t PROGMEM thumbcombos_mouse[] = {MS_BTN2, MS_BTN1, COMBO_END};
 const uint16_t PROGMEM thumbcombos_media[] = {KC_MSTP, KC_MPLY, COMBO_END};
 const uint16_t PROGMEM thumbcombos_num[] = {KC_0, KC_MINS, COMBO_END};
   #if defined (MIRYOKU_LAYERS_FLIP)
@@ -77,7 +77,7 @@ combo_t key_combos[] = {
   COMBO(thumbcombos_base_right, LT(U_FUN, KC_DEL)),
   COMBO(thumbcombos_base_left, LT(U_MEDIA, KC_ESC)),
   COMBO(thumbcombos_nav, KC_DEL),
-  COMBO(thumbcombos_mouse, KC_BTN3),
+  COMBO(thumbcombos_mouse, MS_BTN3),
   COMBO(thumbcombos_media, KC_MUTE),
   COMBO(thumbcombos_num, KC_DOT),
   #if defined (MIRYOKU_LAYERS_FLIP)
