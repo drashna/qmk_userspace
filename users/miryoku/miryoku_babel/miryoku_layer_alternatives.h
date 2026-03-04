@@ -321,7 +321,7 @@ U_NP,              U_NP,              U_NA,              U_NA,              U_NA
 #define MIRYOKU_ALTERNATIVES_MOUSE_VI \
 TD(U_TD_BOOT),     TD(U_TD_U_TAP),    TD(U_TD_U_EXTRA),  TD(U_TD_U_BASE),   U_NA,              U_RDO,             U_PST,             U_CPY,             U_CUT,             U_UND,             \
 KC_LGUI,           KC_LALT,           KC_LCTL,           KC_LSFT,           U_NA,              MS_LEFT,           MS_DOWN,           MS_UP,           MS_RGHT,           U_NU,              \
-U_NA,              KC_ALGR,           TD(U_TD_U_SYM),    TD(U_TD_U_MOUSE),  U_NA,              KC_WH_L,           MS_WHLD,           MS_WHLU,           MS_WHLR,           U_NU,              \
+U_NA,              KC_ALGR,           TD(U_TD_U_SYM),    TD(U_TD_U_MOUSE),  U_NA,              MS_WHLL,           MS_WHLD,           MS_WHLU,           MS_WHLR,           U_NU,              \
 U_NP,              U_NP,              U_NA,              U_NA,              U_NA,              MS_BTN2,           MS_BTN1,           MS_BTN3,           U_NP,              U_NP
 
 #define MIRYOKU_ALTERNATIVES_MOUSE \
