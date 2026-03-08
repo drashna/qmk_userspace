@@ -27,3 +27,6 @@
 [submodule "modules/plodah"]
     path = modules/plodah
     url = https://github.com/plodah/qmk_modules.git
+[submodule "modules/devoidfury"]
+    path = modules/devoidfury
+    url = https://github.com/devoidfury/qmk_modules.git
