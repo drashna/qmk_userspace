@@ -82,9 +82,9 @@ _Static_assert(sizeof(userspace_config_t) <= RPC_EXTENDED_TRANSACTION_BUFFER_SIZ
 _Static_assert(sizeof(userspace_runtime_state_t) <= RPC_EXTENDED_TRANSACTION_BUFFER_SIZE,
                "userspace_runtime_state_t is larger than split buffer size!");
 
-typedef void (*handler_fn_t)(const uint8_t* data, uint8_t size);
+typedef void (*handler_fn_t)(const uint8_t *data, uint8_t size);
 
-void recv_wpm_graph_data(const uint8_t* data, uint8_t size) {
+void recv_wpm_graph_data(const uint8_t *data, uint8_t size) {
 #ifdef WPM_ENABLE
     if (memcmp(data, wpm_graph_samples, size) != 0) {
         memcpy(wpm_graph_samples, data, size);
@@ -102,7 +102,7 @@ _Static_assert(sizeof(autocorrected_str_raw) <= RPC_EXTENDED_TRANSACTION_BUFFER_
                "Autocorrect array larger than buffer size!");
 #endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 
-void recv_autocorrect_string(const uint8_t* data, uint8_t size) {
+void recv_autocorrect_string(const uint8_t *data, uint8_t size) {
 #if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
     if (memcmp(data, autocorrected_str_raw, size) != 0) {
         memcpy(autocorrected_str_raw, data, size);
@@ -118,27 +118,27 @@ _Static_assert((DISPLAY_KEYLOGGER_LENGTH * sizeof(int32_t)) <= RPC_EXTENDED_TRAN
                "Display keylogger string larger than buffer size!");
 #endif
 
-void recv_keylogger_string_sync(const uint8_t* data, uint8_t size) {
+void recv_keylogger_string_sync(const uint8_t *data, uint8_t size) {
 #if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
     split_sync_keylogger_str(data, size);
 #endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE
 }
 
-void recv_keymap_config(const uint8_t* data, uint8_t size) {
+void recv_keymap_config(const uint8_t *data, uint8_t size) {
     if (memcmp(data, &keymap_config, size) != 0) {
         memcpy(&keymap_config, data, size);
         eeconfig_update_keymap(&keymap_config);
     }
 }
 
-void recv_debug_config(const uint8_t* data, uint8_t size) {
+void recv_debug_config(const uint8_t *data, uint8_t size) {
     if (memcmp(data, &debug_config, size) != 0) {
         memcpy(&debug_config, data, size);
         eeconfig_update_debug(&debug_config);
     }
 }
 
-void recv_userspace_config(const uint8_t* data, uint8_t size) {
+void recv_userspace_config(const uint8_t *data, uint8_t size) {
     if (memcmp(data, &userspace_config, size) != 0) {
         memcpy(&userspace_config, data, size);
         eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
@@ -173,7 +173,7 @@ void recv_userspace_config(const uint8_t* data, uint8_t size) {
     }
 }
 
-void recv_userspace_runtime_state(const uint8_t* data, uint8_t size) {
+void recv_userspace_runtime_state(const uint8_t *data, uint8_t size) {
     if (memcmp(data, &userspace_runtime_state, size) != 0) {
         memcpy(&userspace_runtime_state, data, size);
 
@@ -249,7 +249,7 @@ void recv_userspace_runtime_state(const uint8_t* data, uint8_t size) {
     }
 }
 
-void recv_device_suspend_state(const uint8_t* data, uint8_t size) {
+void recv_device_suspend_state(const uint8_t *data, uint8_t size) {
     static bool is_device_suspended = false;
     if (memcmp(data, &is_device_suspended, size) != 0) {
         memcpy(&is_device_suspended, data, size);
@@ -257,13 +257,13 @@ void recv_device_suspend_state(const uint8_t* data, uint8_t size) {
     }
 }
 
-void recv_oled_keylogger_string_sync(const uint8_t* data, uint8_t size) {
+void recv_oled_keylogger_string_sync(const uint8_t *data, uint8_t size) {
 #if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE) && defined(OLED_ENABLE)
     split_sync_oled_keylogger_str(data, size);
 #endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE
 }
 
-void recv_rtc_config(const uint8_t* data, uint8_t size) {
+void recv_rtc_config(const uint8_t *data, uint8_t size) {
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
     static rtc_time_t rtc_time;
     if (memcmp(data, &rtc_time, sizeof(rtc_time_t)) != 0) {
@@ -281,7 +281,7 @@ typedef struct wpm_stat_config_t {
 } wpm_stat_config_t;
 #endif
 
-void recv_wpm_state_config(const uint8_t* data, uint8_t size) {
+void recv_wpm_state_config(const uint8_t *data, uint8_t size) {
 #if defined(WPM_ENABLE) && defined(COMMUNITY_MODULE_WPM_STATS_ENABLE)
 #    include "wpm_stats.h"
     static wpm_stat_config_t wpm_stat_config;
@@ -321,8 +321,8 @@ static const handler_fn_t handlers[NUM_EXTENDED_IDS] = {
  * @param target2initiator_buffer_size The size of the buffer for the response message to the initiator.
  * @param target2initiator_buffer Pointer to the buffer for the response message to the initiator.
  */
-void extended_message_handler(uint8_t initiator2target_buffer_size, const void* initiator2target_buffer,
-                              uint8_t target2initiator_buffer_size, void* target2initiator_buffer) {
+void extended_message_handler(uint8_t initiator2target_buffer_size, const void *initiator2target_buffer,
+                              uint8_t target2initiator_buffer_size, void *target2initiator_buffer) {
     extended_msg_t msg = {0};
     memcpy(&msg, initiator2target_buffer, initiator2target_buffer_size);
     if (msg.id >= NUM_EXTENDED_IDS) {
@@ -360,7 +360,7 @@ void extended_message_handler(uint8_t initiator2target_buffer_size, const void* 
  * @param size The size of the data in bytes.
  * @return true if the message was successfully sent, false otherwise.
  */
-bool send_extended_message_handler(enum extended_id_t id, const void* data, uint8_t size) {
+bool send_extended_message_handler(enum extended_id_t id, const void *data, uint8_t size) {
     if (size > RPC_EXTENDED_TRANSACTION_BUFFER_SIZE) {
         xprintf("Invalid extended message size: %d (ID: %d)\n", size, id);
         return false;
@@ -497,7 +497,7 @@ void sync_keylogger_string(void) {
         bool            needs_sync                                = false;
         static uint16_t last_sync                                 = 0;
         static int32_t  keylog_temp[DISPLAY_KEYLOGGER_LENGTH + 1] = {0};
-        const int32_t*  keylogger_str                             = get_keylogger_str_raw();
+        const int32_t  *keylogger_str                             = get_keylogger_str_raw();
         if (memcmp(keylogger_str, keylog_temp, (DISPLAY_KEYLOGGER_LENGTH + 1) * sizeof(int32_t))) {
             needs_sync = true;
             memcpy(keylog_temp, keylogger_str, (DISPLAY_KEYLOGGER_LENGTH + 1) * sizeof(int32_t));
@@ -518,7 +518,7 @@ void sync_keylogger_string(void) {
         bool            needs_sync                             = false;
         static uint16_t last_sync                              = 0;
         static char     keylog_temp[OLED_KEYLOGGER_LENGTH + 1] = {0};
-        const char*     keylogger_str                          = get_oled_keylogger_str();
+        const char     *keylogger_str                          = get_oled_keylogger_str();
         if (memcmp(keylogger_str, keylog_temp, (OLED_KEYLOGGER_LENGTH + 1))) {
             needs_sync = true;
             memcpy(keylog_temp, keylogger_str, (OLED_KEYLOGGER_LENGTH + 1));
@@ -631,61 +631,6 @@ void sync_debug_config(void) {
     }
 }
 
-#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
-#    include "layer_map.h"
-typedef struct PACKED layer_map_msg_t {
-    uint8_t  row;
-    uint16_t layer_map[LAYER_MAP_COLS];
-} layer_map_msg_t;
-
-_Static_assert(sizeof(layer_map_msg_t) <= RPC_M2S_BUFFER_SIZE, "Layer map message size exceeds buffer size!");
-#endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
-
-void layer_map_sync_handler(uint8_t initiator2target_buffer_size, const void* initiator2target_buffer,
-                            uint8_t target2initiator_buffer_size, void* target2initiator_buffer) {
-#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
-    layer_map_msg_t msg = {0};
-    memcpy(&msg, initiator2target_buffer, initiator2target_buffer_size);
-    if (msg.row >= LAYER_MAP_ROWS) {
-        xprintf("Layer Map row out of bounds: %d (Valid range: 0-%d)\n", msg.row, LAYER_MAP_ROWS - 1);
-        return;
-    }
-    if (memcmp(msg.layer_map, layer_map[msg.row], sizeof(msg.layer_map)) != 0) {
-        memcpy(layer_map[msg.row], msg.layer_map, sizeof(msg.layer_map));
-        set_layer_map_has_updated(true);
-    }
-#endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
-}
-
-#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
-/**
- * @brief Synchronizes the layer map between split keyboard halves.
- *
- * This function ensures that the layer map is consistent across both halves of a split keyboard.
- * It checks for differences between the current layer map and the last synchronized state.
- * If differences are detected, it sends the updated layer map to the other half.
- */
-void sync_layer_map(void) {
-    static uint16_t last_layer_map[LAYER_MAP_ROWS][LAYER_MAP_COLS] = {0};
-    static uint16_t last_sync_time                                 = 0;
-
-    if (memcmp(layer_map, last_layer_map, sizeof(last_layer_map)) != 0 || timer_elapsed(last_sync_time) >= 1000) {
-        memcpy(last_layer_map, layer_map, sizeof(last_layer_map));
-        for (uint8_t i = 0; i < LAYER_MAP_ROWS; i++) {
-            layer_map_msg_t msg = {
-                .row       = i,
-                .layer_map = {0},
-            };
-            memcpy(msg.layer_map, layer_map[i], sizeof(msg.layer_map));
-            if (transaction_rpc_send(RPC_ID_LAYER_MAP_SYNC, sizeof(layer_map_msg_t), &msg)) {
-                continue;
-            }
-        }
-        last_sync_time = timer_read();
-    }
-}
-#endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
-
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
 /**
  * @brief Synchronizes the RTC date and time between split keyboard halves.
@@ -745,7 +690,6 @@ void sync_wpm_stats_config(void) {
 void keyboard_post_init_transport_sync(void) {
     // Register keyboard state sync split transaction
     transaction_register_rpc(RPC_ID_EXTENDED_SYNC_TRANSPORT, extended_message_handler);
-    transaction_register_rpc(RPC_ID_LAYER_MAP_SYNC, layer_map_sync_handler);
 }
 
 /**
@@ -783,9 +727,6 @@ void housekeeping_task_transport_sync(void) {
         sync_debug_config();
         sync_userspace_runtime_state();
         sync_userspace_config();
-#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
-        sync_layer_map();
-#endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
         sync_rtc_config();
 #endif // COMMUNITY_MODULE_RTC_ENABLE
