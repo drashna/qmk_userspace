@@ -118,6 +118,14 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
 
 #    if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
     send_string_memory_state_t state = {str};
+
+    if (strncmp("ushould", typo, strlen(typo)) == 0) {
+        // If we're correcting "ushould" to "you should", we want to add an extra space to the keylogger string after
+        // the correction so that it doesn't look like "youshould" in the keylogger.
+        add_autocorrect_char_to_keylogger_str('u');
+        add_autocorrect_char_to_keylogger_str(' ');
+    }
+
     update_keylogger_string(send_string_get_next_ram, &state);
 
     if (userspace_runtime_state.last_keycode == KC_SPC) {
@@ -130,6 +138,18 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
 #    if defined(AUDIO_ENABLE)
     audio_play_melody(&autocorrect_song, NOTE_ARRAY_SIZE(autocorrect_song), false);
 #    endif // AUDIO_ENABLE
+
+    // add extra handling for "yo ushould" -> you should
+    if (strncmp("ushould", typo, strlen(typo)) == 0) {
+        for (uint8_t i = 0; i < (backspaces + 1); ++i) {
+            tap_code(KC_BSPC);
+        }
+        tap_code(KC_U);
+        tap_code(KC_SPC);
+        send_string_P(str);
+
+        return false;
+    }
 
     return true;
 }
