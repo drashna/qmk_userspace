@@ -30,20 +30,14 @@ jobs:
 
     steps:
       - name: Checkout Userspace
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ github.token }}
           submodules: recursive
 
-      - name: Check if qmk_firmware exists
-        id: check_files
-        uses: andstor/file-existence-action@v3
-        with:
-          files: qmk_firmware
-
       - name: Checkout QMK Firmware
-        uses: actions/checkout@v4
-        if: steps.check_files.outputs.files_exists == 'false'
+        uses: actions/checkout@v6
+        if: ${{ hashFiles('qmk_firmware/requirements.txt') == '' }}
         with:
           token: ${{ github.token }}
           path: qmk_firmware
@@ -74,7 +68,10 @@ jobs:
 
       - name: Build
         run: |
-          qmk userspace-compile -e DUMP_CI_METADATA=yes || touch .failed
+          if qmk userspace-compile --help | grep -q "print-failures"; then
+              EXTRA_ARGS="-p"
+          fi
+          qmk userspace-compile -e DUMP_CI_METADATA=yes $EXTRA_ARGS || touch .failed
           # Generate the step summary markdown
           ./qmk_firmware/util/ci/generate_failure_markdown.sh > $GITHUB_STEP_SUMMARY || true
           # Truncate to a maximum of 1MB to deal with GitHub workflow limit
@@ -83,7 +80,7 @@ jobs:
           [ ! -f .failed ] || exit 1
 
       - name: Upload binaries
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always() && !cancelled()
         continue-on-error: true
         with:
