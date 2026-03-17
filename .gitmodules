@@ -30,3 +30,6 @@
 [submodule "modules/devoidfury"]
     path = modules/devoidfury
     url = https://github.com/devoidfury/qmk_modules.git
+[submodule "modules/zsa"]
+    path = modules/zsa
+    url = https://github.com/zsa/qmk_modules.git
