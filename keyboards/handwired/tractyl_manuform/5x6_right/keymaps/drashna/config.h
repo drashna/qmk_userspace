@@ -42,6 +42,8 @@
 #    define MATRIX_OUTPUT_UNSELECT_DELAY_NOP 25
 #    undef SERIAL_USART_SPEED
 #    define SERIAL_USART_SPEED (2 * 1024 * 1024)
+#    undef PMW33XX_LIFTOFF_DISTANCE
+#    define PMW33XX_LIFTOFF_DISTANCE 0b0011
 #elif defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f411)
 #    undef SPLIT_HAND_PIN
 #    define SPLIT_HAND_PIN A9
