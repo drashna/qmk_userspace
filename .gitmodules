@@ -5,9 +5,11 @@
 [submodule "modules/elpekenin"]
     path = modules/elpekenin
     url = https://github.com/elpekenin/qmk_modules.git
+    branch = main
 [submodule "modules/getreuer"]
     path = modules/getreuer
     url = https://github.com/getreuer/qmk-modules.git
+    branch = main
 [submodule "modules/tzarc"]
     path = modules/tzarc
     url = https://github.com/tzarc/qmk_modules.git
@@ -15,21 +17,28 @@
 [submodule "modules/eynsai"]
     path = modules/eynsai
     url = https://github.com/eynsai/qmk_modules.git
+    branch = main
 [submodule "modules/mintchipleaf"]
     path = modules/mintchipleaf
     url = https://github.com/mintchipleaf/qmk_modules
+    branch = main
 [submodule "modules/dave-thompson"]
     path = modules/dave-thompson
     url = https://github.com/dave-thompson/qmk-modules.git
+    branch = main
 [submodule "modules/dmyoung9"]
     path = modules/dmyoung9
     url = https://github.com/dmyoung9/qmk_modules.git
+    branch = stable
 [submodule "modules/plodah"]
     path = modules/plodah
     url = https://github.com/plodah/qmk_modules.git
+    branch = main
 [submodule "modules/devoidfury"]
     path = modules/devoidfury
     url = https://github.com/devoidfury/qmk_modules.git
+    branch = main
 [submodule "modules/zsa"]
     path = modules/zsa
     url = https://github.com/zsa/qmk_modules.git
+    branch = main
