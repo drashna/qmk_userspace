@@ -11,6 +11,10 @@ ifeq ($(strip $(UNICODE_COMMON)), yes)
     SRC += $(USER_PATH)/keyrecords/unicode.c
 endif
 
+ifeq ($(strip $(ENCODER_ENABLE)), yes)
+    ifeq ($(strip $(ENCODER_INIT_FIX)), yes)
+endif
+
 ifeq ($(strip $(TAP_DANCE_ENABLE)), yes)
     CUSTOM_TAP_DANCE_ENABLE ?= yes
 endif
