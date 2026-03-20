@@ -13,6 +13,8 @@ endif
 
 ifeq ($(strip $(ENCODER_ENABLE)), yes)
     ifeq ($(strip $(ENCODER_INIT_FIX)), yes)
+        OPT_DEFS += -DENCODER_INIT_FIX
+    endif
 endif
 
 ifeq ($(strip $(TAP_DANCE_ENABLE)), yes)
