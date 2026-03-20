@@ -726,7 +726,8 @@ void painter_render_frame(painter_device_t device, painter_font_handle_t font_ti
 
 void painter_render_pd_accel_graph(painter_device_t device, uint16_t x, uint16_t y, uint16_t width, uint16_t height,
                                    bool force_redraw, dual_hsv_t *curr_hsv) {
-#if defined(COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE) && defined(COMMUNITY_MODULE_QP_HELPERS_ENABLE)
+#if defined(COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE) && defined(COMMUNITY_MODULE_QP_HELPERS_ENABLE) && \
+    defined(POINTING_DEVICE_ENABLE)
     static pointing_device_accel_config_t local        = {0};
     bool                                  needs_redraw = false;
     static uint8_t                        graph_samples[ACCEL_GRAPH_SAMPLES];

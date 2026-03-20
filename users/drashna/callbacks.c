@@ -280,9 +280,9 @@ void                       eeconfig_init_user(void) {
     userspace_config.display.oled.pet.mati_speed  = 60;
     userspace_config.display.oled.pet.sleep_speed = 10;
     userspace_config.display.painter.hsv.primary  = (HSV){
-         .h = 128,
-         .s = 255,
-         .v = 255,
+        .h = 128,
+        .s = 255,
+        .v = 255,
     };
     userspace_config.display.painter.hsv.secondary = (HSV){
         .h = 48,
@@ -306,7 +306,7 @@ void                       eeconfig_init_user(void) {
 
     eeconfig_init_keymap();
     eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-#ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
+#if defined(POINTING_DEVICE_ENABLE) && defined(COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE)
     void eeconfig_init_pointing_device(void);
     eeconfig_init_pointing_device();
 #endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
