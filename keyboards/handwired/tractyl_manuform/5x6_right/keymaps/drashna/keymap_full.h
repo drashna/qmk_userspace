@@ -16,7 +16,7 @@
      KC_GRV, DISPLAY_MENU, OS_LGUI, OS_LALT,                                            OS_RALT, OS_RGUI, DISPLAY_MENU, KC_ESC, \
                                 KC_MUTE, KC_GRV,                                        MS_BTN3,  \
                                          KC_SPC,  UC_IRNY,                     KC_ENT,  \
-                                         BK_LWER, MO(_MOUSE),      TG(_MOUSE), DL_RAIS  \
+                                         BK_LWER, TT(_MOUSE),      TG(_MOUSE), DL_RAIS  \
   )
 #define LAYOUT_base_wrapper(...)       LAYOUT_5x6_full_right_base(__VA_ARGS__)
 
@@ -106,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_ADJUST] = LAYOUT_5x6_full_right_wrapper(
         QK_MAKE, KC_WIDE,KC_AUSSIE,KC_SCRIPT,KC_ZALGO,KC_NOMODE,                 KC_NOMODE,KC_BLOCKS,KC_REGIONAL,_______,_______, QK_BOOT,
-        VRSN,    _________________ADJUST_L1_________________,                        _________________ADJUST_R1_________________, KC_SEC6,
+        VRSN,    _________________ADJUST_L1_________________,                        _________________ADJUST_R1_________________, EE_CLR,
         KEYLOCK, _________________ADJUST_L2_________________,                        _________________ADJUST_R2_________________, TG_MODS,
         UC_NEXT, _________________ADJUST_L3_________________,                        _________________ADJUST_R3_________________, KC_MPLY,
         KC_PSCR, _______, TG(_DIABLOII), AC_TOGG,                                                      TG_GAME, TG_DBLO, _______, _______,
