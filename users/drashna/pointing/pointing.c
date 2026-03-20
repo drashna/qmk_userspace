@@ -93,7 +93,7 @@ void pointing_device_init_user(void) {
     pointing_device_init_keymap();
 }
 
-bool mouse_movement_threshold_check(report_mouse_t* mouse_report, mouse_movement_t* movement, uint16_t threshold) {
+bool mouse_movement_threshold_check(report_mouse_t *mouse_report, mouse_movement_t *movement, uint16_t threshold) {
     movement->x += mouse_report->x;
     movement->y += mouse_report->y;
     movement->h += mouse_report->h;
@@ -102,7 +102,7 @@ bool mouse_movement_threshold_check(report_mouse_t* mouse_report, mouse_movement
            abs(movement->v) > threshold;
 }
 
-void mouse_jiggler_check(report_mouse_t* mouse_report) {
+void mouse_jiggler_check(report_mouse_t *mouse_report) {
     static mouse_movement_t jiggler_threshold = {0, 0, 0, 0};
     if (mouse_movement_threshold_check(mouse_report, &jiggler_threshold, MOUSE_JIGGLER_THRESHOLD)) {
         userspace_runtime_state.pointing.mouse_jiggler.running = false;
@@ -146,7 +146,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     return pointing_device_task_keymap(mouse_report);
 }
 
-bool process_record_pointing(uint16_t keycode, keyrecord_t* record) {
+bool process_record_pointing(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case PD_JIGGLER:
             if (record->event.pressed) {
@@ -176,19 +176,28 @@ layer_state_t layer_state_set_pointing(layer_state_t state) {
     return state;
 }
 
-bool has_mouse_report_changed(report_mouse_t* new_report, report_mouse_t* old_report) {
-    return ((new_report->buttons != old_report->buttons) || (new_report->x != 0 && new_report->x != old_report->x) ||
-            (new_report->y != 0 && new_report->y != old_report->y) ||
-            (new_report->h != 0 && new_report->h != old_report->h) ||
-            (new_report->v != 0 && new_report->v != old_report->v));
+bool has_mouse_report_changed(report_mouse_t *new_report, report_mouse_t *old_report) {
+    // memcmp doesn't work here because of the `report_id` field when using
+    // shared mouse endpoint
+    bool changed = ((new_report->buttons != old_report->buttons) ||
+#ifdef MOUSE_EXTENDED_REPORT
+                    (new_report->boot_x != 0 && new_report->boot_x != old_report->boot_x) ||
+                    (new_report->boot_y != 0 && new_report->boot_y != old_report->boot_y) ||
+#endif
+                    (new_report->x != 0 && new_report->x != old_report->x) ||
+                    (new_report->y != 0 && new_report->y != old_report->y) ||
+                    (new_report->h != 0 && new_report->h != old_report->h) ||
+                    (new_report->v != 0 && new_report->v != old_report->v));
+
+    return changed;
 }
 
 #if defined(POINTING_DEVICE_AUTO_MOUSE_ENABLE)
-__attribute__((weak)) bool is_mouse_record_keymap(uint16_t keycode, keyrecord_t* record) {
+__attribute__((weak)) bool is_mouse_record_keymap(uint16_t keycode, keyrecord_t *record) {
     return false;
 }
 
-bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
+bool is_mouse_record_user(uint16_t keycode, keyrecord_t *record) {
     if (is_mouse_record_keymap(keycode, record)) {
         return true;
     }
@@ -235,11 +244,11 @@ const uint16_t PROGMEM pointing_mode_maps[POINTING_MODE_MAP_COUNT][POINTING_NUM_
 #ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
 #    include "pointing_device_accel.h"
 
-void pointing_device_config_read(pointing_device_accel_config_t* config) {
+void pointing_device_config_read(pointing_device_accel_config_t *config) {
     memcpy(config, &userspace_config.pointing.accel, sizeof(pointing_device_accel_config_t));
 }
 
-void pointing_device_config_update(pointing_device_accel_config_t* config) {
+void pointing_device_config_update(pointing_device_accel_config_t *config) {
     memcpy(&userspace_config.pointing.accel, config, sizeof(pointing_device_accel_config_t));
     eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }
