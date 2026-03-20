@@ -88,8 +88,8 @@ typedef union PACKED {
             bool   is_dst     : 1;
             int8_t timezone   : 6;
         } rtc;
-        bool nuke_switch : 1;
-        bool check       : 1;
+        bool    nuke_switch   : 1;
+        uint8_t sizeof_config : 8;
     };
 } userspace_config_t;
 

@@ -58,7 +58,7 @@ __attribute__((weak)) void keyboard_pre_init_keymap(void) {}
 void                       keyboard_pre_init_user(void) {
     print_set_sendchar(drashna_sendchar);
     eeconfig_read_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-    if (!eeconfig_is_user_datablock_valid() || !userspace_config.check) {
+    if (!eeconfig_is_user_datablock_valid() || userspace_config.sizeof_config != sizeof(userspace_config_t)) {
         eeconfig_init_user();
     }
 
@@ -269,7 +269,7 @@ void                       led_set_user(uint8_t usb_led) {
 __attribute__((weak)) void eeconfig_init_keymap(void) {}
 void                       eeconfig_init_user(void) {
     memset(&userspace_config, 0, sizeof(userspace_config_t));
-    userspace_config.check            = true;
+    userspace_config.sizeof_config    = (uint8_t)sizeof(userspace_config_t);
     userspace_config.rgb.layer_change = true;
 #if defined(OLED_ENABLE)
     userspace_config.display.oled.brightness = OLED_BRIGHTNESS;
