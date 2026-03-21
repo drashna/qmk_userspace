@@ -202,6 +202,8 @@ bool is_mouse_record_user(uint16_t keycode, keyrecord_t *record) {
         return true;
     }
     switch (keycode) {
+        case MOUSE_KEYCODE_RANGE:
+            return true;
 #    if defined(KEYBOARD_ploopy)
         case DPI_CONFIG:
 #    elif (defined(KEYBOARD_bastardkb_charybdis) || defined(KEYBOARD_handwired_tractyl_manuform)) && \

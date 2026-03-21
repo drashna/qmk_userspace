@@ -82,7 +82,7 @@
 #    endif // MOUSEKEY_ACCELERATED_SPEED
 // mouse scroll config
 #    ifndef MOUSEKEY_WHEEL_DELAY
-#        define MOUSEKEY_WHEEL_DELAY 15
+#        define MOUSEKEY_WHEEL_DELAY 150
 #    endif // MOUSEKEY_WHEEL_DELAY
 #    ifndef MOUSEKEY_WHEEL_DELTA
 #        define MOUSEKEY_WHEEL_DELTA 1
