@@ -98,7 +98,7 @@ __attribute__((weak)) void display_handler_auto_mouse_debounce(char *text_buffer
 }
 #    endif // POINTING_DEVICE_AUTO_MOUSE_ENABLE
 
-#    ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABL
+#    ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
 bool menu_handler_mouse_jiggler(menu_input_t input) {
     switch (input) {
         case menu_input_left:
