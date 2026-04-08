@@ -98,6 +98,7 @@ __attribute__((weak)) void display_handler_auto_mouse_debounce(char *text_buffer
 }
 #    endif // POINTING_DEVICE_AUTO_MOUSE_ENABLE
 
+#    ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABL
 bool menu_handler_mouse_jiggler(menu_input_t input) {
     switch (input) {
         case menu_input_left:
@@ -137,6 +138,7 @@ bool menu_handler_mouse_jiggler_timeout(menu_input_t input) {
 __attribute__((weak)) void display_handler_mouse_jiggler_timeout(char *text_buffer, size_t buffer_len) {
     snprintf(text_buffer, buffer_len - 1, "%d", userspace_config.pointing.mouse_jiggler.timeout);
 }
+#    endif
 
 #    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis)
 #        include QMK_KEYBOARD_H
@@ -269,11 +271,13 @@ menu_entry_t pointing_acceleration_entries[] = {
 };
 #    endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
 
+#    ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
 menu_entry_t pointing_auto_layer_entries[] = {
     MENU_ENTRY_CHILD("Layer", "Layer", auto_mouse_layer),
     MENU_ENTRY_CHILD("Timeout", "Timeout", auto_mouse_timeout),
     MENU_ENTRY_CHILD("Debounce", "Debounce", auto_mouse_debounce),
 };
+#    endif
 
 menu_entry_t pointing_entries[] = {
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
@@ -286,8 +290,10 @@ menu_entry_t pointing_entries[] = {
     MENU_ENTRY_CHILD("Auto Mouse", "AutoMouse", auto_mouse_enable),
     MENU_ENTRY_MULTI("Auto Mouse Options", "AM Opt", pointing_auto_layer_entries, auto_mouse_layer),
 #    endif // POINTING_DEVICE_AUTO_MOUSE_ENABLE
+#    ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
     MENU_ENTRY_CHILD("Mouse Jiggler", "Jiggler", mouse_jiggler),
     MENU_ENTRY_CHILD("Mouse Jiggler Timeout", "JiggleTime", mouse_jiggler_timeout),
+#    endif // POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
 #    ifdef AUDIO_ENABLE
     MENU_ENTRY_CHILD("Mouse Clicky", "Clicky", audio_mouse_clicky),
 #    endif

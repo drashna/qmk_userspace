@@ -218,12 +218,14 @@ bool is_mouse_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 #endif
 
+#ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
 void pointing_device_mouse_jiggler_toggle(void) {
     mouse_jiggler_timer          = timer_read();
     mouse_jiggler_debounce_timer = timer_read32() + (userspace_config.pointing.mouse_jiggler.timeout - 5) * 1000;
     userspace_config.pointing.mouse_jiggler.enable = !userspace_config.pointing.mouse_jiggler.enable;
     eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
 }
+#endif
 
 #ifdef POINTING_MODE_MAP_ENABLE
 enum keymap_pointing_mode_ids {
