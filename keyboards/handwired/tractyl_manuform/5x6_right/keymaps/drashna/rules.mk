@@ -57,8 +57,8 @@ ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     DISPLAY_KEYLOGGER_ENABLE      = yes
     ENCODER_ENABLE                = yes
     ENCODER_MAP_ENABLE            = yes
-    LTO_ENABLE                    = yes
-    MULTITHREADED_LIGHTING_ENABLE = yes
+    LTO_ENABLE                    = no
+    MULTITHREADED_LIGHTING_ENABLE = no
     MULTITHREADED_PAINTER_ENABLE  = no
     OPT                           = fast
     RGBLIGHT_ENABLE               = yes
