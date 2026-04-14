@@ -131,8 +131,11 @@ void painter_render_menu_block_qmk_info(painter_device_t device, painter_font_ha
 void painter_render_menu_block_nyan_cat(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                                         uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
     if (nyan_token == INVALID_DEFERRED_TOKEN) {
-        nyan_token =
-            qp_animate(device, x + (width - nyan_cat->width) / 2, y + (height - nyan_cat->height) / 2, nyan_cat);
+        uint16_t box_w = width - x;
+        uint16_t box_h = height - y;
+        uint16_t xpos  = x + (box_w > nyan_cat->width ? (box_w - nyan_cat->width) / 2 : 0);
+        uint16_t ypos  = y + (box_h > nyan_cat->height ? (box_h - nyan_cat->height) / 2 : 0);
+        nyan_token     = qp_animate(device, xpos, ypos, nyan_cat);
     }
 }
 
@@ -223,7 +226,7 @@ void painter_render_rtc_time(painter_device_t device, painter_font_handle_t font
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
 
     bool rtc_redraw = false;
-    if (timer_elapsed(*rtc_timer) > 125 && rtc_is_connected()) {
+    if (timer_elapsed(*rtc_timer) > 250 && rtc_is_connected()) {
         *rtc_timer = timer_read();
         rtc_redraw = true;
     }
@@ -286,13 +289,21 @@ void painter_render_console(painter_device_t device, painter_font_handle_t font,
  */
 void painter_render_scan_rate(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                               bool force_redraw, dual_hsv_t *curr_hsv) {
-    static uint32_t last_scan_rate = 0;
-    if (last_scan_rate != get_matrix_scan_rate() || force_redraw) {
-        last_scan_rate = get_matrix_scan_rate();
-        char buf[6]    = {0};
+    static uint32_t last_scan_rate   = 0;
+    static uint16_t scan_rate_timer  = 0;
+    bool            scan_rate_redraw = force_redraw;
+    if (timer_elapsed(scan_rate_timer) > 250) {
+        scan_rate_timer = timer_read();
+        if (last_scan_rate != get_matrix_scan_rate()) {
+            last_scan_rate   = get_matrix_scan_rate();
+            scan_rate_redraw = true;
+        }
+    }
+    if (scan_rate_redraw) {
+        char buf[6] = {0};
         x += qp_drawtext_recolor(device, x, y, font, "SCANS: ", curr_hsv->primary.h, curr_hsv->primary.s,
                                  curr_hsv->primary.v, 0, 0, 0);
-        snprintf(buf, sizeof(buf), "%5lu", get_matrix_scan_rate());
+        snprintf(buf, sizeof(buf), "%5lu", last_scan_rate);
         qp_drawtext_recolor(device, x, y, font, buf, curr_hsv->secondary.h, curr_hsv->secondary.s,
                             curr_hsv->secondary.v, 0, 0, 0);
     }

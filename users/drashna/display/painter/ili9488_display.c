@@ -71,16 +71,22 @@ extern painter_image_handle_t akira_explosion;
 #endif     // ILI9488_SPI_MODE
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
-#    if SURFACE_NUM_DEVICES < 2
-#        error Not enough surfaces for the ILI9488 display
-#    endif
-#    pragma message("ILI9488 Surface enabled")
-#    define SURFACE_MENU_WIDTH  316
-#    define SURFACE_MENU_HEIGHT 146
 #    if HAL_USE_SDRAM == TRUE
-__attribute__((section(".ram7")))
+#        define SURFACE_MENU_WIDTH  320
+#        define SURFACE_MENU_HEIGHT 480
+#        define WPM_NO_SURFACE
+
+__attribute__((section(".ram7"))) static uint8_t
+    menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
+#    else
+#        if SURFACE_NUM_DEVICES < 2
+#            error Not enough surfaces for the ILI9488 display
+#        endif
+#        pragma message("ILI9488 Surface enabled")
+#        define SURFACE_MENU_WIDTH  316
+#        define SURFACE_MENU_HEIGHT 146
+static uint8_t menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
 #    endif
-static uint8_t   menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
 painter_device_t menu_surface;
 
 #    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
@@ -89,6 +95,9 @@ static uint8_t
 static painter_device_t wpm_graph_surface;
 #    endif // WPM_ENABLE && !WPM_NO_SURFACE
 
+#    define pre_display menu_surface
+#else
+#    define pre_display display
 #endif
 
 static bool has_run = false, forced_reinit = false;
@@ -172,8 +181,8 @@ __attribute__((weak)) void ili9488_draw_user(void) {
     qp_get_geometry(display, &width, &height, NULL, NULL, NULL);
 
     if (hue_redraw) {
-        qp_rect(display, 0, 0, width - 1, height - 1, 0, 0, 0, true);
-        painter_render_frame_box(display, curr_hsv.primary, 1, 0, 0, 3, true, false);
+        qp_rect(pre_display, 0, 0, width - 1, height - 1, 0, 0, 0, true);
+        painter_render_frame_box(pre_display, curr_hsv.primary, 1, 0, 0, 3, true, false);
         char title[50] = {0};
         snprintf(title, sizeof(title), "%s", PRODUCT);
         uint16_t title_width = qp_textwidth(font_oled, title);
@@ -181,66 +190,66 @@ __attribute__((weak)) void ili9488_draw_user(void) {
             title_width = width;
         }
         uint16_t title_xpos = (width - title_width) / 2;
-        qp_drawtext_recolor(display, title_xpos, 5, font_oled,
+        qp_drawtext_recolor(pre_display, title_xpos, 5, font_oled,
                             truncate_text(title, title_width, font_oled, false, false), 0, 0, 0, curr_hsv.primary.h,
                             curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below scan rate
-        qp_line(display, 2, 30, 80, 30, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 2, 30, 80, 30, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below rgb matrix
-        qp_line(display, 80, 54, 208, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 80, 54, 208, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below rgb light
-        qp_line(display, 80, 92, 208, 92, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 80, 92, 208, 92, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // line right of rgb block
-        qp_line(display, 208, 16, 208, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 208, 16, 208, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // caps lock vertical line
-        qp_line(display, 288, 16, 288, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 288, 16, 288, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // led lock horizontal line
-        qp_line(display, 208, 54, 318, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 208, 54, 318, 54, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // vertical lines next to scan rate + wpm + pointing
-        qp_line(display, 80, 16, 80, 159, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 80, 16, 80, 159, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below pointing devices
-        qp_line(display, 2, 105, 80, 105, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 2, 105, 80, 105, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // wpm horizontal line
-        qp_line(display, 236, 133, 317, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 236, 133, 317, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below keymap config
-        qp_line(display, 80, 118, 208, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 80, 118, 208, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line between last keyevents
-        qp_line(display, 208, 80, 318, 80, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 208, 80, 318, 80, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below last keyevents
-        qp_line(display, 208, 118, 318, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 208, 118, 318, 118, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below modifiers
-        qp_line(display, 80, 133, 236, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 80, 133, 236, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
         // vertical line below modifiers
-        qp_line(display, 236, 118, 236, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 236, 118, 236, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below keylogger
-        qp_line(display, 80, 160, 236, 160, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 80, 160, 236, 160, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // horizontal line below haptic
-        qp_line(display, 80, 186, 236, 186, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 80, 186, 236, 186, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
-        qp_line(display, 80, 160, 80, 186, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 80, 160, 80, 186, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // wpm horizontal line
-        qp_line(display, 236, 133, 317, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 236, 133, 317, 133, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
 
         // line above menu block
-        qp_line(display, 2, 304, 317, 304, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 2, 304, 317, 304, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
         // line above rtc
-        qp_line(display, 2, 452, 317, 452, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
+        qp_line(pre_display, 2, 452, 317, 452, curr_hsv.primary.h, curr_hsv.primary.s, curr_hsv.primary.v);
     }
     bool transport_icon_redraw = false;
 #ifdef SPLIT_KEYBOARD
@@ -251,9 +260,9 @@ __attribute__((weak)) void ili9488_draw_user(void) {
     }
 #endif
     if (hue_redraw || transport_icon_redraw) {
-        qp_rect(display, width - mouse_icon->width - 6, 6, width - 6, 6 + mouse_icon->height - 1, 0, 0, 0, true);
+        qp_rect(pre_display, width - mouse_icon->width - 6, 6, width - 6, 6 + mouse_icon->height - 1, 0, 0, 0, true);
         qp_drawimage_recolor(
-            display, width - mouse_icon->width - 6, 6, mouse_icon,
+            pre_display, width - mouse_icon->width - 6, 6, mouse_icon,
             is_keyboard_master() ? curr_hsv.secondary.h : curr_hsv.primary.h,
             is_keyboard_master() ? curr_hsv.secondary.s : curr_hsv.primary.s,
 #ifdef SPLIT_KEYBOARD
@@ -267,14 +276,14 @@ __attribute__((weak)) void ili9488_draw_user(void) {
     uint16_t ypos    = 20;
     uint16_t xpos    = 5;
 
-    painter_render_scan_rate(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
+    painter_render_scan_rate(pre_display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
     ypos += font_oled->line_height + 4;
     if (painter_render_side()) {
         ypos = 20;
         xpos = 83;
 
 #if defined(RGB_MATRIX_ENABLE)
-        painter_render_rgb(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv,
+        painter_render_rgb(pre_display, font_oled, xpos, ypos, hue_redraw, &curr_hsv,
                            "RGB Matrix Config:", rgb_matrix_get_effect_name, rgb_matrix_get_hsv,
                            rgb_matrix_is_enabled(), RGB_MATRIX_MAXIMUM_BRIGHTNESS);
 #endif // RGB_MATRIX_ENABLE
@@ -282,7 +291,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
 #ifdef OS_DETECTION_ENABLE
         ypos = 20;
         xpos = 210;
-        painter_render_os_detection(display, font_oled, xpos, ypos, 80, hue_redraw, &curr_hsv);
+        painter_render_os_detection(pre_display, font_oled, xpos, ypos, 80, hue_redraw, &curr_hsv);
 #endif // OS_DETECTION_ENABLE
 
 #ifdef CUSTOM_UNICODE_ENABLE
@@ -292,25 +301,25 @@ __attribute__((weak)) void ili9488_draw_user(void) {
             last_unicode_mode   = get_unicode_input_mode();
             xpos                = 212;
             uint8_t xpos_offset = xpos +
-                                  qp_drawtext_recolor(display, xpos, ypos, font_oled, "Unicode", curr_hsv.primary.h,
+                                  qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "Unicode", curr_hsv.primary.h,
                                                       curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0) +
                                   4;
             switch (last_unicode_mode) {
                 case UNICODE_MODE_WINCOMPOSE:
                 case UNICODE_MODE_WINDOWS:
-                    qp_drawimage(display, xpos_offset, ypos + 2, windows_logo);
+                    qp_drawimage(pre_display, xpos_offset, ypos + 2, windows_logo);
                     break;
                 case UNICODE_MODE_MACOS:
-                    qp_drawimage(display, xpos_offset, ypos + 2, apple_logo);
+                    qp_drawimage(pre_display, xpos_offset, ypos + 2, apple_logo);
                     break;
                 case UNICODE_MODE_LINUX:
                 case UNICODE_MODE_BSD:
                 case UNICODE_MODE_EMACS:
-                    qp_drawimage(display, xpos_offset, ypos + 2, linux_logo);
+                    qp_drawimage(pre_display, xpos_offset, ypos + 2, linux_logo);
                     break;
             }
             ypos += font_oled->line_height + 4;
-            qp_drawtext_recolor(display, xpos + 8, ypos, font_oled, "Mode", curr_hsv.primary.h, curr_hsv.primary.s,
+            qp_drawtext_recolor(pre_display, xpos + 8, ypos, font_oled, "Mode", curr_hsv.primary.h, curr_hsv.primary.s,
                                 curr_hsv.primary.v, 0, 0, 0);
         }
 #endif // CUSTOM_UNICODE_ENABLE
@@ -320,7 +329,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
 
         ypos = 24;
         xpos = 292;
-        painter_render_lock_state(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv, disabled_val);
+        painter_render_lock_state(pre_display, font_oled, xpos, ypos, hue_redraw, &curr_hsv, disabled_val);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Keymap config (nkro, autocorrect, oneshots)
@@ -328,7 +337,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         ypos = 54 + 4;
         xpos = 83;
 #if defined(RGBLIGHT_ENABLE)
-        painter_render_rgb(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv,
+        painter_render_rgb(pre_display, font_oled, xpos, ypos, hue_redraw, &curr_hsv,
                            "RGB Light Config:", rgblight_get_effect_name, rgblight_get_hsv, rgblight_is_enabled(),
                            RGB_MATRIX_MAXIMUM_BRIGHTNESS);
 #endif // RGB_MATRIX_ENABLE
@@ -349,25 +358,25 @@ __attribute__((weak)) void ili9488_draw_user(void) {
 #endif // CAPS_WORD_ENABLE
         if (hue_redraw || keymap_config_redraw) {
             xpos = 80 + 4;
-            xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, "NKRO",
+            xpos += qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "NKRO",
                                         last_keymap_config.nkro ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                         last_keymap_config.nkro ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                         last_keymap_config.nkro ? curr_hsv.primary.v : disabled_val, 0, 0, 0) +
                     5;
             xpos += qp_drawtext_recolor(
-                        display, xpos, ypos, font_oled, "CRCT",
+                        pre_display, xpos, ypos, font_oled, "CRCT",
                         last_keymap_config.autocorrect_enable ? curr_hsv.secondary.h : curr_hsv.primary.h,
                         last_keymap_config.autocorrect_enable ? curr_hsv.secondary.s : curr_hsv.primary.s,
                         last_keymap_config.autocorrect_enable ? curr_hsv.primary.v : disabled_val, 0, 0, 0) +
                     5;
             xpos +=
-                qp_drawtext_recolor(display, xpos, ypos, font_oled, "1SHT",
+                qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "1SHT",
                                     last_keymap_config.oneshot_enable ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                     last_keymap_config.oneshot_enable ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                     last_keymap_config.oneshot_enable ? curr_hsv.primary.v : disabled_val, 0, 0, 0) +
                 5;
 #ifdef CAPS_WORD_ENABLE
-            xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, "CAPS",
+            xpos += qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "CAPS",
                                         is_caps_word_on() ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                         is_caps_word_on() ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                         is_caps_word_on() ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
@@ -382,34 +391,34 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         if (hue_redraw || memcmp(&userspace_runtime_state, &last_user_state, sizeof(userspace_runtime_state))) {
             memcpy(&last_user_state, &userspace_runtime_state, sizeof(userspace_runtime_state));
             xpos = 80 + 4;
-            xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, "AUDIO",
+            xpos += qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "AUDIO",
                                         last_user_state.audio.enable ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                         last_user_state.audio.enable ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                         last_user_state.audio.enable ? curr_hsv.primary.v : disabled_val, 0, 0, 0) +
                     5;
             xpos +=
-                qp_drawtext_recolor(display, xpos, ypos, font_oled, "CLCK",
+                qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "CLCK",
                                     last_user_state.audio.clicky_enable ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                     last_user_state.audio.clicky_enable ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                     last_user_state.audio.clicky_enable ? curr_hsv.primary.v : disabled_val, 0, 0, 0) +
                 5;
             xpos += qp_drawtext_recolor(
-                        display, xpos, ypos, font_oled, "HOST",
+                        pre_display, xpos, ypos, font_oled, "HOST",
                         !last_user_state.internals.host_driver_disabled ? curr_hsv.secondary.h : curr_hsv.primary.h,
                         !last_user_state.internals.host_driver_disabled ? curr_hsv.secondary.s : curr_hsv.primary.s,
                         !last_user_state.internals.host_driver_disabled ? curr_hsv.primary.v : disabled_val, 0, 0, 0) +
                     5;
             xpos +=
-                qp_drawtext_recolor(display, xpos, ypos, font_oled, "SWAP",
+                qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "SWAP",
                                     last_user_state.internals.swap_hands ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                     last_user_state.internals.swap_hands ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                     last_user_state.internals.swap_hands ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
         }
 
-        painter_render_modifiers(display, font_oled, 84, 122, 150, hue_redraw, &curr_hsv, disabled_val);
+        painter_render_modifiers(pre_display, font_oled, 84, 122, 150, hue_redraw, &curr_hsv, disabled_val);
 
 #ifdef DISPLAY_KEYLOGGER_ENABLE
-        painter_render_keylogger(display, font_oled, 84, 137, 150, hue_redraw, &curr_hsv);
+        painter_render_keylogger(pre_display, font_oled, 84, 137, 150, hue_redraw, &curr_hsv);
 #endif // DISPLAY_KEYLOGGER_ENABLE
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -424,11 +433,11 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         if (hue_redraw || last_cpi != charybdis_get_pointer_default_dpi()) {
             last_cpi = charybdis_get_pointer_default_dpi();
             xpos     = 5;
-            xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, "CPI:   ", curr_hsv.primary.h,
+            xpos += qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "CPI:   ", curr_hsv.primary.h,
                                         curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
             snprintf(buf, sizeof(buf), "%5u", last_cpi);
-            xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, buf, curr_hsv.secondary.h, curr_hsv.secondary.s,
-                                        curr_hsv.secondary.v, 0, 0, 0);
+            xpos += qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, buf, curr_hsv.secondary.h,
+                                        curr_hsv.secondary.s, curr_hsv.secondary.v, 0, 0, 0);
         }
         ypos += font_oled->line_height + 4;
 #    endif
@@ -444,8 +453,8 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         }
         if (hue_redraw || auto_mouse_redraw) {
             xpos = 5;
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Auto Layer:", curr_hsv.primary.h, curr_hsv.primary.s,
-                                curr_hsv.primary.v, 0, 0, 0);
+            qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "Auto Layer:", curr_hsv.primary.h,
+                                curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
         }
         ypos += font_oled->line_height + 4;
 
@@ -454,7 +463,8 @@ __attribute__((weak)) void ili9488_draw_user(void) {
             last_am_layer = get_auto_mouse_layer();
             xpos          = 5;
             snprintf(buf, sizeof(buf), "%12s", get_layer_name_string(get_auto_mouse_layer(), false, true));
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, truncate_text(buf, 80 - 5 - 2, font_oled, false, false),
+            qp_drawtext_recolor(pre_display, xpos, ypos, font_oled,
+                                truncate_text(buf, 80 - 5 - 2, font_oled, false, false),
                                 get_auto_mouse_enable() ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                 get_auto_mouse_enable() ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                 get_auto_mouse_enable() ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
@@ -472,7 +482,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
             last_ds_state = charybdis_get_pointer_dragscroll_enabled();
             xpos          = 5;
             xpos += qp_drawtext_recolor(
-                display, xpos, ypos, font_oled, "Drag-Scroll",
+                pre_display, xpos, ypos, font_oled, "Drag-Scroll",
                 charybdis_get_pointer_dragscroll_enabled() ? curr_hsv.secondary.h : curr_hsv.primary.h,
                 charybdis_get_pointer_dragscroll_enabled() ? curr_hsv.secondary.s : curr_hsv.primary.s,
                 charybdis_get_pointer_dragscroll_enabled() ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
@@ -490,7 +500,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         if (hue_redraw || last_accel_state != pointing_device_accel_get_enabled()) {
             last_accel_state = pointing_device_accel_get_enabled();
             xpos             = 5;
-            xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, "Acceleration",
+            xpos += qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "Acceleration",
                                         last_accel_state ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                         last_accel_state ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                         last_accel_state ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
@@ -506,7 +516,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
             last_sp_state = charybdis_get_pointer_sniping_enabled();
             xpos          = 5;
             xpos += qp_drawtext_recolor(
-                display, xpos, ypos, font_oled, "Sniping",
+                pre_display, xpos, ypos, font_oled, "Sniping",
                 charybdis_get_pointer_sniping_enabled() ? curr_hsv.secondary.h : curr_hsv.primary.h,
                 charybdis_get_pointer_sniping_enabled() ? curr_hsv.secondary.s : curr_hsv.primary.s,
                 charybdis_get_pointer_sniping_enabled() ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
@@ -518,7 +528,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         if (hue_redraw || last_jiggle_enabled != userspace_config.pointing.mouse_jiggler.enable) {
             last_jiggle_enabled = userspace_config.pointing.mouse_jiggler.enable;
             xpos                = 5;
-            xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, "Jiggler",
+            xpos += qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "Jiggler",
                                         last_jiggle_enabled ? curr_hsv.secondary.h : curr_hsv.primary.h,
                                         last_jiggle_enabled ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                         last_jiggle_enabled ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
@@ -531,16 +541,16 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         if (last_accel_state2 != pointing_device_accel_get_enabled()) {
             last_accel_state2 = pointing_device_accel_get_enabled();
             if (last_accel_state2) {
-                painter_render_pd_accel_graph(display, xpos, ypos, 78, 54, hue_redraw, &curr_hsv);
+                painter_render_pd_accel_graph(pre_display, xpos, ypos, 78, 54, hue_redraw, &curr_hsv);
             } else {
-                qp_rect(display, xpos + 1, ypos, xpos + 78, ypos + 54 - 1, 0, 0, 0, true);
-                qp_line(display, xpos + 1, ypos + 10, xpos + 78, ypos + 10, curr_hsv.secondary.h, curr_hsv.secondary.s,
-                        curr_hsv.secondary.v);
-                qp_line(display, xpos + 1, ypos + 54 - 1, xpos + 78, ypos + 54 - 1, curr_hsv.primary.h,
+                qp_rect(pre_display, xpos + 1, ypos, xpos + 78, ypos + 54 - 1, 0, 0, 0, true);
+                qp_line(pre_display, xpos + 1, ypos + 10, xpos + 78, ypos + 10, curr_hsv.secondary.h,
+                        curr_hsv.secondary.s, curr_hsv.secondary.v);
+                qp_line(pre_display, xpos + 1, ypos + 54 - 1, xpos + 78, ypos + 54 - 1, curr_hsv.primary.h,
                         curr_hsv.primary.s, curr_hsv.primary.v);
             }
         }
-#    endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABL7,E
+#    endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
 #endif     // POINTING_DEVICE_ENABLE
 
         // xpos = 1;
@@ -548,14 +558,14 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         xpos = 236;
         ypos = 118;
 #ifdef WPM_ENABLE
-        painter_render_wpm(display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
+        painter_render_wpm(pre_display, font_oled, xpos, ypos, hue_redraw, &curr_hsv);
         ypos += font_oled->line_height + 2 * 4;
 #    if defined(QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE) && !defined(WPM_NO_SURFACE)
         painter_render_wpm_graph(wpm_graph_surface, font_oled, 0, 0, WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT,
                                  hue_redraw, &curr_hsv);
-        qp_surface_draw(wpm_graph_surface, display, xpos, ypos, false);
+        qp_surface_draw(wpm_graph_surface, pre_display, xpos, ypos, false);
 #    else
-        painter_render_wpm_graph(display, font_oled, xpos, ypos, WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT,
+        painter_render_wpm_graph(pre_display, font_oled, xpos, ypos, WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT,
                                  hue_redraw, &curr_hsv);
 #    endif
 #endif
@@ -565,11 +575,11 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         if (hue_redraw || last_keycode != userspace_runtime_state.last_keycode) {
             last_keycode = userspace_runtime_state.last_keycode;
             xpos         = 212;
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Last keycode:", curr_hsv.primary.h, curr_hsv.primary.s,
-                                curr_hsv.primary.v, 0, 0, 0);
+            qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "Last keycode:", curr_hsv.primary.h,
+                                curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
             ypos += font_oled->line_height + 4;
             snprintf(buf, 18, "%17s", get_keycode_string(last_keycode));
-            qp_drawtext_recolor(display, xpos + 3, ypos, font_oled, buf, curr_hsv.secondary.h, curr_hsv.secondary.s,
+            qp_drawtext_recolor(pre_display, xpos + 3, ypos, font_oled, buf, curr_hsv.secondary.h, curr_hsv.secondary.s,
                                 curr_hsv.secondary.v, 0, 0, 0);
         }
 
@@ -578,34 +588,28 @@ __attribute__((weak)) void ili9488_draw_user(void) {
             memcpy(&last_event, &userspace_runtime_state.last_key_event, sizeof(keyevent_t));
             ypos = 84;
             xpos = 212;
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Last keyevent:", curr_hsv.primary.h,
+            qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "Last keyevent:", curr_hsv.primary.h,
                                 curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
             ypos += font_oled->line_height + 4;
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Row:", curr_hsv.primary.h, curr_hsv.primary.s,
+            qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "Row:", curr_hsv.primary.h, curr_hsv.primary.s,
                                 curr_hsv.primary.v, 0, 0, 0);
 
             snprintf(buf, 4, "%3s", get_u8_str(last_event.key.row, ' '));
-            qp_drawtext_recolor(display, 320 - (4 + qp_textwidth(font_oled, buf)), ypos, font_oled, buf,
+            qp_drawtext_recolor(pre_display, 320 - (4 + qp_textwidth(font_oled, buf)), ypos, font_oled, buf,
                                 curr_hsv.secondary.h, curr_hsv.secondary.s, curr_hsv.secondary.v, 0, 0, 0);
             ypos += font_oled->line_height + 4;
-            qp_drawtext_recolor(display, xpos, ypos, font_oled, "Column:", curr_hsv.primary.h, curr_hsv.primary.s,
+            qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "Column:", curr_hsv.primary.h, curr_hsv.primary.s,
                                 curr_hsv.primary.v, 0, 0, 0);
 
             snprintf(buf, 4, "%3s", get_u8_str(last_event.key.col, ' '));
-            qp_drawtext_recolor(display, 320 - (4 + qp_textwidth(font_oled, buf)), ypos, font_oled, buf,
+            qp_drawtext_recolor(pre_display, 320 - (4 + qp_textwidth(font_oled, buf)), ypos, font_oled, buf,
                                 curr_hsv.secondary.h, curr_hsv.secondary.s, curr_hsv.secondary.v, 0, 0, 0);
         }
 
-        painter_render_haptic(display, font_oled, 82, 164, hue_redraw, &curr_hsv);
+        painter_render_haptic(pre_display, font_oled, 82, 164, hue_redraw, &curr_hsv);
 
-#ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
-        painter_render_menu_block(menu_surface, font_oled, 0, 0, SURFACE_MENU_WIDTH - 1, SURFACE_MENU_HEIGHT,
-                                  hue_redraw, &curr_hsv, is_keyboard_left(), true);
-        qp_surface_draw(menu_surface, display, 2, 305, false);
-#else  // QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
-        painter_render_menu_block(display, font_oled, 2, 305, 317, 451, hue_redraw, &curr_hsv, is_keyboard_master(),
+        painter_render_menu_block(pre_display, font_oled, 2, 305, 317, 451, hue_redraw, &curr_hsv, is_keyboard_master(),
                                   true);
-#endif // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
 
         // Footer
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -614,7 +618,7 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         xpos = 27;
         if (hue_redraw) {
             snprintf(buf, sizeof(buf), "SN: %s BD: %10.10s", get_hardware_id_string(), QMK_BUILDDATE);
-            xpos += qp_drawtext_recolor(display, xpos, ypos, font_mono, buf, 0, 0, 0, curr_hsv.primary.h,
+            xpos += qp_drawtext_recolor(pre_display, xpos, ypos, font_mono, buf, 0, 0, 0, curr_hsv.primary.h,
                                         curr_hsv.primary.s, curr_hsv.primary.v);
         }
 
@@ -625,7 +629,8 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         ypos = height - (16 + font_oled->line_height);
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
         static uint16_t last_rtc_time = 0xFFFF;
-        painter_render_rtc_time(display, font_oled, xpos, ypos, width, hue_redraw, &last_rtc_time, &curr_hsv.primary);
+        painter_render_rtc_time(pre_display, font_oled, xpos, ypos, width, hue_redraw, &last_rtc_time,
+                                &curr_hsv.primary);
 #else
         if (hue_redraw) {
             snprintf(buf, sizeof(buf), "Built on: %s", QMK_BUILDDATE);
@@ -636,11 +641,13 @@ __attribute__((weak)) void ili9488_draw_user(void) {
             }
             uint8_t title_xpos = (width - title_width) / 2;
 
-            xpos += qp_drawtext_recolor(display, title_xpos, ypos, font_oled, buf, curr_hsv.primary.h,
+            xpos += qp_drawtext_recolor(pre_display, title_xpos, ypos, font_oled, buf, curr_hsv.primary.h,
                                         curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
         }
 #endif
-
+#ifdef QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE
+        qp_surface_draw(menu_surface, display, 0, 0, false);
+#endif
         forced_reinit = false;
     }
 
