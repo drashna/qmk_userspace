@@ -60,8 +60,22 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f429)
     COMMUNITY_SDRAM_ENABLE                = yes
     DIP_SWITCH_ENABLE                     = yes
     DIP_SWITCH_MAP_ENABLE                 = yes
+    HAPTIC_ENABLE                         = no
 endif
-
+ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f429_rando)
+    OVERLOAD_FEATURES                     = yes
+    AUDIO_SUPPORTED = no
+    BACKLIGHT_ENABLE                      = yes
+    RGB_MATRIX_ENABLE                     = yes
+    RGBLIGHT_DRIVER                       = custom
+    QUANTUM_PAINTER_ENABLE                = yes
+    CUSTOM_QUANTUM_PAINTER_ENABLE         = yes
+    CUSTOM_QUANTUM_PAINTER_ILI9341        = no
+    CUSTOM_QUANTUM_PAINTER_ILI9488        = yes
+    QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE = yes
+    COMMUNITY_SDRAM_ENABLE                = yes
+    HAPTIC_ENABLE                         = no
+endif
 ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     AUDIO_ENABLE                  = yes
     AUTOCORRECT_ENABLE            = yes
