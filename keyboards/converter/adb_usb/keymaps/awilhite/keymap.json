@@ -1,0 +1,15 @@
+{
+    "modules": [
+        "drashna/autocorrect",
+        "drashna/console_keylogging",
+        "drashna/display_menu",
+        "drashna/drag_scroll",
+        "drashna/layer_map",
+        "drashna/keyboard_lock",
+        "drashna/pointing_device_accel",
+        "drashna/qp_helpers",
+        "drashna/rtc",
+        "drashna/unicode_typing",
+        "getreuer/sentence_case"
+    ]
+}
