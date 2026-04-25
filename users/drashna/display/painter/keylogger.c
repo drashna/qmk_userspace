@@ -88,11 +88,16 @@ static const replacements_t replacements[] = {
     replacement("DOWN",    "↓",   NULL, NULL),
     replacement("RGHT",    "→",   NULL, NULL),
     replacement("UP",      "↑",   NULL, NULL),
+    replacement("INS",     "I",   NULL, NULL),
     replacement("HOME",    "◀",   NULL, NULL),
     replacement("END",     "▶",   NULL, NULL),
     replacement("PGUP",    "▲",   NULL, NULL),
     replacement("PGDN",    "▼",   NULL, NULL),
     replacement("PSCR",    "P",   NULL, NULL),
+
+    replacement("SCRL",    "S",   NULL, NULL),
+    replacement("NUM",     "N",   NULL, NULL),
+    replacement("LCAP",    "↕",   NULL, NULL),
 
     replacement("LOWR",    "▼",   NULL, NULL),
     replacement("UPPR",    "▲",   NULL, NULL),
@@ -133,6 +138,24 @@ static const replacements_t replacements[] = {
     replacement("F11",     "F",   NULL, NULL),
     replacement("F12",     "F",   NULL, NULL),
 
+    replacement("KP_0",    "0",   NULL,  NULL),
+    replacement("KP_1",    "1",   NULL,  NULL),
+    replacement("KP_2",    "2",   NULL,  NULL),
+    replacement("KP_3",    "3",   NULL,  NULL),
+    replacement("KP_4",    "4",   NULL,  NULL),
+    replacement("KP_5",    "5",   NULL,  NULL),
+    replacement("KP_6",    "6",   NULL,  NULL),
+    replacement("KP_7",    "7",   NULL,  NULL),
+    replacement("KP_8",    "8",   NULL,  NULL),
+    replacement("KP_9",    "9",   NULL,  NULL),
+    replacement("PDOT",    ".",   NULL,  NULL),
+    replacement("PEQL",    "=",   NULL,  NULL),
+    replacement("PSLS",    "/",   NULL,  NULL),
+    replacement("PAST",    "*",   NULL,  NULL),
+    replacement("PMNS",    "-",   NULL,  NULL),
+    replacement("PPLS",    "+",   NULL,  NULL),
+    replacement("PENT",    "↲",   NULL,  NULL),
+
     replacement("MS_BTN1", "⸁",   NULL, NULL),
     replacement("MS_BTN2", "⸂",   NULL, NULL),
     replacement("MS_BTN3", "⸀",   NULL, NULL),
@@ -150,6 +173,8 @@ static const replacements_t replacements[] = {
     replacement("SNI_DEC", "⸀",   NULL, NULL),
     replacement("SNI_INC", "⸀",   NULL, NULL),
 
+    replacement("BOOT",    "B",   NULL, NULL),
+    replacement("PAUS",    "⏸",   NULL, NULL),
 };
 // clang-format on
 
