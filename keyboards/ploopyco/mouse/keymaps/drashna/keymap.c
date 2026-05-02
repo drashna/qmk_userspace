@@ -6,16 +6,16 @@
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-                 C(KC_C), KC_BTN1, KC_BTN3, KC_BTN2, MO(1), KC_BTN4, KC_BTN5, DPI_CONFIG),
+                 C(KC_C), MS_BTN1, MS_BTN3, MS_BTN2, MO(1), MS_BTN4, MS_BTN5, DPI_CONFIG),
     [1] = LAYOUT(
-                 RGB_HUI, RGB_MOD, RGB_TOG, RGB_RMOD, MO(1), KC_VOLU, KC_VOLD, QK_BOOT)
+                 UG_HUEU, UG_NEXT, UG_TOGG, UG_PREV, MO(1), KC_VOLU, KC_VOLD, QK_BOOT)
 };
 // clang-format on
 
 #ifdef ENCODER_MAP_ENABLE
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [0] = {ENCODER_CCW_CW(KC_WH_D, KC_WH_U)},
-    [1] = {ENCODER_CCW_CW(RGB_HUD, RGB_HUI)},
+    [0] = {ENCODER_CCW_CW(MS_WHLU, MS_WHLU)},
+    [1] = {ENCODER_CCW_CW(UG_HUEU, UG_HUED)},
 };
 #endif
 
