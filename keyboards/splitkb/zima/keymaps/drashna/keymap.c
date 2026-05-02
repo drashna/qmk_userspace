@@ -87,27 +87,11 @@ bool oled_task_user(void) {
         oled_write_ln_P(PSTR("--------------"), false);
         if (rgblight_is_enabled()) {
             oled_write_P(PSTR("HSV: "), false);
-            char hsv_char[4];
-            n           = rgblight_get_hue();
-            hsv_char[3] = '\0';
-            hsv_char[2] = '0' + n % 10;
-            hsv_char[1] = (n /= 10) % 10 ? '0' + (n) % 10 : (n / 10) % 10 ? '0' : ' ';
-            hsv_char[0] = n / 10 ? '0' + n / 10 : ' ';
-            oled_write(hsv_char, false);
+            oled_write(get_u8_str(rgblight_get_hue(), ' '), false);
             oled_write_P(PSTR(", "), false);
-            n           = rgblight_get_sat();
-            hsv_char[3] = '\0';
-            hsv_char[2] = '0' + n % 10;
-            hsv_char[1] = (n /= 10) % 10 ? '0' + (n) % 10 : (n / 10) % 10 ? '0' : ' ';
-            hsv_char[0] = n / 10 ? '0' + n / 10 : ' ';
-            oled_write(hsv_char, false);
+            oled_write(get_u8_str(rgblight_get_sat(), ' '), false);
             oled_write_P(PSTR(", "), false);
-            n           = rgblight_get_val();
-            hsv_char[3] = '\0';
-            hsv_char[2] = '0' + n % 10;
-            hsv_char[1] = (n /= 10) % 10 ? '0' + (n) % 10 : (n / 10) % 10 ? '0' : ' ';
-            hsv_char[0] = n / 10 ? '0' + n / 10 : ' ';
-            oled_write_ln(hsv_char, false);
+            oled_write_ln(get_u8_str(rgblight_get_val(), ' '), false);
         } else {
             oled_write_ln_P(PSTR("RGB LIGHT DISABLED"), false);
         }
@@ -132,7 +116,7 @@ void suspend_wakeup_init_user(void) {
     is_asleep = false;
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     oled_timer = timer_read32();
 
     return true;
