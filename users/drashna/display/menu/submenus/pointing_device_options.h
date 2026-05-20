@@ -3,6 +3,9 @@
 
 #ifdef POINTING_DEVICE_ENABLE
 #    include "pointing/pointing.h"
+#    ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
+#        include "mouse_jiggler.h"
+#    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
 
 #    ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
 bool menu_handler_auto_mouse_enable(menu_input_t input) {
@@ -98,13 +101,15 @@ __attribute__((weak)) void display_handler_auto_mouse_debounce(char *text_buffer
 }
 #    endif // POINTING_DEVICE_AUTO_MOUSE_ENABLE
 
-#    ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
+#    ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
 bool menu_handler_mouse_jiggler(menu_input_t input) {
     switch (input) {
         case menu_input_left:
         case menu_input_right:
         case menu_input_enter:
-            pointing_device_mouse_jiggler_toggle();
+            jiggler_toggle();
+            userspace_config.pointing.mouse_jiggler.enable = jiggler_get_state() != 0;
+            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -121,6 +126,7 @@ bool menu_handler_mouse_jiggler_timeout(menu_input_t input) {
             if (userspace_config.pointing.mouse_jiggler.timeout != 0) {
                 userspace_config.pointing.mouse_jiggler.timeout--;
             }
+            jiggler_set_backoff(userspace_config.pointing.mouse_jiggler.timeout);
             eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         case menu_input_right:
@@ -128,6 +134,7 @@ bool menu_handler_mouse_jiggler_timeout(menu_input_t input) {
             if (userspace_config.pointing.mouse_jiggler.timeout != 255) {
                 userspace_config.pointing.mouse_jiggler.timeout++;
             }
+            jiggler_set_backoff(userspace_config.pointing.mouse_jiggler.timeout);
             eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
@@ -136,7 +143,7 @@ bool menu_handler_mouse_jiggler_timeout(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_mouse_jiggler_timeout(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%d", userspace_config.pointing.mouse_jiggler.timeout);
+    snprintf(text_buffer, buffer_len - 1, "%d", (uint8_t)jiggler_get_backoff());
 }
 #    endif
 

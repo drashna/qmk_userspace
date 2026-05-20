@@ -15,6 +15,7 @@
         "getreuer/lumino",
         "getreuer/palettefx",
         "getreuer/sentence_case",
+        "drashna/mouse_jiggler",
         "tzarc/konami_code"
     ]
 }
