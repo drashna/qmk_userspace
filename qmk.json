@@ -10,6 +10,7 @@
         ["splitkb/kyria/rev3", "drashna"],
         ["crkbd/rev1", "drashna"],
         ["splitkb/zima", "drashna"],
-        ["zsa/voyager", "drashna"]
+        ["zsa/voyager", "drashna"],
+        ["ploopyco/bean/rev1_001", "drashna"],
     ]
 }
