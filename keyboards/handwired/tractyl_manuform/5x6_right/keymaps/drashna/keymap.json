@@ -19,5 +19,147 @@
         "drashna/mouse_jiggler",
         "drashna/better_rgb_keys",
         "tzarc/konami_code"
+    ],
+    "keycodes": [
+        {
+            "key": "VRSN",
+            "label": "Version"
+        },
+        {
+            "key": "KC_DIABLO_CLEAR",
+            "label": "Clear all diablo key timers"
+        },
+        {
+            "key": "KC_RGB_T",
+            "label": "RGB Layer Indication toggle"
+        },
+        {
+            "key": "RGB_IDL",
+            "label": "RGB Idle animation toggle"
+        },
+        {
+            "key": "KC_SECRET_1",
+            "label": "Secret Key 1",
+            "aliases": [
+                "KC_SEC1"
+            ]
+        },
+        {
+            "key": "KC_SECRET_2",
+            "label": "Secret Key 2",
+            "aliases": [
+                "KC_SEC2"
+            ]
+        },
+        {
+            "key": "KC_SECRET_3",
+            "label": "Secret Key 3",
+            "aliases": [
+                "KC_SEC3"
+            ]
+        },
+        {
+            "key": "KC_SECRET_4",
+            "label": "Secret Key 4",
+            "aliases": [
+                "KC_SEC4"
+            ]
+        },
+        {
+            "key": "KC_SECRET_5",
+            "label": "Secret Key 5",
+            "aliases": [
+                "KC_SEC5"
+            ]
+        },
+        {
+            "key": "KC_SECRET_6",
+            "label": "Secret Key 6",
+            "aliases": [
+                "KC_SEC6"
+            ],
+        },
+        {
+            "key": "KC_NUKE"
+        },
+        {
+            "key": "UC_FLIP"
+        },
+        {
+            "key": "UC_TABL"
+        },
+        {
+            "key": "UC_SHRG"
+        },
+        {
+            "key": "UC_DISA"
+        },
+        {
+            "key": "UC_IRNY"
+        },
+        {
+            "key": "UC_CLUE"
+        },
+        {
+            "key": "OLED_LOCK",
+            "aliases": [
+                "OL_LOCK"
+            ]
+        },
+        {
+            "key": "OLED_BRIGHTNESS_INC",
+            "aliases": [
+                "OL_BINC"
+            ]
+        },
+        {
+            "key": "OLED_BRIGHTNESS_DEC",
+            "aliases": [
+                "OL_BDEC"
+            ]
+        },
+        {
+            "key": "OLED_ROTATE_CW",
+            "aliases": [
+                "OL_CW"
+            ]
+        },
+        {
+            "key": "OLED_ROTATE_CCW",
+            "aliases": [
+                "OL_CCW"
+            ]
+        },
+        {
+            "key": "STORE_SETUPS",
+        },
+        {
+            "key": "PRINT_SETUPS",
+        },
+        {
+            "key": "US_MATRIX_SCAN_RATE_PRINT",
+            "aliases": [
+                "US_MSRP"
+            ]
+        },
+        {
+            "key": "US_I2C_SCAN_ENABLE",
+            "aliases": [
+                "I2C_SCN"
+            ]
+        },
+        {
+            "key": "US_SELECT_WORD",
+            "aliases": [
+                "US_SELW"
+            ]
+        },
+        {
+            "key": "US_GAMING_SCAN_TOGGLE",
+            "label": "Gaming Song Toggle"
+        },
+        {
+            "key": "USER_SAFE_RANGE"
+        }
     ]
 }
