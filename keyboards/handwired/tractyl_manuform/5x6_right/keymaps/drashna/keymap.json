@@ -17,6 +17,7 @@
         "getreuer/palettefx",
         "getreuer/sentence_case",
         "drashna/mouse_jiggler",
+        "drashna/better_rgb_keys",
         "tzarc/konami_code"
     ]
 }
