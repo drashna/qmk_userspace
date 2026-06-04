@@ -434,7 +434,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Pointing Device Drag Scroll
 
-#    if (defined(KEYBOARD_bastardkb_charybdis) || defined(KEYBOARD_handwired_tractyl_manuform))
+#    if (defined(KEYBOARD_bastardkb_charybdis))
             static uint32_t last_ds_state = 0xFFFFFFFF;
             if (hue_redraw || last_ds_state != charybdis_get_pointer_dragscroll_enabled()) {
                 last_ds_state = charybdis_get_pointer_dragscroll_enabled();
@@ -446,7 +446,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
                     charybdis_get_pointer_dragscroll_enabled() ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
             }
             ypos += font_oled->line_height + 4;
-#    endif // (defined(KEYBOARD_bastardkb_charybdis) || defined(KEYBOARD_handwired_tractyl_manuform))
+#    endif // (defined(KEYBOARD_bastardkb_charybdis))
 
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
