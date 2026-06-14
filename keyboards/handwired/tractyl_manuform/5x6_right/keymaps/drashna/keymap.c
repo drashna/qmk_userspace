@@ -11,7 +11,8 @@
 // green - CC1
 // yellow - CC2
 
-#if defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f405)
+#if defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f405) || \
+    defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f429_rando)
 #    include "keymap_full.h"
 #else // KEYBOARD_handwired_tractyl_manuform_5x6_right_f405
 #    include "keymap_regular.h"
