@@ -326,7 +326,7 @@ void matrix_scan_user(void) {
  */
 #ifdef SPLIT_KEYBOARD
 #    if defined(AUDIO_ENABLE) && defined(AUDIO_INIT_DELAY)
-#        if defined(SPLIT_WATCHDOG_ENABLE) && !defined(SPLIT_WATCHDOG_TIMEOUT)
+#        if !defined(SPLIT_WATCHDOG_TIMEOUT)
 #            if defined(SPLIT_USB_TIMEOUT)
 #                define SPLIT_WATCHDOG_TIMEOUT (SPLIT_USB_TIMEOUT + 100)
 #            else
