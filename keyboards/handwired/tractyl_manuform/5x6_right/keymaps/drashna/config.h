@@ -46,6 +46,11 @@
 #    define SPLIT_HAND_PIN A9
 #    define DISPLAY_CS_PIN B10
 #    define DISPLAY_DC_PIN B2
+#elif defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f429_rando)
+#    define FT6X36_RESET_PIN     A15
+#    define FT6X36_INTERRUPT_PIN A8
+#    undef POINTING_DEVICE_RIGHT
+#    define POINTING_DEVICE_LEFT
 #endif
 #ifdef WEAR_LEVELING_SPI_FLASH
 #    undef WEAR_LEVELING_LOGICAL_SIZE
@@ -63,5 +68,3 @@
 #if !defined(CUSTOM_QUANTUM_PAINTER_ILI9488) && !defined(QUANTUM_PAINTER_DISPLAY_TIMEOUT)
 #    define QUANTUM_PAINTER_DISPLAY_TIMEOUT 600000
 #endif
-#define SPLIT_USB_TIMEOUT      500
-#define SPLIT_WATCHDOG_TIMEOUT 700
