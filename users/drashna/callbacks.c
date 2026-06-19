@@ -38,12 +38,6 @@ void keyboard_post_init_unicode(void);
 #ifdef CUSTOM_TAP_DANCE_ENABLE
 #    include "keyrecords/custom_tap_dance.h"
 #endif // CUSTOM_TAP_DANCE_ENABLE
-#ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-#    include "i2c_scanner.h"
-#endif // COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-#ifdef COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
-#    include "console_keylogging.h"
-#endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
 
 userspace_runtime_state_t userspace_runtime_state;
 
@@ -85,12 +79,6 @@ void                       keyboard_post_init_user(void) {
 #ifdef CUSTOM_UNICODE_ENABLE
     keyboard_post_init_unicode();
 #endif // CUSTOM_UNICODE_ENABLE
-#ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-    i2c_scanner_set_enabled(userspace_config.debug.i2c_scanner_enable);
-#endif // COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-#ifdef COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
-    console_keylogger_set_enabled(userspace_config.debug.console_keylogger);
-#endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
 #ifdef DEBUG_MATRIX_SCAN_RATE_ENABLE
     userspace_config.debug.matrix_scan_print = true;
 #endif // DEBUG_MATRIX_SCAN_RATE_ENABLE
