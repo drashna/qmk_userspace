@@ -83,11 +83,6 @@ typedef union PACKED {
                 uint8_t timeout : 8;
             } mouse_jiggler;
         } pointing;
-        struct {
-            bool   format_24h : 1;
-            bool   is_dst     : 1;
-            int8_t timezone   : 6;
-        } rtc;
         bool    nuke_switch   : 1;
         uint8_t sizeof_config : 8;
     };
