@@ -188,7 +188,7 @@ bool menu_handler_keylogger(menu_input_t input) {
         case menu_input_right:
             userspace_config.debug.console_keylogger = !userspace_config.debug.console_keylogger;
             eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-            console_keylogger_set_enabled(userspace_config.debug.console_keylogger);
+            console_keylogging_set_enabled(userspace_config.debug.console_keylogger);
             return false;
         default:
             return true;
@@ -196,7 +196,7 @@ bool menu_handler_keylogger(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_keylogger(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%s", console_keylogger_get_enabled() ? "on" : "off");
+    snprintf(text_buffer, buffer_len - 1, "%s", console_keylogging_get_enabled() ? "on" : "off");
 }
 #endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
 
