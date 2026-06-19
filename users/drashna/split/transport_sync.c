@@ -13,9 +13,6 @@
 #if defined(COMMUNITY_MODULE_DISPLAY_MENU_ENABLE)
 #    include "display_menu.h"
 #endif // COMMUNITY_MODULE_DISPLAY_MENU_ENABLE
-#ifdef COMMUNITY_MODULE_RTC_ENABLE
-#    include "rtc.h"
-#endif // COMMUNITY_MODULE_RTC_ENABLE
 #ifdef UNICODE_COMMON_ENABLE
 #    include "process_unicode_common.h"
 extern unicode_config_t unicode_config;
@@ -57,7 +54,6 @@ typedef enum PACKED extended_id_t {
     RPC_ID_EXTENDED_USERSPACE_RUNTIME_STATE,
     RPC_ID_EXTENDED_SUSPEND_STATE,
     RPC_ID_EXTENDED_OLED_KEYLOGGER_STR,
-    RPC_ID_EXTENDED_RTC_CONFIG,
     RPC_ID_EXTENDED_PLACEHOLDER_2,
     NUM_EXTENDED_IDS,
 } extended_id_t;
@@ -260,16 +256,6 @@ void recv_oled_keylogger_string_sync(const uint8_t *data, uint8_t size) {
 #endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE
 }
 
-void recv_rtc_config(const uint8_t *data, uint8_t size) {
-#ifdef COMMUNITY_MODULE_RTC_ENABLE
-    static rtc_time_t rtc_time;
-    if (memcmp(data, &rtc_time, sizeof(rtc_time_t)) != 0) {
-        memcpy(&rtc_time, data, sizeof(rtc_time_t));
-        rtc_set_time(rtc_time);
-    }
-#endif // COMMUNITY_MODULE_RTC_ENABLE
-}
-
 static const handler_fn_t handlers[NUM_EXTENDED_IDS] = {
     [RPC_ID_EXTENDED_WPM_GRAPH_DATA]          = recv_wpm_graph_data,
     [RPC_ID_EXTENDED_AUTOCORRECT_STR]         = recv_autocorrect_string,
@@ -280,7 +266,6 @@ static const handler_fn_t handlers[NUM_EXTENDED_IDS] = {
     [RPC_ID_EXTENDED_USERSPACE_RUNTIME_STATE] = recv_userspace_runtime_state,
     [RPC_ID_EXTENDED_SUSPEND_STATE]           = recv_device_suspend_state,
     [RPC_ID_EXTENDED_OLED_KEYLOGGER_STR]      = recv_oled_keylogger_string_sync,
-    [RPC_ID_EXTENDED_RTC_CONFIG]              = recv_rtc_config,
 };
 
 /**
@@ -608,30 +593,6 @@ void sync_debug_config(void) {
     }
 }
 
-#ifdef COMMUNITY_MODULE_RTC_ENABLE
-/**
- * @brief Synchronizes the RTC date and time between split keyboard halves.
- *
- * This function ensures that the RTC date and time are consistent across both halves of a split keyboard.
- */
-void sync_rtc_config(void) {
-    extern bool     rtc_needs_sync;
-    static uint32_t last_rtc_sync = 0;
-
-    if (!rtc_is_connected()) {
-        return;
-    }
-
-    if (rtc_needs_sync || timer_elapsed32(last_rtc_sync) > 60 * 60 * 1000) { // 1 hour
-        last_rtc_sync       = timer_read32();
-        rtc_time_t rtc_time = rtc_read_time_struct();
-        if (send_extended_message_handler(RPC_ID_EXTENDED_RTC_CONFIG, &rtc_time, sizeof(rtc_time_t))) {
-            rtc_needs_sync = false;
-        }
-    }
-}
-#endif // COMMUNITY_MODULE_LAYER_MAP_ENABLE
-
 /**
  * @brief Initialize the transport sync
  *
@@ -676,8 +637,5 @@ void housekeeping_task_transport_sync(void) {
         sync_debug_config();
         sync_userspace_runtime_state();
         sync_userspace_config();
-#ifdef COMMUNITY_MODULE_RTC_ENABLE
-        sync_rtc_config();
-#endif // COMMUNITY_MODULE_RTC_ENABLE
     }
 }
