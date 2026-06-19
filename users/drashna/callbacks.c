@@ -18,9 +18,6 @@
 #ifdef CUSTOM_DYNAMIC_MACROS_ENABLE
 #    include "keyrecords/custom_dynamic_macros.h"
 #endif // CUSTOM_DYNAMIC_MACROS_ENABLE
-#ifndef RTC_TIMEZONE
-#    define RTC_TIMEZONE -8
-#endif // RTC_TIMEZONE
 #ifdef CUSTOM_UNICODE_ENABLE
 void keyboard_post_init_unicode(void);
 #endif // CUSTOM_UNICODE_ENABLE
@@ -297,8 +294,6 @@ void                       eeconfig_init_user(void) {
     userspace_config.pointing.auto_mouse_layer.debounce = AUTO_MOUSE_DEBOUNCE;
     userspace_config.pointing.mouse_jiggler.enable      = false;
     userspace_config.pointing.mouse_jiggler.timeout     = 30;
-
-    userspace_config.rtc.timezone = RTC_TIMEZONE;
     // ensure that nkro is enabled
     eeconfig_read_keymap(&keymap_config);
     keymap_config.nkro = true;
@@ -306,10 +301,6 @@ void                       eeconfig_init_user(void) {
 
     eeconfig_init_keymap();
     eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-#if defined(POINTING_DEVICE_ENABLE) && defined(COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE)
-    void eeconfig_init_pointing_device(void);
-    eeconfig_init_pointing_device();
-#endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
 }
 
 /**
@@ -404,27 +395,10 @@ void                       housekeeping_task_user(void) {
 }
 
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
-bool rtc_needs_sync = false;
-
-void rtc_check_dst_format(rtc_time_t *time) {
-#    ifdef VENDOR_RTC_DRIVER_ENABLE
-    time->format = userspace_config.rtc.format_24h;
-#    endif // VENDOR_RTC_DRIVER_ENABLE
-    time->timezone = userspace_config.rtc.timezone;
-    time->is_dst   = userspace_config.rtc.is_dst;
-}
-
 bool rtc_set_time_user(rtc_time_t *time) {
 #    ifdef COMMUNITY_MODULE_DISPLAY_MENU_ENABLE
     display_menu_set_dirty(true);
 #    endif // COMMUNITY_MODULE_DISPLAY_MENU_ENABLE
-    userspace_config.rtc.is_dst     = time->is_dst;
-    userspace_config.rtc.timezone   = time->timezone;
-    userspace_config.rtc.format_24h = time->format;
-    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-    if (is_keyboard_master()) {
-        rtc_needs_sync = rtc_is_connected();
-    }
     return true;
 }
 #endif

@@ -174,16 +174,3 @@ const uint16_t PROGMEM pointing_mode_maps[POINTING_MODE_MAP_COUNT][POINTING_NUM_
     [_PM_BROW] = POINTING_MODE_LAYOUT(C(S(KC_PGUP)), C(S(KC_TAB)), C(KC_TAB), C(S(KC_PGDN))),
     [_PM_APP]  = POINTING_MODE_LAYOUT(KC_NO, A(S(KC_TAB)), A(KC_TAB), KC_NO)};
 #endif // POINTING_MODE_MAP_ENABLE
-
-#ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
-#    include "pointing_device_accel.h"
-
-void pointing_device_config_read(pointing_device_accel_config_t *config) {
-    memcpy(config, &userspace_config.pointing.accel, sizeof(pointing_device_accel_config_t));
-}
-
-void pointing_device_config_update(pointing_device_accel_config_t *config) {
-    memcpy(&userspace_config.pointing.accel, config, sizeof(pointing_device_accel_config_t));
-    eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-}
-#endif

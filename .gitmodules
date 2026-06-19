@@ -1,7 +1,7 @@
 [submodule "modules/drashna"]
     path = modules/drashna
     url = https://github.com/drashna/qmk_modules.git
-    branch = main
+    branch = develop
 [submodule "modules/elpekenin"]
     path = modules/elpekenin
     url = https://github.com/elpekenin/qmk_modules.git
