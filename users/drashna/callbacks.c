@@ -15,9 +15,6 @@
 #if defined(OLED_ENABLE) && defined(CUSTOM_OLED_DRIVER)
 #    include "display/oled/oled_stuff.h"
 #endif
-#ifdef CUSTOM_DYNAMIC_MACROS_ENABLE
-#    include "keyrecords/custom_dynamic_macros.h"
-#endif // CUSTOM_DYNAMIC_MACROS_ENABLE
 #ifdef CUSTOM_UNICODE_ENABLE
 void keyboard_post_init_unicode(void);
 #endif // CUSTOM_UNICODE_ENABLE
@@ -90,9 +87,6 @@ void                       keyboard_post_init_user(void) {
     DDRB &= ~(1 << 0);
     PORTB &= ~(1 << 0);
 #endif // BOOTLOADER_CATERINA && __AVR__ && __AVR_ATmega32U4__
-#ifdef CUSTOM_DYNAMIC_MACROS_ENABLE
-    dynamic_macro_init();
-#endif // CUSTOM_DYNAMIC_MACROS_ENABLE
 #ifdef WPM_ENABLE
     void keyboard_post_init_wpm(void);
     keyboard_post_init_wpm();
