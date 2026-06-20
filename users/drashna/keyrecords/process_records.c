@@ -5,9 +5,6 @@
 #include "drashna.h"
 #include "version.h"
 #include "drashna_names.h"
-#ifdef CUSTOM_DYNAMIC_MACROS_ENABLE
-#    include "keyrecords/custom_dynamic_macros.h"
-#endif // CUSTOM_DYNAMIC_MACROS_ENABLE
 #ifdef DISPLAY_DRIVER_ENABLE
 #    include "display/display.h"
 #endif // DISPLAY_DRIVER_ENABLE
@@ -23,9 +20,6 @@
 #ifdef UNICODE_COMMON_ENABLE
 #    include "keyrecords/unicode.h"
 #endif // UNICODE_COMMON_ENABLE
-#ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-#    include "i2c_scanner.h"
-#endif
 
 #if defined(AUDIO_ENABLE) && defined(OS_DETECTION_ENABLE)
 #    include "audio.h"
@@ -103,9 +97,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #if defined(CUSTOM_POINTING_DEVICE)
           && process_record_pointing(keycode, record)
 #endif // CUSTOM_POINTING_DEVICE
-#ifdef CUSTOM_DYNAMIC_MACROS_ENABLE
-          && process_record_dynamic_macro(keycode, record)
-#endif // CUSTOM_DYNAMIC_MACROS_ENABLE
           && true)) {
         return false;
     }
@@ -214,13 +205,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
         case US_I2C_SCAN_ENABLE:
-#ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-            if (record->event.pressed) {
-                userspace_config.debug.i2c_scanner_enable = !userspace_config.debug.i2c_scanner_enable;
-                i2c_scanner_set_enabled(userspace_config.debug.i2c_scanner_enable);
-                eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-            }
-#endif
             break;
         case US_GAMING_SCAN_TOGGLE:
 #ifdef AUDIO_ENABLE
