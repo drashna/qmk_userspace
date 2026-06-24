@@ -42,3 +42,7 @@
     path = modules/zsa
     url = https://github.com/zsa/qmk_modules.git
     branch = main
+[submodule "modules/bastardkb"]
+    path = modules/bastardkb
+    url = https://github.com/bastardkb/qmk_modules.git
+    branch = main
