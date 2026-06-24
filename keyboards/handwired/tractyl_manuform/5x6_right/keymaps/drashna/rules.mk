@@ -95,4 +95,5 @@ ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     SWAP_HANDS_ENABLE             = yes
     TAP_DANCE_ENABLE              = yes
     WPM_ENABLE                    = yes
+    XAP_ENABLE                    = yes
 endif
