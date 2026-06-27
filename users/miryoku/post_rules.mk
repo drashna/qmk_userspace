@@ -49,6 +49,7 @@ ifeq ($(PLATFORM_KEY),avr)
     GRAVE_ESC_ENABLE       = no
     MAGIC_ENABLE           ?= no
     SEND_STRING_ENABLE     ?= no
+    UNICODE_ENABLE         = no
     CONSOLE_ENABLE         = no
     COMMAND_ENABLE         = no
     AVR_USE_MINIMAL_PRINTF = yes
