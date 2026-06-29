@@ -8,6 +8,7 @@ bool menu_handler_debugging_enable(menu_input_t input) {
         case menu_input_right:
         case menu_input_enter:
             debug_enable = !debug_enable;
+            eeconfig_update_debug(&debug_config);
             return false;
         default:
             return true;
@@ -24,6 +25,7 @@ bool menu_handler_keyboard_debugging(menu_input_t input) {
         case menu_input_right:
         case menu_input_enter:
             debug_keyboard = !debug_keyboard;
+            eeconfig_update_debug(&debug_config);
             return false;
         default:
             return true;
@@ -40,6 +42,7 @@ bool menu_handler_matrix_debugging(menu_input_t input) {
         case menu_input_right:
         case menu_input_enter:
             debug_matrix = !debug_matrix;
+            eeconfig_update_debug(&debug_config);
             return false;
         default:
             return true;
@@ -56,6 +59,7 @@ bool menu_handler_mouse_debugging(menu_input_t input) {
         case menu_input_right:
         case menu_input_enter:
             debug_mouse = !debug_mouse;
+            eeconfig_update_debug(&debug_config);
             return false;
         default:
             return true;
@@ -73,6 +77,7 @@ bool menu_handler_pointing_debugging(menu_input_t input) {
         case menu_input_right:
         case menu_input_enter:
             debug_pointing = !debug_pointing;
+            eeconfig_update_debug(&debug_config);
             return false;
         default:
             return true;
@@ -89,6 +94,7 @@ bool menu_handler_action_debugging(menu_input_t input) {
         case menu_input_right:
         case menu_input_enter:
             debug_action = !debug_action;
+            eeconfig_update_debug(&debug_config);
             return false;
         default:
             return true;
@@ -105,6 +111,7 @@ bool menu_handler_split_serial_debugging(menu_input_t input) {
         case menu_input_right:
         case menu_input_enter:
             debug_serial = !debug_serial;
+            eeconfig_update_debug(&debug_config);
             return false;
         default:
             return true;
@@ -121,6 +128,7 @@ bool menu_handler_quantum_painter_debugging(menu_input_t input) {
         case menu_input_right:
         case menu_input_enter:
             debug_quantum_painter = !debug_quantum_painter;
+            eeconfig_update_debug(&debug_config);
             return false;
         default:
             return true;
