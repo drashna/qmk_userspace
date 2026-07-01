@@ -186,9 +186,7 @@ bool menu_handler_keylogger(menu_input_t input) {
     switch (input) {
         case menu_input_left:
         case menu_input_right:
-            userspace_config.debug.console_keylogger = !userspace_config.debug.console_keylogger;
-            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-            console_keylogging_set_enabled(userspace_config.debug.console_keylogger);
+            console_keylogging_set_enabled(!console_keylogging_get_enabled());
             return false;
         default:
             return true;
