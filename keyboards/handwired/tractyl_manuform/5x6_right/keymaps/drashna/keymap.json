@@ -18,6 +18,7 @@
         "getreuer/sentence_case",
         "drashna/mouse_jiggler",
         "drashna/better_rgb_keys",
+        "drashna/wpm_stats",
         "tzarc/konami_code"
     ],
     "keycodes": [

@@ -398,11 +398,11 @@ void painter_render_lock_state(painter_device_t device, painter_font_handle_t fo
 void painter_render_wpm(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y, bool force_redraw,
                         dual_hsv_t *curr_hsv) {
 #ifdef WPM_ENABLE
-    static wpm_sync_data_t last_wpm_update = {0};
-    static char            buf[4]          = {0};
-    uint16_t               temp_x = x + 4, temp_y = y + 4;
-    if (force_redraw || memcmp(&last_wpm_update, &userspace_runtime_state.wpm, sizeof(wpm_sync_data_t)) != 0) {
-        memcpy(&last_wpm_update, &userspace_runtime_state.wpm, sizeof(wpm_sync_data_t));
+    static uint8_t last_wpm_update = 0;
+    static char    buf[4]          = {0};
+    uint16_t       temp_x = x + 4, temp_y = y + 4;
+    if (force_redraw || last_wpm_update != get_current_wpm()) {
+        last_wpm_update = get_current_wpm();
         temp_x += qp_drawtext_recolor(device, temp_x, temp_y, font, "WPM: ", curr_hsv->primary.h, curr_hsv->primary.s,
                                       curr_hsv->primary.v, 0, 0, 0) +
                   5;
