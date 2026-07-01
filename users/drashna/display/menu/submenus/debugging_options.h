@@ -148,10 +148,7 @@ bool menu_handler_i2c_scanner(menu_input_t input) {
         case menu_input_left:
         case menu_input_right:
         case menu_input_enter:
-            userspace_config.debug.i2c_scanner_enable = !userspace_config.debug.i2c_scanner_enable;
-            i2c_scanner_set_enabled(userspace_config.debug.i2c_scanner_enable);
-            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
-
+            i2c_scanner_set_enabled(!i2c_scanner_get_enabled());
             return false;
         default:
             return true;
@@ -159,7 +156,7 @@ bool menu_handler_i2c_scanner(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_i2c_scanner(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%s", userspace_config.debug.i2c_scanner_enable ? "on" : "off");
+    snprintf(text_buffer, buffer_len - 1, "%s", i2c_scanner_get_enabled() ? "on" : "off");
 }
 #endif
 
