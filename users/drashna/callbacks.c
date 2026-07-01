@@ -35,6 +35,13 @@ void keyboard_post_init_unicode(void);
 #if defined(CUSTOM_RGB_MATRIX)
 #    include "rgb/rgb_matrix_stuff.h"
 #endif // CUSTOM_RGB_MATRIX
+#ifdef WPM_ENABLE
+#    include "wpm.h"
+#    ifdef COMMUNITY_MODULE_WPM_STATS_ENABLE
+#        include "wpm_stats.h"
+#    endif
+uint8_t wpm_graph_samples[WPM_GRAPH_SAMPLES] = {0};
+#endif // WPM_ENABLE
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
 #    include "rtc.h"
 #endif // COMMUNITY_MODULE_RTC_ENABLE
@@ -108,10 +115,6 @@ void                       keyboard_post_init_user(void) {
 #ifdef CUSTOM_DYNAMIC_MACROS_ENABLE
     dynamic_macro_init();
 #endif // CUSTOM_DYNAMIC_MACROS_ENABLE
-#ifdef WPM_ENABLE
-    void keyboard_post_init_wpm(void);
-    keyboard_post_init_wpm();
-#endif // WPM_ENABLE
     keyboard_post_init_keymap();
 }
 
@@ -397,8 +400,25 @@ void                       housekeeping_task_user(void) {
     housekeeping_task_transport_sync();
 #endif // SPLIT_KEYBOARD && SPLIT_TRANSACTION_IDS_USER
 #ifdef WPM_ENABLE
-    void housekeeping_task_wpm(void);
-    housekeeping_task_wpm();
+    if (is_keyboard_master()) {
+        static uint16_t interval = 0;
+
+        if (timer_elapsed(interval) >= 1000) {
+            // Shift the wpm_graph_samples array to the right
+            for (uint8_t i = WPM_GRAPH_SAMPLES - 1; i > 0; i--) {
+                wpm_graph_samples[i] = wpm_graph_samples[i - 1];
+            }
+
+            // Update the first element of the array with the new average WPM
+#    ifdef COMMUNITY_MODULE_WPM_STATS_ENABLE
+            wpm_graph_samples[0] = wpm_stats_get_avg();
+#    else
+            wpm_graph_samples[0] = get_current_wpm();
+#    endif // COMMUNITY_MODULE_WPM_STATS_ENABLE
+        }
+
+        interval = timer_read();
+    }
 #endif // WPM_ENABLE
     housekeeping_task_keymap();
 }
