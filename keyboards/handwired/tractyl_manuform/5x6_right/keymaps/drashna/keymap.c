@@ -120,18 +120,6 @@ void keyboard_post_init_keymap(void) {
 }
 #endif // QUANTUM_PAINTER_ENABLE &&  !CUSTOM_QUANTUM_PAINTER_ENABLE
 
-#ifdef USE_USB_OTG_HS_PORT
-#    pragma message("Using USB OTG HS Port")
-void early_hardware_init_post(void) {
-    // D-  white
-    palSetLineMode(
-        B14, PAL_MODE_ALTERNATE(12) | PAL_STM32_OTYPE_PUSHPULL | PAL_STM32_OSPEED_HIGHEST | PAL_STM32_PUPDR_FLOATING);
-    // D+  blue
-    palSetLineMode(
-        B15, PAL_MODE_ALTERNATE(12) | PAL_STM32_OTYPE_PUSHPULL | PAL_STM32_OSPEED_HIGHEST | PAL_STM32_PUPDR_FLOATING);
-}
-#endif
-
 #ifdef KEYCODE_STRING_ENABLE
 // clang-format off
 KEYCODE_STRING_NAMES_KB(

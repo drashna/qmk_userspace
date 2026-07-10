@@ -67,7 +67,3 @@ ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     TAP_DANCE_ENABLE              = yes
     WPM_ENABLE                    = yes
 endif
-
-ifeq ($(strip $(USE_USB_OTG_HS_PORT)), yes)
-    OPT_DEFS += -DUSE_USB_OTG_HS_PORT
-endif
