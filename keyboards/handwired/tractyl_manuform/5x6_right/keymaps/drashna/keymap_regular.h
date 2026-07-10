@@ -75,7 +75,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                KC_LCTL, KC_V,               _______, _______
     ),
     [_MOUSE] = LAYOUT_5x6_right_wrapper(
-        _______, _______, _______, _______, _______, _______,                        XXXXXXX, DPI_RMOD,DPI_MOD, S_D_RMOD,S_D_MOD, PD_JIGG,
+        _______, _______, _______, _______, _______, _______,                        XXXXXXX, DPI_RMOD,DPI_MOD, S_D_RMOD,S_D_MOD, XXXXXXX,
         _______, ___________________BLANK___________________,                        _________________MOUSE_R1__________________, XXXXXXX,
         _______, ___________________BLANK___________________,                        _________________MOUSE_R2__________________, XXXXXXX,
         _______, ___________________BLANK___________________,                        _________________MOUSE_R3__________________, XXXXXXX,
