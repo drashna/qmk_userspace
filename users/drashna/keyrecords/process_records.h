@@ -5,9 +5,6 @@
 
 #include "action.h"
 
-#if __has_include("keymap.h")
-#    include "keymap.h"
-#else
 enum userspace_custom_keycodes {
     VRSN = QK_USER,  // Prints QMK Firmware and board info
     KC_DIABLO_CLEAR, // Clears all Diablo Timers
@@ -47,23 +44,21 @@ enum userspace_custom_keycodes {
     USER_SAFE_RANGE,
 };
 
-#    define KC_SEC1 KC_SECRET_1
-#    define KC_SEC2 KC_SECRET_2
-#    define KC_SEC3 KC_SECRET_3
-#    define KC_SEC4 KC_SECRET_4
-#    define KC_SEC5 KC_SECRET_5
-#    define KC_SEC6 KC_SECRET_6
+#define KC_SEC1 KC_SECRET_1
+#define KC_SEC2 KC_SECRET_2
+#define KC_SEC3 KC_SECRET_3
+#define KC_SEC4 KC_SECRET_4
+#define KC_SEC5 KC_SECRET_5
+#define KC_SEC6 KC_SECRET_6
 
-#    define OL_LOCK OLED_LOCK
-#    define OL_BINC OLED_BRIGHTNESS_INC
-#    define OL_BDEC OLED_BRIGHTNESS_DEC
-#    define OL_CW   OLED_ROTATE_CW
-#    define OL_CCW  OLED_ROTATE_CCW
+#define OL_LOCK OLED_LOCK
+#define OL_BINC OLED_BRIGHTNESS_INC
+#define OL_BDEC OLED_BRIGHTNESS_DEC
+#define OL_CW   OLED_ROTATE_CW
+#define OL_CCW  OLED_ROTATE_CCW
 
-#    define US_MSRP US_MATRIX_SCAN_RATE_PRINT
-#    define US_SELW US_SELECT_WORD
-
-#endif // _hash_include("keymap.h")
+#define US_MSRP US_MATRIX_SCAN_RATE_PRINT
+#define US_SELW US_SELECT_WORD
 
 bool process_record_secrets(uint16_t keycode, keyrecord_t *record);
 bool pre_process_record_keymap(uint16_t keycode, keyrecord_t *record);
