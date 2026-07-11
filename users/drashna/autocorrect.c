@@ -19,7 +19,7 @@ float autocorrect_song[][2] = SONG(PLOVER_GOODBYE_SOUND);
 // 2 strings, 2q chars each + null terminator. max autocorrect length is 19 chars but 128px/6 supports 21 chars
 char autocorrected_str[2][21]     = {"    automatically\0", "      corrected\0"};
 char autocorrected_str_raw[2][21] = {"automatically\0", "corrected\0"};
-bool autocorrect_str_has_changed  = false;
+bool autocorrect_str_has_changed  = true;
 
 #    if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
 #        include "users/drashna/display/painter/keylogger.h"

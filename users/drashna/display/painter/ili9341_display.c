@@ -127,7 +127,7 @@ void init_display_ili9341_rotation(void) {
  * @brief Initializes the display, clears it and sets frame and title
  *
  */
-void init_display_ili9341(void) {
+uint32_t init_display_ili9341_exec(uint32_t trigger_time, void *cb_arg) {
     display = qp_ili9341_make_spi_device(240, 320, ILI9341_CS_PIN, ILI9341_DC_PIN, ILI9341_RST_PIN, ILI9341_SPI_DIVIDER,
                                          ILI9341_SPI_MODE);
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
@@ -147,6 +147,12 @@ void init_display_ili9341(void) {
 #endif     // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
 
     init_display_ili9341_rotation();
+
+    return 0;
+}
+
+void init_display_ili9341(void) {
+    defer_exec(500, init_display_ili9341_exec, NULL);
 }
 
 void ili9341_display_power(bool on) {
@@ -195,6 +201,11 @@ __attribute__((weak)) void ili9341_draw_user(void) {
     const uint8_t disabled_val = curr_hsv.primary.v / 2;
     uint16_t      width;
     uint16_t      height;
+
+    if (display == NULL) {
+        return;
+    }
+
     qp_get_geometry(display, &width, &height, NULL, NULL, NULL);
 
     if (screen_saver_sanity_checks()) {
