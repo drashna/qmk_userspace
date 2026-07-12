@@ -83,7 +83,7 @@ static painter_device_t wpm_graph_surface;
 #    endif // WPM_ENABLE && !WPM_NO_SURFACE
 #endif     // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
 
-static bool has_run = false, forced_reinit = false;
+static bool has_run = false, forced_reinit = true;
 
 void init_display_ili9341_inversion(void) {
     qp_comms_start(display);
