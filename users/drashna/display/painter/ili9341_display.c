@@ -762,6 +762,10 @@ __attribute__((weak)) void ili9341_draw_user(void) {
 }
 
 void ili9341_display_shutdown(bool jump_to_bootloader) {
+    if (display == NULL) {
+        init_display_ili9341_exec(0, NULL);
+    }
+
     ili9341_display_power(true);
     painter_render_shutdown(display, jump_to_bootloader);
 }
