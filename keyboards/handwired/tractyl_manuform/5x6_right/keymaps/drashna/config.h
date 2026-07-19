@@ -54,6 +54,8 @@
 #    define FT6X36_INTERRUPT_PIN A8
 #    undef POINTING_DEVICE_RIGHT
 #    define POINTING_DEVICE_LEFT
+#elif defined(KEYBOARD_handwired_tractyl_manuform_5x6_right_f429)
+#    define PAINTER_SCREENSAVER_EGIRLS
 #endif
 #ifdef WEAR_LEVELING_SPI_FLASH
 #    undef WEAR_LEVELING_LOGICAL_SIZE
