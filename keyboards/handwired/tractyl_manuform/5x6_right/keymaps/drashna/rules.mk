@@ -53,7 +53,6 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f429)
     QUANTUM_PAINTER_ENABLE                = yes
     CUSTOM_QUANTUM_PAINTER_ENABLE         = yes
     CUSTOM_QUANTUM_PAINTER_ILI9341        = yes
-    USE_USB_OTG_HS_PORT                   = yes
 endif
 ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f429_rando)
     OVERLOAD_FEATURES                     = yes
