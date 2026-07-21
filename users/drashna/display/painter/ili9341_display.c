@@ -503,7 +503,25 @@ __attribute__((weak)) void ili9341_draw_user(void) {
                                             last_jiggle_enabled ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
             }
 #    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
-#endif     // POINTING_DEVICE_ENABLE
+
+#    ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Pointing Device Sniping mode
+            bool pointing_device_smoothing_get_enabled(void);
+
+            static bool last_smoothing_state = false;
+
+            if (hue_redraw || last_smoothing_state != pointing_device_smoothing_get_enabled()) {
+                last_smoothing_state = pointing_device_smoothing_get_enabled();
+                xpos                 = 5;
+                xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, "Smoothing",
+                                            last_smoothing_state ? curr_hsv.secondary.h : curr_hsv.primary.h,
+                                            last_smoothing_state ? curr_hsv.secondary.s : curr_hsv.primary.s,
+                                            last_smoothing_state ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
+            }
+            ypos += font_oled->line_height + 4;
+#    endif
+#endif // POINTING_DEVICE_ENABLE
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Mods
