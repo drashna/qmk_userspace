@@ -154,6 +154,25 @@ __attribute__((weak)) void display_handler_rgb_idle(char *text_buffer, size_t bu
     snprintf(text_buffer, buffer_len - 1, "%s", userspace_config.rgb.idle_anim ? "on" : "off");
 }
 
+#ifdef COMMUNITY_MODULE_LUMINO_ENABLE
+#include "lumino.h"
+bool menu_handler_rgb_lumino(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+        case menu_input_right:
+        case menu_input_enter:
+            lumino_cycle_3_state();
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_rgb_lumino(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%u", lumino_get_value());
+}
+#endif // COMMUNITY_MODULE_LUMINO_ENABLE
+
 menu_entry_t rgb_matrix_entries[] = {
     MENU_ENTRY_CHILD("RGB Enabled", "Enabled", rm_enabled),
     MENU_ENTRY_CHILD("RGB Mode", "Mode", rm_mode),
@@ -163,6 +182,9 @@ menu_entry_t rgb_matrix_entries[] = {
     MENU_ENTRY_CHILD("RGB Speed", "Speed", rm_speed),
     MENU_ENTRY_CHILD("Layer Indication", "Layer", rgb_layer),
     MENU_ENTRY_CHILD("Idle Animation", "Idle", rgb_idle),
+#    ifdef COMMUNITY_MODULE_LUMINO_ENABLE
+    MENU_ENTRY_CHILD("Lumino State", "Lumino", rgb_lumino),
+#    endif // COMMUNITY_MODULE_LUMINO_ENABLE
 };
 #endif // RGB_MATRIX_ENABLE
 
