@@ -268,7 +268,6 @@ bool menu_handler_mouse_accel_limit(menu_input_t input) {
 __attribute__((weak)) void display_handler_mouse_accel_limit(char *text_buffer, size_t buffer_len) {
     snprintf(text_buffer, buffer_len - 1, "%1.2f", pointing_device_accel_get_limit());
 }
-
 menu_entry_t pointing_acceleration_entries[] = {
     MENU_ENTRY_CHILD("Acceleration", "Accel", mouse_accel_toggle),
     MENU_ENTRY_CHILD("Takeoff", "Takeoff", mouse_accel_takeoff),
@@ -284,6 +283,25 @@ menu_entry_t pointing_auto_layer_entries[] = {
     MENU_ENTRY_CHILD("Timeout", "Timeout", auto_mouse_timeout),
     MENU_ENTRY_CHILD("Debounce", "Debounce", auto_mouse_debounce),
 };
+#    endif
+
+#    ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
+#        include "pointing_device_smoothing.h"
+bool menu_handler_mouse_smoothing(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+        case menu_input_right:
+        case menu_input_enter:
+            pointing_device_smoothing_toggle_enabled();
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_mouse_smoothing(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%s", pointing_device_smoothing_get_enabled() ? "on" : "off");
+}
 #    endif
 
 menu_entry_t pointing_entries[] = {
@@ -304,5 +322,8 @@ menu_entry_t pointing_entries[] = {
 #    ifdef AUDIO_ENABLE
     MENU_ENTRY_CHILD("Mouse Clicky", "Clicky", audio_mouse_clicky),
 #    endif
+#    ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
+    MENU_ENTRY_CHILD("Mouse Smoothing", "Smoothing", mouse_smoothing),
+#    endif // COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
 };
 #endif // POINTING_DEVICE_ENABLE
