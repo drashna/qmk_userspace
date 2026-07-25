@@ -43,7 +43,7 @@
 #ifndef TAPPING_TOGGLE
 #    define TAPPING_TOGGLE 1
 #endif // !TAPPING_TOGGLE
-#define TAP_CODE_DELAY 5
+#define ENCODER_MAP_KEY_DELAY 5
 
 /* Disable unused and unneeded features to reduce on firmware size */
 #ifdef LOCKING_SUPPORT_ENABLE
