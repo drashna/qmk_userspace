@@ -510,6 +510,7 @@ const char *get_keyode_character(uint16_t keycode, keypos_t *key) {
         case QK_DEF_LAYER ... QK_DEF_LAYER_MAX:
         case QK_TOGGLE_LAYER ... QK_TOGGLE_LAYER_MAX:
         case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
+        case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
         case QK_PERSISTENT_DEF_LAYER ... QK_PERSISTENT_DEF_LAYER_MAX:
         case QK_COMMUNITY_MODULE ... QK_COMMUNITY_MODULE_MAX:
         case QK_TAP_DANCE ... QK_TAP_DANCE_MAX:
