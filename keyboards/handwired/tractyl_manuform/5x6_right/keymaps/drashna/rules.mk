@@ -39,6 +39,7 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f405)
     CUSTOM_QUANTUM_PAINTER_ST7789_135X240 = no
     CUSTOM_QUANTUM_PAINTER_ST7789_76X284  = no
     USE_USB_OTG_HS_PORT                   = yes
+    NKRO_BOOT_COMPAT_ENABLE               = yes
     ifeq ($(strip $(PORTSCAN_MATRIX_ENABLE)), yes)
         CUSTOM_MATRIX = lite
         SRC += portscan_matrix.c
