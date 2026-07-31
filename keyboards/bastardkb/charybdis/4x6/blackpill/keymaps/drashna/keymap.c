@@ -70,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                SFT_T(KC_SPACE),  ALT_T(KC_Q),      _______
     ),
     [_MOUSE] = LAYOUT_charybdis_4x6_wrapper(
-        _______, _______, _______, _______, _______, _______,   MA_TOGG, DPI_RMOD,DPI_MOD, S_D_RMOD,S_D_MOD, PD_JIGGLER,
+        _______, _______, _______, _______, _______, _______,   MA_TOGG, DPI_RMOD,DPI_MOD, S_D_RMOD,S_D_MOD, XXXXXXX,
         _______, ___________________BLANK___________________,   _________________MOUSE_R1__________________, XXXXXXX,
         _______, ___________________BLANK___________________,   _________________MOUSE_R2__________________, XXXXXXX,
         _______, ___________________BLANK___________________,   _________________MOUSE_R3__________________, XXXXXXX,
