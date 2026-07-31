@@ -430,14 +430,29 @@ void painter_render_wpm_graph(painter_device_t device, painter_font_handle_t fon
 
     if (force_redraw || timer_elapsed(wpm_timer) > 1000) {
         wpm_timer = timer_read();
-        extern uint8_t     wpm_graph_samples[WPM_GRAPH_SAMPLES];
-        const graph_line_t lines[] = {
+        extern uint8_t     wpm_graph_samples[3][WPM_GRAPH_SAMPLES];
+        hsv_t              max_color = {.h = 0, .s = curr_hsv->secondary.s, .v = curr_hsv->secondary.v};
+        const graph_line_t lines[]   = {
             {
-                .data      = wpm_graph_samples,
+                .data      = wpm_graph_samples[0],
                 .color     = curr_hsv->secondary,
                 .mode      = LINE,
-                .max_value = 120,
+                .max_value = 140,
             },
+#    ifdef COMMUNITY_MODULE_WPM_STATS_ENABLE
+            {
+                .data      = wpm_graph_samples[1],
+                .color     = curr_hsv->primary,
+                .mode      = LINE,
+                .max_value = 140,
+            },
+            {
+                .data      = wpm_graph_samples[2],
+                .color     = max_color,
+                .mode      = LINE,
+                .max_value = 140,
+            },
+#    endif
             GRAPHS_END,
         };
 
