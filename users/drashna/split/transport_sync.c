@@ -27,7 +27,7 @@ extern bool           delayed_tasks_run;
 extern bool swap_hands;
 #endif
 #ifdef WPM_ENABLE
-extern uint8_t wpm_graph_samples[WPM_GRAPH_SAMPLES];
+extern uint8_t wpm_graph_samples[3][WPM_GRAPH_SAMPLES];
 #endif // WPM_ENABLE
 #ifdef DISPLAY_DRIVER_ENABLE
 #    include "display/display.h"

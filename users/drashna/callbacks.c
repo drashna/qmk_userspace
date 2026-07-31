@@ -34,7 +34,7 @@ void keyboard_post_init_unicode(void);
 #    ifdef COMMUNITY_MODULE_WPM_STATS_ENABLE
 #        include "wpm_stats.h"
 #    endif
-uint8_t wpm_graph_samples[WPM_GRAPH_SAMPLES] = {0};
+uint8_t wpm_graph_samples[3][WPM_GRAPH_SAMPLES] = {0};
 #endif // WPM_ENABLE
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
 #    include "rtc.h"
@@ -379,14 +379,18 @@ void                       housekeeping_task_user(void) {
         if (timer_elapsed(interval) >= 1000) {
             // Shift the wpm_graph_samples array to the right
             for (uint8_t i = WPM_GRAPH_SAMPLES - 1; i > 0; i--) {
-                wpm_graph_samples[i] = wpm_graph_samples[i - 1];
+                for (uint8_t j = 0; j < 3; j++) {
+                    wpm_graph_samples[j][i] = wpm_graph_samples[j][i - 1];
+                }
             }
 
             // Update the first element of the array with the new average WPM
 #    ifdef COMMUNITY_MODULE_WPM_STATS_ENABLE
-            wpm_graph_samples[0] = wpm_stats_get_avg();
+            wpm_graph_samples[0][0] = wpm_stats_get_current();
+            wpm_graph_samples[1][0] = wpm_stats_get_avg();
+            wpm_graph_samples[2][0] = wpm_stats_get_max();
 #    else
-            wpm_graph_samples[0] = get_current_wpm();
+            wpm_graph_samples[0][0] = get_current_wpm();
 #    endif // COMMUNITY_MODULE_WPM_STATS_ENABLE
             interval = timer_read();
         }
