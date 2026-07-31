@@ -415,9 +415,8 @@ void                       housekeeping_task_user(void) {
 #    else
             wpm_graph_samples[0] = get_current_wpm();
 #    endif // COMMUNITY_MODULE_WPM_STATS_ENABLE
+            interval = timer_read();
         }
-
-        interval = timer_read();
     }
 #endif // WPM_ENABLE
     housekeeping_task_keymap();
