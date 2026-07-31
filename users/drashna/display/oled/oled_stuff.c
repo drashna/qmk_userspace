@@ -107,6 +107,12 @@ __attribute__((unused)) static void add_keylog(uint16_t keycode, keyrecord_t *re
     }
 }
 
+void add_keycode_to_keylogger_str(uint8_t keycode, uint8_t mods) {
+    memmove(display_keylogger_string, display_keylogger_string + 1, OLED_KEYLOGGER_LENGTH - 1);
+    display_keylogger_string[OLED_KEYLOGGER_LENGTH - 1] = pgm_read_byte(&code_to_name[keycode]);
+    keylogger_has_changed                               = true;
+}
+
 const char *get_oled_keylogger_str(void) {
     return display_keylogger_string;
 }
