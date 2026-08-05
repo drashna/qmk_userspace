@@ -146,7 +146,7 @@ void painter_render_menu_block_game_of_life(painter_device_t device, painter_fon
 
 void painter_render_menu_block_layer_map(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                                          uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
-    painter_render_layer_map(device, font, x, y, width, force_redraw, curr_hsv);
+    painter_render_layer_map(device, font, x + 20, y + font->line_height + 4, width, force_redraw, curr_hsv);
 }
 
 void painter_render_menu_block_pd_accel_graph(painter_device_t device, painter_font_handle_t font, uint16_t x,
@@ -1102,10 +1102,10 @@ void painter_render_layer_map(painter_device_t device, painter_font_handle_t fon
                               uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
 #ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
     if (force_redraw || get_layer_map_has_updated()) {
-        y += font->line_height + 4;
+        // y += font->line_height + 4;
         uint16_t xpos = x, ypos = y;
         for (uint8_t lm_y = 0; lm_y < LAYER_MAP_ROWS; lm_y++) {
-            xpos = x + 20;
+            xpos = x;
             for (uint8_t lm_x = 0; lm_x < LAYER_MAP_COLS; lm_x++) {
                 uint16_t keycode = extract_non_basic_keycode(layer_map[lm_y][lm_x], NULL, false);
 #    ifdef LAYER_MAP_REMAPPING
@@ -1114,7 +1114,7 @@ void painter_render_layer_map(painter_device_t device, painter_font_handle_t fon
                 keypos_t key = {.row = lm_y, .col = lm_x};
 #    endif // LAYER_MAP_REMAPPING
 
-                xpos += MAX(qp_drawtext_recolor(device, xpos, ypos, font_oled, get_keyode_character(keycode, &key),
+                xpos += MAX(qp_drawtext_recolor(device, xpos, ypos, font, get_keyode_character(keycode, &key),
                                                 curr_hsv->primary.h, curr_hsv->primary.s,
                                                 peek_matrix_layer_map(lm_y, lm_x) ? 0 : curr_hsv->primary.v,
                                                 curr_hsv->secondary.h, curr_hsv->secondary.s,
