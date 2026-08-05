@@ -74,10 +74,8 @@ extern painter_image_handle_t akira_explosion;
 #    if HAL_USE_SDRAM == TRUE
 #        define SURFACE_MENU_WIDTH  320
 #        define SURFACE_MENU_HEIGHT 480
-#        define WPM_NO_SURFACE
 
-__attribute__((section(".ram7"))) static uint8_t
-    menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
+SDRAM_DATA static uint8_t menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
 #    else
 #        if SURFACE_NUM_DEVICES < 2
 #            error Not enough surfaces for the ILI9488 display
@@ -90,7 +88,8 @@ static uint8_t menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH,
 painter_device_t menu_surface;
 
 #    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
-static uint8_t
+
+SDRAM_DATA static uint8_t
     wpm_graph_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT, 24)] = {0};
 static painter_device_t wpm_graph_surface;
 #    endif // WPM_ENABLE && !WPM_NO_SURFACE
@@ -607,6 +606,8 @@ __attribute__((weak)) void ili9488_draw_user(void) {
         }
 
         painter_render_haptic(pre_display, font_oled, 82, 164, hue_redraw, &curr_hsv);
+
+        painter_render_layer_map(pre_display, font_oled, 2 + 4, 190 + 4, 0, hue_redraw, &curr_hsv);
 
         painter_render_menu_block(pre_display, font_oled, 2, 305, 317, 451, hue_redraw, &curr_hsv, is_keyboard_master(),
                                   true);
