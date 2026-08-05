@@ -53,7 +53,8 @@ ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f429)
     RGBLIGHT_DRIVER                       = custom
     QUANTUM_PAINTER_ENABLE                = yes
     CUSTOM_QUANTUM_PAINTER_ENABLE         = yes
-    CUSTOM_QUANTUM_PAINTER_ILI9341        = yes
+    CUSTOM_QUANTUM_PAINTER_ILI9488        = yes
+    QUANTUM_PAINTER_DRIVERS_ILI9488_SURFACE = yes
 endif
 ifeq ($(strip $(KEYBOARD)), handwired/tractyl_manuform/5x6_right/f429_rando)
     OVERLOAD_FEATURES                     = yes
