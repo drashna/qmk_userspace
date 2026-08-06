@@ -13,6 +13,12 @@
 #if defined(COMMUNITY_MODULE_DISPLAY_MENU_ENABLE)
 #    include "display_menu.h"
 #endif // COMMUNITY_MODULE_DISPLAY_MENU_ENABLE
+#if defined(COMMUNITY_MODULE_I2C_SCANNER_ENABLE)
+#    include "i2c_scanner.h"
+#endif // COMMUNITY_MODULE_I2C_SCANNER_ENABLE
+#if defined(COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE)
+#    include "console_keylogging.h"
+#endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
 #ifdef UNICODE_COMMON_ENABLE
 #    include "process_unicode_common.h"
 extern unicode_config_t unicode_config;
@@ -54,8 +60,8 @@ typedef enum PACKED extended_id_t {
     RPC_ID_EXTENDED_USERSPACE_RUNTIME_STATE,
     RPC_ID_EXTENDED_SUSPEND_STATE,
     RPC_ID_EXTENDED_OLED_KEYLOGGER_STR,
-    RPC_ID_EXTENDED_PLACEHOLDER,
-    RPC_ID_EXTENDED_PLACEHOLDER_2,
+    RPC_ID_EXTENDED_I2C_SCANNER,
+    RPC_ID_EXTENDED_CONSOLE_KEYLOGGER,
     NUM_EXTENDED_IDS,
 } extended_id_t;
 
@@ -257,6 +263,24 @@ void recv_oled_keylogger_string_sync(const uint8_t *data, uint8_t size) {
 #endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE
 }
 
+void recv_i2c_scanner_data(const uint8_t *data, uint8_t size) {
+#ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
+    bool status = *((bool *)data);
+    if (status != i2c_scanner_get_enabled()) {
+        i2c_scanner_set_enabled(status);
+    }
+#endif // COMMUNITY_MODULE_I2C_SCANNER_ENABLE
+}
+
+void recv_console_keylogger_data(const uint8_t *data, uint8_t size) {
+#ifdef COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
+    bool status = *((bool *)data);
+    if (status != console_keylogging_get_enabled()) {
+        console_keylogging_set_enabled(status);
+    }
+#endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
+}
+
 static const handler_fn_t handlers[NUM_EXTENDED_IDS] = {
     [RPC_ID_EXTENDED_WPM_GRAPH_DATA]          = recv_wpm_graph_data,
     [RPC_ID_EXTENDED_AUTOCORRECT_STR]         = recv_autocorrect_string,
@@ -267,6 +291,8 @@ static const handler_fn_t handlers[NUM_EXTENDED_IDS] = {
     [RPC_ID_EXTENDED_USERSPACE_RUNTIME_STATE] = recv_userspace_runtime_state,
     [RPC_ID_EXTENDED_SUSPEND_STATE]           = recv_device_suspend_state,
     [RPC_ID_EXTENDED_OLED_KEYLOGGER_STR]      = recv_oled_keylogger_string_sync,
+    [RPC_ID_EXTENDED_I2C_SCANNER]             = recv_i2c_scanner_data,
+    [RPC_ID_EXTENDED_CONSOLE_KEYLOGGER]       = recv_console_keylogger_data,
 };
 
 /**
@@ -594,6 +620,50 @@ void sync_debug_config(void) {
     }
 }
 
+void sync_i2c_scanner_state(void) {
+#ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
+    bool            needs_sync    = false;
+    static uint16_t last_sync     = 0;
+    bool            current_state = i2c_scanner_get_enabled();
+
+    if (current_state != i2c_scanner_get_enabled()) {
+        needs_sync = true;
+    }
+
+    if (timer_elapsed(last_sync) > FORCED_SYNC_THROTTLE_MS) {
+        needs_sync = true;
+    }
+
+    if (needs_sync) {
+        if (send_extended_message_handler(RPC_ID_EXTENDED_I2C_SCANNER, &current_state, sizeof(bool))) {
+            last_sync = timer_read();
+        }
+    }
+#endif // COMMUNITY_MODULE_I2C_SCANNER_ENABLE
+}
+
+void sync_console_keylogger_state(void) {
+#ifdef COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
+    bool            needs_sync    = false;
+    static uint16_t last_sync     = 0;
+    bool            current_state = console_keylogging_get_enabled();
+
+    if (current_state != console_keylogging_get_enabled()) {
+        needs_sync = true;
+    }
+
+    if (timer_elapsed(last_sync) > FORCED_SYNC_THROTTLE_MS) {
+        needs_sync = true;
+    }
+
+    if (needs_sync) {
+        if (send_extended_message_handler(RPC_ID_EXTENDED_CONSOLE_KEYLOGGER, &current_state, sizeof(bool))) {
+            last_sync = timer_read();
+        }
+    }
+#endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
+}
+
 /**
  * @brief Initialize the transport sync
  *
@@ -638,5 +708,7 @@ void housekeeping_task_transport_sync(void) {
         sync_debug_config();
         sync_userspace_runtime_state();
         sync_userspace_config();
+        sync_i2c_scanner_state();
+        sync_console_keylogger_state();
     }
 }
