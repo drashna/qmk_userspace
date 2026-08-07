@@ -6,7 +6,15 @@
         {
             "label": "Build Tractyl Manuform",
             "type": "shell",
-            "command": "qmk compile -kb handwired/tractyl_manuform/5x6_right/f411 -km drashna -e HARDWARE_DEBUG_ENABLE=yes -c",
+            "command": "qmk compile -kb handwired/tractyl_manuform/5x6_right/f405 -km drashna -c",
+            "options": {
+                "shell": {
+                    "executable": "/usr/bin/zsh",
+                    "args": [
+                        "-lic"
+                    ]
+                }
+            },
             "problemMatcher": [],
             "group": {
                 "kind": "build"
@@ -25,6 +33,14 @@
             "label": "Build Userspace",
             "type": "shell",
             "command": "qmk userspace-compile; echo Done.",
+            "options": {
+                "shell": {
+                    "executable": "/usr/bin/zsh",
+                    "args": [
+                        "-lic"
+                    ]
+                }
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
