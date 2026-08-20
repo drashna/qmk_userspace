@@ -59,7 +59,7 @@ ifeq ($(strip $(OVERLOAD_FEATURES)), yes)
     LTO_ENABLE                    = no
     MULTITHREADED_LIGHTING_ENABLE = no
     MULTITHREADED_PAINTER_ENABLE  = no
-    OPT                           = fast
+    #OPT                           = fast
     RGBLIGHT_ENABLE               = yes
     RGBLIGHT_STARTUP_ANIMATION    = no
     RTC_TOTP_ENABLE               = yes
