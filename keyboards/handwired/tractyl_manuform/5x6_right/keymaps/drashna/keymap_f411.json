@@ -1,6 +1,7 @@
 {
     "modules": [
         "drashna/autocorrect",
+        "drashna/tractyl",
         "drashna/console_keylogging",
         "drashna/display_menu",
         "drashna/i2c_scanner",

@@ -398,12 +398,12 @@ __attribute__((weak)) void ili9341_draw_user(void) {
 
             ypos = 30 + 4;
 #if defined(POINTING_DEVICE_ENABLE)
-#    if (defined(KEYBOARD_bastardkb_charybdis) || defined(KEYBOARD_handwired_tractyl_manuform))
-#        include QMK_KEYBOARD_H
+#    if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
+#        include "tractyl.h"
 
             static uint16_t last_cpi = 0xFFFF;
-            if (hue_redraw || last_cpi != charybdis_get_pointer_default_dpi()) {
-                last_cpi = charybdis_get_pointer_default_dpi();
+            if (hue_redraw || last_cpi != tractyl_get_pointer_default_dpi()) {
+                last_cpi = tractyl_get_pointer_default_dpi();
                 xpos     = 5;
                 xpos += qp_drawtext_recolor(display, xpos, ypos, font_oled, "CPI:   ", curr_hsv.primary.h,
                                             curr_hsv.primary.s, curr_hsv.primary.v, 0, 0, 0);
