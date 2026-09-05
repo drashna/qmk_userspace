@@ -208,26 +208,17 @@ __attribute__((weak)) void display_handler_mouse_jiggler_ending(char *text_buffe
 
 #    endif
 
-#    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis) || \
-        defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
-#        include QMK_KEYBOARD_H
+#    if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
+#        include "tractyl.h"
 
 bool menu_handler_dpi_config(menu_input_t input) {
     switch (input) {
         case menu_input_left:
-#        if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
             tractyl_cycle_pointer_default_dpi(false);
-#        else
-            charybdis_cycle_pointer_default_dpi(false);
-#        endif // defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
             return false;
         case menu_input_right:
         case menu_input_enter:
-#        if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
             tractyl_cycle_pointer_default_dpi(true);
-#        else
-            charybdis_cycle_pointer_default_dpi(true);
-#        endif // defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
             return false;
         default:
             return true;
@@ -235,11 +226,25 @@ bool menu_handler_dpi_config(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_dpi_config(char *text_buffer, size_t buffer_len) {
-#        if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
     snprintf(text_buffer, buffer_len - 1, "%d", tractyl_get_pointer_default_dpi());
-#        else
-    snprintf(text_buffer, buffer_len - 1, "%d", charybdis_get_pointer_default_dpi());
-#        endif // defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
+}
+
+bool menu_handler_sniping_dpi_config(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+            tractyl_cycle_pointer_sniping_dpi(false);
+            return false;
+        case menu_input_right:
+        case menu_input_enter:
+            tractyl_cycle_pointer_sniping_dpi(true);
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_sniping_dpi_config(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%d", tractyl_get_pointer_sniping_dpi());
 }
 #    endif // defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis) ||
            // defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
@@ -397,9 +402,9 @@ menu_entry_t pointing_entries[] = {
 #    ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
     DISPLAY_MENU_ENTRY_MULTI("Mouse Jiggler", "Jiggler", pointing_mouse_jiggler, NULL, mouse_jiggler),
 #    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
-#    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis) || \
-        defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
+#    if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
     DISPLAY_MENU_ENTRY_CHILD("DPI Config", "DPI", dpi_config),
+    DISPLAY_MENU_ENTRY_CHILD("Sniping DPI Config", "Sniping DPI", sniping_dpi_config),
 #    endif // KEYBOARD_handwired_tractyl_manuform || KEYBOARD_bastardkb_charybdis
 #    ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Auto Mouse", "AutoMouse", auto_mouse_enable),
