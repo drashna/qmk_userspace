@@ -1,5 +1,6 @@
 {
     "modules": [
+        "drashna/tractyl",
         "drashna/autocorrect",
         "drashna/console_keylogging",
         "drashna/display_menu",

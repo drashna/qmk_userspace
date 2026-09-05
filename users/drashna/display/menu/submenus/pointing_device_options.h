@@ -147,17 +147,17 @@ __attribute__((weak)) void display_handler_mouse_jiggler_timeout(char *text_buff
 }
 #    endif
 
-#    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis)
-#        include QMK_KEYBOARD_H
+#    if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
+#        include "tractyl.h"
 
 bool menu_handler_dpi_config(menu_input_t input) {
     switch (input) {
         case menu_input_left:
-            charybdis_cycle_pointer_default_dpi(false);
+            tractyl_cycle_pointer_default_dpi(false);
             return false;
         case menu_input_right:
         case menu_input_enter:
-            charybdis_cycle_pointer_default_dpi(true);
+            tractyl_cycle_pointer_default_dpi(true);
             return false;
         default:
             return true;
@@ -165,7 +165,25 @@ bool menu_handler_dpi_config(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_dpi_config(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%d", charybdis_get_pointer_default_dpi());
+    snprintf(text_buffer, buffer_len - 1, "%d", tractyl_get_pointer_default_dpi());
+}
+
+bool menu_handler_sniping_dpi_config(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+            tractyl_cycle_pointer_sniping_dpi(false);
+            return false;
+        case menu_input_right:
+        case menu_input_enter:
+            tractyl_cycle_pointer_sniping_dpi(true);
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_sniping_dpi_config(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%d", tractyl_get_pointer_sniping_dpi());
 }
 #    endif
 
@@ -308,8 +326,9 @@ menu_entry_t pointing_entries[] = {
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
     MENU_ENTRY_MULTI("Mouse Acceleration", "Accel", pointing_acceleration_entries, mouse_accel_toggle),
 #    endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
-#    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis)
+#    if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
     MENU_ENTRY_CHILD("DPI Config", "DPI", dpi_config),
+    MENU_ENTRY_CHILD("Sniping DPI Config", "Sniping DPI", sniping_dpi_config),
 #    endif // KEYBOARD_handwired_tractyl_manuform || KEYBOARD_bastardkb_charybdis
 #    ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
     MENU_ENTRY_CHILD("Auto Mouse", "AutoMouse", auto_mouse_enable),
