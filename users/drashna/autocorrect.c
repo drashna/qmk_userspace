@@ -124,9 +124,15 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
         // the correction so that it doesn't look like "youshould" in the keylogger.
         add_autocorrect_char_to_keylogger_str('u');
         add_autocorrect_char_to_keylogger_str(' ');
+    } else if (strncmp("eexist", typo, strlen(typo)) == 0) {
+        keylog_shift_right();
+        add_autocorrect_char_to_keylogger_str('e');
+        add_autocorrect_char_to_keylogger_str(' ');
+        add_autocorrect_char_to_keylogger_str('e');
+    } else {
+        // For all other corrections, we just add the corrected string to the keylogger string.
+        update_keylogger_string(send_string_get_next_ram, &state);
     }
-
-    update_keylogger_string(send_string_get_next_ram, &state);
 
     if (userspace_runtime_state.last_keycode == KC_SPC) {
         // If the last keycode was space, we need to add a space to the keylogger string
@@ -146,6 +152,16 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
         }
         tap_code(KC_U);
         tap_code(KC_SPC);
+        send_string_P(str);
+
+        return false;
+    } else if (strncmp("eexist", typo, strlen(typo)) == 0) {
+        for (uint8_t i = 0; i < (backspaces + 2); ++i) {
+            tap_code(KC_BSPC);
+        }
+        tap_code(KC_E);
+        tap_code(KC_SPC);
+        tap_code(KC_E);
         send_string_P(str);
 
         return false;
