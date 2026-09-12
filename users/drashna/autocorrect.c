@@ -27,11 +27,6 @@ bool autocorrect_str_has_changed  = true;
 #        include <ctype.h>
 
 #        define PGM_LOADBIT(mem, pos) ((pgm_read_byte(&((mem)[(pos) / 8])) >> ((pos) % 8)) & 0x01)
-char send_string_get_next_ram(void *arg);
-
-typedef struct send_string_memory_state_t {
-    const char *string;
-} send_string_memory_state_t;
 
 void add_autocorrect_char_to_keylogger_str(char ascii_code) {
     if (ascii_code == '\a') { // BEL
@@ -53,44 +48,6 @@ void add_autocorrect_char_to_keylogger_str(char ascii_code) {
     }
 
     add_keycode_to_keylogger_str(keycode, mods);
-}
-
-static void update_keylogger_string(char (*getter)(void *), void *arg) {
-    while (1) {
-        char ascii_code = getter(arg);
-        if (!ascii_code) break;
-        if (ascii_code == SS_QMK_PREFIX) {
-            ascii_code = getter(arg);
-
-            if (ascii_code == SS_TAP_CODE) {
-                // tap
-                uint8_t keycode = getter(arg);
-                add_autocorrect_char_to_keylogger_str(keycode);
-            } else if (ascii_code == SS_DOWN_CODE) {
-                // down
-                uint8_t keycode = getter(arg);
-                add_autocorrect_char_to_keylogger_str(keycode);
-            } else if (ascii_code == SS_UP_CODE) {
-                // up
-                getter(arg);
-            } else if (ascii_code == SS_DELAY_CODE) {
-                // delay
-                int ms     = 0;
-                ascii_code = getter(arg);
-
-                while (isdigit(ascii_code)) {
-                    ms *= 10;
-                    ms += ascii_code - '0';
-                    ascii_code = getter(arg);
-                }
-            }
-
-            // if we had a delay that terminated with a null, we're done
-            if (ascii_code == 0) break;
-        } else {
-            add_autocorrect_char_to_keylogger_str(ascii_code);
-        }
-    }
 }
 #    endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
 
@@ -117,8 +74,6 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
     }
 
 #    if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
-    send_string_memory_state_t state = {str};
-
     if (strncmp("ushould", typo, strlen(typo)) == 0) {
         // If we're correcting "ushould" to "you should", we want to add an extra space to the keylogger string after
         // the correction so that it doesn't look like "youshould" in the keylogger.
@@ -129,9 +84,6 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
         add_autocorrect_char_to_keylogger_str('e');
         add_autocorrect_char_to_keylogger_str(' ');
         add_autocorrect_char_to_keylogger_str('e');
-    } else {
-        // For all other corrections, we just add the corrected string to the keylogger string.
-        update_keylogger_string(send_string_get_next_ram, &state);
     }
 
     if (userspace_runtime_state.last_keycode == KC_SPC) {
