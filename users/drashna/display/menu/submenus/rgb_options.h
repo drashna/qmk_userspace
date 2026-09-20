@@ -173,9 +173,95 @@ __attribute__((weak)) void display_handler_rgb_lumino(char *text_buffer, size_t 
 }
 #endif // COMMUNITY_MODULE_LUMINO_ENABLE
 
+#    undef RGB_MATRIX_EFFECT
+#    define RGB_MATRIX_EFFECT(name, ...)                                                                  \
+        bool menu_handler_rm_mode_##name(menu_input_t input) {                                            \
+            switch (input) {                                                                              \
+                case menu_input_enter:                                                                    \
+                    rgb_matrix_mode(RGB_MATRIX_##name);                                                   \
+                    menu_handle_input(menu_input_back);                                                   \
+                    return false;                                                                         \
+                default:                                                                                  \
+                    return true;                                                                          \
+            }                                                                                             \
+        }                                                                                                 \
+        __attribute__((weak)) void display_handler_rm_mode_##name(char *text_buffer, size_t buffer_len) { \
+            snprintf(text_buffer, buffer_len - 1, "%s", rgb_matrix_name(RGB_MATRIX_##name));              \
+        }
+
+#    include "rgb_matrix_effects.inc"
+#    undef RGB_MATRIX_EFFECT
+
+#    ifdef COMMUNITY_MODULES_ENABLE
+#        define RGB_MATRIX_EFFECT(name, ...)                                                                      \
+            bool menu_handler_rm_mode_community_##name(menu_input_t input) {                                      \
+                switch (input) {                                                                                  \
+                    case menu_input_enter:                                                                        \
+                        rgb_matrix_mode(RGB_MATRIX_COMMUNITY_MODULE_##name);                                      \
+                        menu_handle_input(menu_input_back);                                                       \
+                        return false;                                                                             \
+                    default:                                                                                      \
+                        return true;                                                                              \
+                }                                                                                                 \
+            }                                                                                                     \
+            __attribute__((weak)) void display_handler_rm_mode_community_##name(char  *text_buffer,               \
+                                                                                size_t buffer_len) {              \
+                snprintf(text_buffer, buffer_len - 1, "%s", rgb_matrix_name(RGB_MATRIX_COMMUNITY_MODULE_##name)); \
+            }
+#        include "rgb_matrix_community_modules.inc"
+#        undef RGB_MATRIX_EFFECT
+#    endif
+
+#    if defined(RGB_MATRIX_CUSTOM_KB) || defined(RGB_MATRIX_CUSTOM_USER)
+#        define RGB_MATRIX_EFFECT(name, ...)                                                                         \
+            bool menu_handler_rm_mode_custom_##name(menu_input_t input) {                                            \
+                switch (input) {                                                                                     \
+                    case menu_input_enter:                                                                           \
+                        rgb_matrix_mode(RGB_MATRIX_CUSTOM_##name);                                                   \
+                        menu_handle_input(menu_input_back);                                                          \
+                        return false;                                                                                \
+                    default:                                                                                         \
+                        return true;                                                                                 \
+                }                                                                                                    \
+            }                                                                                                        \
+            __attribute__((weak)) void display_handler_rm_mode_custom_##name(char *text_buffer, size_t buffer_len) { \
+                snprintf(text_buffer, buffer_len - 1, "%s", rgb_matrix_name(RGB_MATRIX_CUSTOM_##name));              \
+            }
+#        ifdef RGB_MATRIX_CUSTOM_KB
+#            include "rgb_matrix_kb.inc"
+#        endif
+#        ifdef RGB_MATRIX_CUSTOM_USER
+#            include "rgb_matrix_user.inc"
+#        endif
+#        undef RGB_MATRIX_EFFECT
+#    endif
+
+menu_entry_t rm_mode_list[] = {
+#    define RGB_MATRIX_EFFECT(name, ...) MENU_ENTRY_CHILD("Mode", "Mode", rm_mode_##name),
+#    include "rgb_matrix_effects.inc"
+#    undef RGB_MATRIX_EFFECT
+
+#    ifdef COMMUNITY_MODULES_ENABLE
+#        define RGB_MATRIX_EFFECT(name, ...) MENU_ENTRY_CHILD("Mode", "Mode", rm_mode_community_##name),
+#        include "rgb_matrix_community_modules.inc"
+#        undef RGB_MATRIX_EFFECT
+#    endif
+
+#    if defined(RGB_MATRIX_CUSTOM_KB) || defined(RGB_MATRIX_CUSTOM_USER)
+#        define RGB_MATRIX_EFFECT(name, ...) MENU_ENTRY_CHILD("Mode", "Mode", rm_mode_custom_##name),
+#        ifdef RGB_MATRIX_CUSTOM_KB
+#            include "rgb_matrix_kb.inc"
+#        endif
+#        ifdef RGB_MATRIX_CUSTOM_USER
+#            include "rgb_matrix_user.inc"
+#        endif
+#        undef RGB_MATRIX_EFFECT
+#    endif
+};
+
 menu_entry_t rgb_matrix_entries[] = {
     MENU_ENTRY_CHILD("RGB Enabled", "Enabled", rm_enabled),
-    MENU_ENTRY_CHILD("RGB Mode", "Mode", rm_mode),
+    MENU_ENTRY_MULTI("RGB Mode", "Mode", rm_mode_list, rm_mode),
     MENU_ENTRY_CHILD("RGB Hue", "Hue", rm_hue),
     MENU_ENTRY_CHILD("RGB Saturation", "Sat", rm_sat),
     MENU_ENTRY_CHILD("RGB Value", "Val", rm_val),

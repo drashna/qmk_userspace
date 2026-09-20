@@ -268,11 +268,15 @@ void rgb_matrix_shutdown(bool jump_to_bootloader) {
 }
 
 const char *rgb_matrix_get_effect_name(void) {
+    return rgb_matrix_name(rgb_matrix_get_mode());
+}
+
+const char *rgb_matrix_name(uint8_t mode) {
     static char    buf[32]     = {0};
     static uint8_t last_effect = 0;
-    if (last_effect != rgb_matrix_get_mode()) {
-        last_effect = rgb_matrix_get_mode();
-        snprintf(buf, sizeof(buf), "%s", rgb_matrix_get_mode_name(rgb_matrix_get_mode()));
+    if (last_effect != mode) {
+        last_effect = mode;
+        snprintf(buf, sizeof(buf), "%s", rgb_matrix_get_mode_name(mode));
         for (uint8_t i = 1; i < sizeof(buf); ++i) {
             if (buf[i] == 0)
                 break;
