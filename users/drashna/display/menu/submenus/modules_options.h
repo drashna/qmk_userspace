@@ -98,7 +98,7 @@ __attribute__((weak)) void display_handler_dynamic_debounce(char *text_buffer, s
 #    undef DEBOUNCE_ALGORITHM
 
 menu_entry_t dynamic_debounce_algo[] = {
-#    define DEBOUNCE_ALGORITHM(name) MENU_ENTRY_CHILD(#name, #name, dynamic_debounce_##name),
+#    define DEBOUNCE_ALGORITHM(name) DISPLAY_MENU_ENTRY_CHILD(#name, #name, dynamic_debounce_##name),
 #    include "debounce.inc"
 #    undef DEBOUNCE_ALGORITHM
 };
@@ -122,8 +122,9 @@ __attribute__((weak)) void display_handler_dynamic_debounce_time(char *text_buff
 }
 
 menu_entry_t dynamic_debounce_menu[] = {
-    MENU_ENTRY_MULTI("Debounce Algorithm", "ALGO", dynamic_debounce_algo, dynamic_debounce),
-    MENU_ENTRY_CHILD("Debounce Time", "TIME", dynamic_debounce_time),
+    DISPLAY_MENU_ENTRY_MULTI("Debounce Algorithm", "ALGO", dynamic_debounce_algo, dynamic_debounce_get_algorithm,
+                             dynamic_debounce),
+    DISPLAY_MENU_ENTRY_CHILD("Debounce Time", "TIME", dynamic_debounce_time),
 };
 #endif
 
