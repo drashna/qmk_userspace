@@ -736,7 +736,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
         qp_surface_draw(menu_surface, display, 2, 172, screen_saver_redraw);
 #else  // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
         painter_render_menu_block(display, font_oled, 2, 172, 237, 291, screen_saver_redraw || hue_redraw, &curr_hsv,
-                                  is_keyboard_master(), true);
+                                  is_keyboard_left(), true);
 #endif // QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
 
         // Footer
