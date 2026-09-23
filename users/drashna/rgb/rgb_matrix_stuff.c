@@ -20,7 +20,7 @@ static uint32_t hypno_timer;
 rgb_t           rgb_matrix_hsv_to_rgb(hsv_t hsv);
 
 void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode, uint8_t speed, uint8_t led_type,
-                             uint8_t led_min, uint8_t led_max) {
+                             led_index_t led_min, led_index_t led_max) {
     hsv_t   hsv  = {hue, sat, val};
     rgb_t   rgb  = {0};
     uint8_t time = scale16by8(g_rgb_timer, qadd8(speed / 4, 1));
@@ -172,10 +172,10 @@ const rgblight_driver_t rgblight_driver = {
 };
 #endif // RGBLIGHT_ENABLE && RGBLIGHT_CUSTOM
 
-__attribute__((weak)) bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
+__attribute__((weak)) bool rgb_matrix_indicators_advanced_keymap(led_index_t led_min, led_index_t led_max) {
     return true;
 }
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+bool rgb_matrix_indicators_advanced_user(led_index_t led_min, led_index_t led_max) {
     if (!rgb_matrix_indicators_advanced_keymap(led_min, led_max)) {
         return false;
     }
@@ -189,7 +189,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
  * @param led_min
  * @param led_max
  */
-void rgb_matrix_indicators_render_layer(uint8_t led_min, uint8_t led_max) {
+void rgb_matrix_indicators_render_layer(led_index_t led_min, led_index_t led_max) {
     if (userspace_config.rgb.layer_change) {
 #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
 #    if defined(SPLIT_KEYBOARD) && defined(SPLIT_LAYER_STATE_ENABLE)
