@@ -13,7 +13,7 @@ void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode
                              led_index_t led_max);
 void rgb_matrix_indicators_render_layer(led_index_t led_min, led_index_t led_max);
 
-bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max);
+bool rgb_matrix_indicators_advanced_keymap(led_index_t led_min, led_index_t led_max);
 bool rgb_matrix_indicators_keymap(void);
 void rgb_matrix_shutdown(bool jump_to_bootloader);
 

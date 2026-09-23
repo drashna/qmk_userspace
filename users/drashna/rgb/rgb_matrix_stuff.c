@@ -178,10 +178,10 @@ const rgblight_driver_t rgblight_driver = {
  * @param led_min The minimum LED index to consider.
  * @param led_max The maximum LED index to consider.
  */
-void rgb_matrix_indicators_render_mods(uint8_t led_min, uint8_t led_max) {
+void rgb_matrix_indicators_render_mods(led_index_t led_min, led_index_t led_max) {
     for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
         for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
-            uint8_t index = g_led_config.matrix_co[row][col];
+            led_index_t index = g_led_config.matrix_co[row][col];
 
             if (index != NO_LED && index >= led_min && index < led_max) {
                 keypos_t key = {.col = col, .row = row};
@@ -228,10 +228,10 @@ void rgb_matrix_indicators_render_mods(uint8_t led_min, uint8_t led_max) {
     }
 }
 
-__attribute__((weak)) bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
+__attribute__((weak)) bool rgb_matrix_indicators_advanced_keymap(led_index_t led_min, led_index_t led_max) {
     return true;
 }
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+bool rgb_matrix_indicators_advanced_user(led_index_t led_min, led_index_t led_max) {
     if (!rgb_matrix_indicators_advanced_keymap(led_min, led_max)) {
         return false;
     }
@@ -247,7 +247,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
  * @param led_min
  * @param led_max
  */
-void rgb_matrix_indicators_render_layer(uint8_t led_min, uint8_t led_max) {
+void rgb_matrix_indicators_render_layer(led_index_t led_min, led_index_t led_max) {
     if (userspace_config.rgb.layer_change) {
 #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_CUSTOM)
 #    if defined(SPLIT_KEYBOARD) && defined(SPLIT_LAYER_STATE_ENABLE)
