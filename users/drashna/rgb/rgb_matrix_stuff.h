@@ -10,10 +10,10 @@ void housekeeping_task_rgb_matrix(void);
 
 void rgb_matrix_set_color_all(uint8_t red, uint8_t green, uint8_t blue);
 void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode, uint8_t speed, uint8_t led_type,
-                             uint8_t led_min, uint8_t led_max);
-void rgb_matrix_indicators_render_layer(uint8_t led_min, uint8_t led_max);
+                             led_index_t led_min, led_index_t led_max);
+void rgb_matrix_indicators_render_layer(led_index_t led_min, led_index_t led_max);
 
-bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max);
+bool rgb_matrix_indicators_advanced_keymap(led_index_t led_min, led_index_t led_max);
 bool rgb_matrix_indicators_keymap(void);
 void rgb_matrix_shutdown(bool jump_to_bootloader);
 
