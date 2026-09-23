@@ -43,6 +43,7 @@
 #include "submenus/rtc_options.h"
 #include "submenus/user_settings_options.h"
 #include "submenus/debugging_options.h"
+#include "submenus/modules_options.h"
 #ifdef SECRET_MENU_ENABLE
 #    include "secrets_menu.h"
 #endif
@@ -82,10 +83,8 @@ menu_entry_t root_entries[] = {
     MENU_ENTRY_MULTI("Haptic Settings", "Haptics", haptic_entries, haptic_enabled),
 #endif // HAPTIC_ENABLE
     MENU_ENTRY_PARENT("Keymap Settings", "Keymap", keymap_config_entries),
-#if defined(COMMUNITY_MODULE_RTC_ENABLE)
-    MENU_ENTRY_PARENT("RTC Settings", "RTC", rtc_config_entries),
-#endif // COMMUNITY_MODULE_RTC_ENABLE
     MENU_ENTRY_PARENT("User Settings", "User", user_settings_option_entries),
+    MENU_ENTRY_PARENT("Community Modules", "Modules", community_modules_settings_option_entries),
 #ifdef SECRET_MENU_ENABLE
     MENU_ENTRY_PARENT("Secret Settings", "Secret", secret_entries),
 #endif

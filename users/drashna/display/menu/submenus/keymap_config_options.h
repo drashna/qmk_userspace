@@ -170,7 +170,7 @@ __attribute__((weak)) void display_handler_keycode_oneshot(char *text_buffer, si
     snprintf(text_buffer, buffer_len - 1, "%s", keymap_config.oneshot_enable ? "on" : "off");
 }
 
-#if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
+#if defined(AUTOCORRECT_ENABLE) && !defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
 #    include "autocorrect.h"
 
 bool menu_handler_keycode_autocorrect(menu_input_t input) {
@@ -206,7 +206,7 @@ __attribute__((weak)) void display_handler_keycode_autocorrect_dict(char *text_b
     uint8_t dict_index = autocorrect_get_current_dictionary();
     snprintf(text_buffer, buffer_len - 1, "Dict %d/%d", dict_index + 1, autocorrect_get_number_of_dictionaries());
 }
-#endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
+#endif // AUTOCORRECT_ENABLE
 
 menu_entry_t keymap_config_entries[] = {
     MENU_ENTRY_CHILD("Control <-> Capslock", "Ctl-Caps", keycode_ctrl_caps),
@@ -217,8 +217,8 @@ menu_entry_t keymap_config_entries[] = {
     MENU_ENTRY_CHILD("GUI", "GUI", keycode_disable_gui),
     MENU_ENTRY_CHILD("N-Key Roll Over", "NKRO", keycode_nkro),
     MENU_ENTRY_CHILD("Oneshot Keys", "1SHOT", keycode_oneshot),
-#if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
+#if defined(AUTOCORRECT_ENABLE) && !defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
     MENU_ENTRY_CHILD("Autocorrect", "AutoCorr", keycode_autocorrect),
     MENU_ENTRY_CHILD("Autocorrect Dictionary", "AutoDict", keycode_autocorrect_dict),
-#endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
+#endif // AUTOCORRECT_ENABLE && ! COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 };

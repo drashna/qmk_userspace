@@ -140,25 +140,6 @@ __attribute__((weak)) void display_handler_quantum_painter_debugging(char *text_
 }
 #endif
 
-#ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-#    include "i2c_scanner.h"
-
-bool menu_handler_i2c_scanner(menu_input_t input) {
-    switch (input) {
-        case menu_input_left:
-        case menu_input_right:
-        case menu_input_enter:
-            i2c_scanner_set_enabled(!i2c_scanner_get_enabled());
-            return false;
-        default:
-            return true;
-    }
-}
-
-__attribute__((weak)) void display_handler_i2c_scanner(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%s", i2c_scanner_get_enabled() ? "on" : "off");
-}
-#endif
 
 bool menu_handler_scan_rate(menu_input_t input) {
     switch (input) {
@@ -177,24 +158,6 @@ __attribute__((weak)) void display_handler_scan_rate(char *text_buffer, size_t b
     snprintf(text_buffer, buffer_len - 1, "%s", userspace_config.debug.matrix_scan_print ? "on" : "off");
 }
 
-#ifdef COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
-#    include "console_keylogging.h"
-bool menu_handler_keylogger(menu_input_t input) {
-    switch (input) {
-        case menu_input_left:
-        case menu_input_right:
-            console_keylogging_set_enabled(!console_keylogging_get_enabled());
-            return false;
-        default:
-            return true;
-    }
-}
-
-__attribute__((weak)) void display_handler_keylogger(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%s", console_keylogging_get_enabled() ? "on" : "off");
-}
-#endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
-
 menu_entry_t debug_entries[] = {
     MENU_ENTRY_CHILD("Debugging", "Enabled", debugging_enable), // force formatting
     MENU_ENTRY_CHILD("Keyboard Debugging", "Keeb", keyboard_debugging),
@@ -205,12 +168,5 @@ menu_entry_t debug_entries[] = {
     MENU_ENTRY_CHILD("Action Debugging", "Action", action_debugging),
     MENU_ENTRY_CHILD("Split Serial Debugging", "Split", split_serial_debugging),
     MENU_ENTRY_CHILD("Quantum Painter Debugging", "QP????", quantum_painter_debugging),
-#endif
-#ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-    MENU_ENTRY_CHILD("I2C Scanner", "I2C Scan", i2c_scanner),
-#endif // COMMUNITY_MODULE_I2C_SCANNER_ENABLE
     MENU_ENTRY_CHILD("Matrix Scan Rate Print", "Scan Rate", scan_rate),
-#ifdef COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
-    MENU_ENTRY_CHILD("Console Keylogger", "Keylogger", keylogger),
-#endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
 };
