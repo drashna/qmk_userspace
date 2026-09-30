@@ -173,6 +173,28 @@ bool menu_handler_rtc_hour_format(menu_input_t input) {
     }
 }
 
+__attribute__((weak)) void display_handler_rtc_am_pm(char *text_buffer, size_t buffer_len) {
+    if (rtc_is_connected()) {
+        snprintf(text_buffer, buffer_len - 1, "%s",
+                 rtc_read_time_struct().format == RTC_FORMAT_12H ? (rtc_read_time_struct().am_pm ? "AM" : "PM")
+                                                                 : "<<< 24-Hour >>>");
+    } else {
+        snprintf(text_buffer, buffer_len - 1, "Not Connected");
+    }
+}
+
+bool menu_handler_rtc_am_pm(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+        case menu_input_right:
+        case menu_input_enter:
+            rtc_am_pm_toggle();
+            return false;
+        default:
+            return true;
+    }
+}
+
 __attribute__((weak)) void display_handler_rtc_dst(char *text_buffer, size_t buffer_len) {
     if (rtc_is_connected()) {
         snprintf(text_buffer, buffer_len - 1, "%s", rtc_read_time_struct().is_dst ? "on" : "off");
@@ -201,6 +223,7 @@ menu_entry_t rtc_config_entries[] = {
     MENU_ENTRY_CHILD("Minute", "Minute", rtc_minute),
     MENU_ENTRY_CHILD("Second", "Second", rtc_second),
     MENU_ENTRY_CHILD("12/24 Hour Format", "Format", rtc_hour_format),
+    MENU_ENTRY_CHILD("AM/PM", "AM/PM", rtc_am_pm),
     MENU_ENTRY_CHILD("DST", "DST", rtc_dst),
 };
 #endif // COMMUNITY_MODULE_RTC_ENABLE

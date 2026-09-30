@@ -232,7 +232,12 @@ void painter_render_rtc_time(painter_device_t device, painter_font_handle_t font
     }
     if (force_redraw || rtc_redraw) {
         char buf[40] = {0};
+        static rtc_time_format_t last    = 0;
         if (rtc_is_connected()) {
+            if (last != rtc_read_time_struct().format) {
+                last = rtc_read_time_struct().format;
+                qp_rect(device, x, y, display_width - x - 6, y + font->line_height, 0, 0, 0, true);
+            }
             snprintf(buf, sizeof(buf), "RTC Date/Time: %s", rtc_read_date_time_str());
         } else {
             snprintf(buf, sizeof(buf), "RTC Device Not Connected");
