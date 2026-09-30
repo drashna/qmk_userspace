@@ -536,52 +536,9 @@ void painter_render_haptic(painter_device_t device, painter_font_handle_t font, 
  * @param curr_hsv A pointer to the current HSV color values.
  * @param wide_load Render as  "name XXXXXX" if false, or "name: XXX XXX" if true
  */
-void painter_render_totp(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y, uint16_t width,
-                         bool force_redraw, dual_hsv_t *curr_hsv, bool wide_load) {
-#if defined(COMMUNITY_MODULE_RTC_ENABLE) && defined(RTC_TOTP_ENABLE) && __has_include("rtc_secrets.h")
-#    include "rtc_secrets.h"
-    uint32_t    get_totp_code(const uint8_t *hmackey, const uint8_t keylength, const uint32_t timestep);
-    static bool is_rtc_connected = false;
-    bool        totp_redraw = false, draw_red_redraw = false;
-    if (rtc_is_connected() != is_rtc_connected) {
-        is_rtc_connected = rtc_is_connected();
-        totp_redraw      = true;
-    }
-    if (rtc_read_time_struct().unixtime % 30 == 1) {
-        totp_redraw = true;
-    }
-    if (rtc_read_time_struct().unixtime % 30 == 23) {
-        totp_redraw = draw_red_redraw = true;
-    }
-    if (force_redraw || totp_redraw) {
-        uint16_t temp_x     = x;
-        char     buf[20]    = {0};
-        uint16_t text_width = qp_textwidth(font, wide_load ? "WWWWWW: WWW WWW" : "WWWWWW WWWWWW") + 10;
-        for (uint8_t i = 0; i < ARRAY_SIZE(totp_pairs); i++) {
-            uint32_t code = rtc_is_connected()
-                                ? get_totp_code(totp_pairs[i].hmacKey, totp_pairs[i].key_length, totp_pairs[i].timestep)
-                                : 0;
-            snprintf(buf, sizeof(buf), "%6s%s", totp_pairs[i].name, wide_load ? ": " : " ");
-            if ((temp_x + text_width) > (width)) {
-                temp_x = x;
-                y += font->line_height + 3;
-            }
-            temp_x += qp_drawtext_recolor(device, temp_x, y, font, buf, curr_hsv->primary.h, curr_hsv->primary.s,
-                                          curr_hsv->primary.v, 0, 0, 0);
-
-            if (wide_load) {
-                snprintf(buf, sizeof(buf), "%03ld %03ld", code / 1000, code % 1000);
-            } else {
-                snprintf(buf, sizeof(buf), "%06ld", code);
-            }
-            temp_x +=
-                qp_drawtext_recolor(device, temp_x, y, font, buf, draw_red_redraw ? 0 : curr_hsv->secondary.h,
-                                    draw_red_redraw ? 170 : curr_hsv->secondary.s, curr_hsv->secondary.v, 0, 0, 0) +
-                10;
-        }
-    }
-#endif
-}
+__attribute__((weak)) void painter_render_totp(painter_device_t device, painter_font_handle_t font, uint16_t x,
+                                               uint16_t y, uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv,
+                                               bool wide_load) {}
 
 void painter_render_frame_box(painter_device_t device, hsv_t hsv, uint16_t x_buffer, uint16_t y_buffer,
                               int16_t x_offset, int16_t y_offset, bool top_indents, bool side_indents) {
