@@ -111,13 +111,13 @@ __attribute__((weak)) void display_handler_audio_mouse_clicky(char *text_buffer,
 }
 
 menu_entry_t audio_entries[] = {
-    MENU_ENTRY_CHILD("Audio", "Audio", audio_enabled),
-    MENU_ENTRY_CHILD("Music Mode", "Music", music_enabled),
-    MENU_ENTRY_CHILD("Clicky", "Clicky", audio_clicky_enabled),
-    MENU_ENTRY_CHILD("Clicky Frequency", "Freq", audio_clicky_freq),
-    MENU_ENTRY_CHILD("Gaming Song", "GameSong", gaming_song_enabled),
+    DISPLAY_MENU_ENTRY_CHILD("Audio", "Audio", audio_enabled),
+    DISPLAY_MENU_ENTRY_CHILD("Music Mode", "Music", music_enabled),
+    DISPLAY_MENU_ENTRY_CHILD("Clicky", "Clicky", audio_clicky_enabled),
+    DISPLAY_MENU_ENTRY_CHILD("Clicky Frequency", "Freq", audio_clicky_freq),
+    DISPLAY_MENU_ENTRY_CHILD("Gaming Song", "GameSong", gaming_song_enabled),
 #    ifdef POINTING_DEVICE_ENABLE
-    MENU_ENTRY_CHILD("Mouse Clicky", "MouseC", audio_mouse_clicky),
+    DISPLAY_MENU_ENTRY_CHILD("Mouse Clicky", "MouseC", audio_mouse_clicky),
 #    endif // POINTING_DEVICE_ENABLE
 };
 #endif // AUDIO_ENABLE

@@ -216,14 +216,14 @@ bool menu_handler_rtc_dst(menu_input_t input) {
 }
 
 menu_entry_t rtc_config_entries[] = {
-    MENU_ENTRY_CHILD("Year", "Year", rtc_year),
-    MENU_ENTRY_CHILD("Month", "Month", rtc_month),
-    MENU_ENTRY_CHILD("Date", "Date", rtc_date),
-    MENU_ENTRY_CHILD("Hour", "Hour", rtc_hour),
-    MENU_ENTRY_CHILD("Minute", "Minute", rtc_minute),
-    MENU_ENTRY_CHILD("Second", "Second", rtc_second),
-    MENU_ENTRY_CHILD("12/24 Hour Format", "Format", rtc_hour_format),
-    MENU_ENTRY_CHILD("AM/PM", "AM/PM", rtc_am_pm),
-    MENU_ENTRY_CHILD("DST", "DST", rtc_dst),
+    DISPLAY_MENU_ENTRY_CHILD("Year", "Year", rtc_year),
+    DISPLAY_MENU_ENTRY_CHILD("Month", "Month", rtc_month),
+    DISPLAY_MENU_ENTRY_CHILD("Date", "Date", rtc_date),
+    DISPLAY_MENU_ENTRY_CHILD("Hour", "Hour", rtc_hour),
+    DISPLAY_MENU_ENTRY_CHILD("Minute", "Minute", rtc_minute),
+    DISPLAY_MENU_ENTRY_CHILD("Second", "Second", rtc_second),
+    DISPLAY_MENU_ENTRY_CHILD("12/24 Hour Format", "Format", rtc_hour_format),
+    DISPLAY_MENU_ENTRY_CHILD("AM/PM", "AM/PM", rtc_am_pm),
+    DISPLAY_MENU_ENTRY_CHILD("DST", "DST", rtc_dst),
 };
 #endif // COMMUNITY_MODULE_RTC_ENABLE

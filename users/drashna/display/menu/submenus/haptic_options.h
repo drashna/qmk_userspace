@@ -162,16 +162,16 @@ __attribute__((weak)) void display_handler_haptic_love_intensity(char *text_buff
 #    endif // HAPTIC_DRV2605L
 
 menu_entry_t haptic_entries[] = {
-    MENU_ENTRY_CHILD("Haptic Enabled", "Enabled", haptic_enabled),
-    MENU_ENTRY_CHILD("Haptic Mode", "Mode", haptic_mode),
-    MENU_ENTRY_CHILD("Feedback Mode", "Key", feedback_mode),
+    DISPLAY_MENU_ENTRY_CHILD("Haptic Enabled", "Enabled", haptic_enabled),
+    DISPLAY_MENU_ENTRY_CHILD("Haptic Mode", "Mode", haptic_mode),
+    DISPLAY_MENU_ENTRY_CHILD("Feedback Mode", "Key", feedback_mode),
 #    ifdef HAPTIC_SOLENOID
-    MENU_ENTRY_CHILD("Buzz", "Buzz", haptic_buzz),
-    MENU_ENTRY_CHILD("Dwell", "Dwell", haptic_dwell),
+    DISPLAY_MENU_ENTRY_CHILD("Buzz", "Buzz", haptic_buzz),
+    DISPLAY_MENU_ENTRY_CHILD("Dwell", "Dwell", haptic_dwell),
 #    endif // HAPTIC_SOLENOID
 #    ifdef HAPTIC_DRV2605L
-    MENU_ENTRY_CHILD("Continuous", "Cont", haptic_love_mode),
-    MENU_ENTRY_CHILD("Continuous Amplitude", "Intensity", haptic_love_intensity),
+    DISPLAY_MENU_ENTRY_CHILD("Continuous", "Cont", haptic_love_mode),
+    DISPLAY_MENU_ENTRY_CHILD("Continuous Amplitude", "Intensity", haptic_love_intensity),
 #    endif // HAPTIC_DRV2605L
 };
 #endif // HAPTIC_ENABLE

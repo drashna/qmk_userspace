@@ -209,16 +209,16 @@ __attribute__((weak)) void display_handler_keycode_autocorrect_dict(char *text_b
 #endif // AUTOCORRECT_ENABLE
 
 menu_entry_t keymap_config_entries[] = {
-    MENU_ENTRY_CHILD("Control <-> Capslock", "Ctl-Caps", keycode_ctrl_caps),
-    MENU_ENTRY_CHILD("Alt <-> GUI", "Alt-GUI", keycode_alt_gui),
-    MENU_ENTRY_CHILD("Control <-> GUI", "Ctl-GUI", keycode_ctrl_gui),
-    MENU_ENTRY_CHILD("Grave <-> Escape", "Grv-Esc", keycode_grave_esc),
-    MENU_ENTRY_CHILD("Backslash <-> Backspace", "/-Bspc", keycode_bslash_bspc),
-    MENU_ENTRY_CHILD("GUI", "GUI", keycode_disable_gui),
-    MENU_ENTRY_CHILD("N-Key Roll Over", "NKRO", keycode_nkro),
-    MENU_ENTRY_CHILD("Oneshot Keys", "1SHOT", keycode_oneshot),
+    DISPLAY_MENU_ENTRY_CHILD("Control <-> Capslock", "Ctl-Caps", keycode_ctrl_caps),
+    DISPLAY_MENU_ENTRY_CHILD("Alt <-> GUI", "Alt-GUI", keycode_alt_gui),
+    DISPLAY_MENU_ENTRY_CHILD("Control <-> GUI", "Ctl-GUI", keycode_ctrl_gui),
+    DISPLAY_MENU_ENTRY_CHILD("Grave <-> Escape", "Grv-Esc", keycode_grave_esc),
+    DISPLAY_MENU_ENTRY_CHILD("Backslash <-> Backspace", "/-Bspc", keycode_bslash_bspc),
+    DISPLAY_MENU_ENTRY_CHILD("GUI", "GUI", keycode_disable_gui),
+    DISPLAY_MENU_ENTRY_CHILD("N-Key Roll Over", "NKRO", keycode_nkro),
+    DISPLAY_MENU_ENTRY_CHILD("Oneshot Keys", "1SHOT", keycode_oneshot),
 #if defined(AUTOCORRECT_ENABLE) && !defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
-    MENU_ENTRY_CHILD("Autocorrect", "AutoCorr", keycode_autocorrect),
-    MENU_ENTRY_CHILD("Autocorrect Dictionary", "AutoDict", keycode_autocorrect_dict),
+    DISPLAY_MENU_ENTRY_CHILD("Autocorrect", "AutoCorr", keycode_autocorrect),
+    DISPLAY_MENU_ENTRY_CHILD("Autocorrect Dictionary", "AutoDict", keycode_autocorrect_dict),
 #endif // AUTOCORRECT_ENABLE && ! COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 };

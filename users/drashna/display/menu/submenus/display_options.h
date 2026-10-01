@@ -673,56 +673,56 @@ __attribute__((weak)) void display_handler_display_val_secondary(char *text_buff
 
 menu_entry_t oled_pets_entries[] = {
 #if defined(OLED_ENABLE) && defined(CUSTOM_OLED_DRIVER)
-    MENU_ENTRY_CHILD("Pet Animation", "Pet", oled_pet_animation),
-    MENU_ENTRY_CHILD("Sleep WPM (Max)", "Sleep WPM", oled_pet_sleep_speed),
-    MENU_ENTRY_CHILD("Kaki WPM (Min)", "Kaki WPM", oled_pet_kaki_speed),
-    MENU_ENTRY_CHILD("Mati WPM (Min)", "Mati WPM", oled_pet_mati_speed),
+    DISPLAY_MENU_ENTRY_CHILD("Pet Animation", "Pet", oled_pet_animation),
+    DISPLAY_MENU_ENTRY_CHILD("Sleep WPM (Max)", "Sleep WPM", oled_pet_sleep_speed),
+    DISPLAY_MENU_ENTRY_CHILD("Kaki WPM (Min)", "Kaki WPM", oled_pet_kaki_speed),
+    DISPLAY_MENU_ENTRY_CHILD("Mati WPM (Min)", "Mati WPM", oled_pet_mati_speed),
 #endif
 };
 
 #if defined(QUANTUM_PAINTER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE) && defined(SPLIT_KEYBOARD)
 menu_entry_t display_options_left[] = {
-    MENU_ENTRY_CHILD("Rotation", "Rotation", display_rotation_left),
-    MENU_ENTRY_CHILD("Inverted", "Inverted", display_inverted_left),
-    MENU_ENTRY_CHILD("Mode", "Mode", display_mode_left),
-    MENU_ENTRY_CHILD("Image", "Image", display_image_left),
-    MENU_ENTRY_CHILD("Cycle", "Cycle", display_image_cycle_left),
+    DISPLAY_MENU_ENTRY_CHILD("Rotation", "Rotation", display_rotation_left),
+    DISPLAY_MENU_ENTRY_CHILD("Inverted", "Inverted", display_inverted_left),
+    DISPLAY_MENU_ENTRY_CHILD("Mode", "Mode", display_mode_left),
+    DISPLAY_MENU_ENTRY_CHILD("Image", "Image", display_image_left),
+    DISPLAY_MENU_ENTRY_CHILD("Cycle", "Cycle", display_image_cycle_left),
 };
 
 menu_entry_t display_options_right[] = {
-    MENU_ENTRY_CHILD("Rotation", "Rotation", display_rotation_right),
-    MENU_ENTRY_CHILD("Inverted", "Inverted", display_inverted_right),
-    MENU_ENTRY_CHILD("Mode", "Mode", display_mode_right),
-    MENU_ENTRY_CHILD("Image", "Image", display_image_right),
-    MENU_ENTRY_CHILD("Cycle", "Cycle", display_image_cycle_right),
+    DISPLAY_MENU_ENTRY_CHILD("Rotation", "Rotation", display_rotation_right),
+    DISPLAY_MENU_ENTRY_CHILD("Inverted", "Inverted", display_inverted_right),
+    DISPLAY_MENU_ENTRY_CHILD("Mode", "Mode", display_mode_right),
+    DISPLAY_MENU_ENTRY_CHILD("Image", "Image", display_image_right),
+    DISPLAY_MENU_ENTRY_CHILD("Cycle", "Cycle", display_image_cycle_right),
 };
 #endif
 
 menu_entry_t display_option_entries[] = {
 #ifdef SPLIT_KEYBOARD
-    MENU_ENTRY_CHILD("Menu Location", "Side", display_menu_location),
+    DISPLAY_MENU_ENTRY_CHILD("Menu Location", "Side", display_menu_location),
 #endif // SPLIT_KEYBOARD
 #if defined(OLED_ENABLE) && defined(CUSTOM_OLED_DRIVER)
-    MENU_ENTRY_CHILD("Rotation", "Rotation", display_rotation_oled),
-    MENU_ENTRY_CHILD("Inverted", "Inverted", display_inverted_oled),
-    MENU_ENTRY_CHILD("Brightness", "Brightness", oled_brightness),
-    MENU_ENTRY_CHILD("Screen Lock", "Lock", oled_lock),
-    MENU_ENTRY_MULTI("Pet Animation", "Pet", oled_pets_entries, oled_pet_animation),
+    DISPLAY_MENU_ENTRY_CHILD("Rotation", "Rotation", display_rotation_oled),
+    DISPLAY_MENU_ENTRY_CHILD("Inverted", "Inverted", display_inverted_oled),
+    DISPLAY_MENU_ENTRY_CHILD("Brightness", "Brightness", oled_brightness),
+    DISPLAY_MENU_ENTRY_CHILD("Screen Lock", "Lock", oled_lock),
+    DISPLAY_MENU_ENTRY_MULTI("Pet Animation", "Pet", oled_pets_entries, oled_pet_animation),
 #endif // OLED_ENABLE && CUSTOM_OLED_DRIVER
 #if defined(QUANTUM_PAINTER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
 #    ifdef SPLIT_KEYBOARD
-    MENU_ENTRY_MULTI("Left Display Options", "Options(L)", display_options_left, display_mode_left),
-    MENU_ENTRY_MULTI("Right Display Options", "Options(R)", display_options_right, display_mode_right),
+    DISPLAY_MENU_ENTRY_MULTI("Left Display Options", "Options(L)", display_options_left, NULL, display_mode_left),
+    DISPLAY_MENU_ENTRY_MULTI("Right Display Options", "Options(R)", display_options_right, NULL, display_mode_right),
 #    else  // SPLIT_KEYBOARD
-    MENU_ENTRY_CHILD("Mode", "Mode", display_mode_left),
-    MENU_ENTRY_CHILD("Image", "Image", display_image_cycle_left),
-    MENU_ENTRY_CHILD("Cycle", "Cycle", display_image_cycle_right),
+    DISPLAY_MENU_ENTRY_CHILD("Mode", "Mode", display_mode_left),
+    DISPLAY_MENU_ENTRY_CHILD("Image", "Image", display_image_cycle_left),
+    DISPLAY_MENU_ENTRY_CHILD("Cycle", "Cycle", display_image_cycle_right),
 #    endif // SPLIT_KEYBOARD
-    MENU_ENTRY_CHILD("Primary Hue", "P Hue", display_hue_primary),
-    MENU_ENTRY_CHILD("Primary Saturation", "P Sat", display_sat_primary),
-    MENU_ENTRY_CHILD("Primary Value", "P Val", display_val_primary),
-    MENU_ENTRY_CHILD("Secondary Hue", "S Hue", display_hue_secondary),
-    MENU_ENTRY_CHILD("Secondary Saturation", "S Sat", display_sat_secondary),
-    MENU_ENTRY_CHILD("Secondary Value", "S Val", display_val_secondary),
+    DISPLAY_MENU_ENTRY_CHILD("Primary Hue", "P Hue", display_hue_primary),
+    DISPLAY_MENU_ENTRY_CHILD("Primary Saturation", "P Sat", display_sat_primary),
+    DISPLAY_MENU_ENTRY_CHILD("Primary Value", "P Val", display_val_primary),
+    DISPLAY_MENU_ENTRY_CHILD("Secondary Hue", "S Hue", display_hue_secondary),
+    DISPLAY_MENU_ENTRY_CHILD("Secondary Saturation", "S Sat", display_sat_secondary),
+    DISPLAY_MENU_ENTRY_CHILD("Secondary Value", "S Val", display_val_secondary),
 #endif // QUANTUM_PAINTER_ENABLE
 };

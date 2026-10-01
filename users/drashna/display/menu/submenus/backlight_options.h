@@ -56,10 +56,10 @@ __attribute__((weak)) void display_handler_breathing(char *text_buffer, size_t b
 #    endif
 
 menu_entry_t backlight_entries[] = {
-    MENU_ENTRY_CHILD("Backlight Enabled", "Enabled", bl_enabled),
-    MENU_ENTRY_CHILD("Backlight Level", "Level", bl_level),
+    DISPLAY_MENU_ENTRY_CHILD("Backlight Enabled", "Enabled", bl_enabled),
+    DISPLAY_MENU_ENTRY_CHILD("Backlight Level", "Level", bl_level),
 #    ifdef BACKLIGHT_BREATHING
-    MENU_ENTRY_CHILD("Backlight Breathing", "Breathing", breathing),
+    DISPLAY_MENU_ENTRY_CHILD("Backlight Breathing", "Breathing", breathing),
 #    endif // BACKLIGHT_BREATHING
 };
 #endif // BACKLIGHT_ENABLE

@@ -269,19 +269,19 @@ __attribute__((weak)) void display_handler_mouse_accel_limit(char *text_buffer, 
     snprintf(text_buffer, buffer_len - 1, "%1.2f", pointing_device_accel_get_limit());
 }
 menu_entry_t pointing_acceleration_entries[] = {
-    MENU_ENTRY_CHILD("Acceleration", "Accel", mouse_accel_toggle),
-    MENU_ENTRY_CHILD("Takeoff", "Takeoff", mouse_accel_takeoff),
-    MENU_ENTRY_CHILD("Growth Rate", "Growth", mouse_accel_growth_rate),
-    MENU_ENTRY_CHILD("Offset", "Offset", mouse_accel_offset),
-    MENU_ENTRY_CHILD("Limit", "Limit", mouse_accel_limit),
+    DISPLAY_MENU_ENTRY_CHILD("Acceleration", "Accel", mouse_accel_toggle),
+    DISPLAY_MENU_ENTRY_CHILD("Takeoff", "Takeoff", mouse_accel_takeoff),
+    DISPLAY_MENU_ENTRY_CHILD("Growth Rate", "Growth", mouse_accel_growth_rate),
+    DISPLAY_MENU_ENTRY_CHILD("Offset", "Offset", mouse_accel_offset),
+    DISPLAY_MENU_ENTRY_CHILD("Limit", "Limit", mouse_accel_limit),
 };
 #    endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
 
 #    ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
 menu_entry_t pointing_auto_layer_entries[] = {
-    MENU_ENTRY_CHILD("Layer", "Layer", auto_mouse_layer),
-    MENU_ENTRY_CHILD("Timeout", "Timeout", auto_mouse_timeout),
-    MENU_ENTRY_CHILD("Debounce", "Debounce", auto_mouse_debounce),
+    DISPLAY_MENU_ENTRY_CHILD("Layer", "Layer", auto_mouse_layer),
+    DISPLAY_MENU_ENTRY_CHILD("Timeout", "Timeout", auto_mouse_timeout),
+    DISPLAY_MENU_ENTRY_CHILD("Debounce", "Debounce", auto_mouse_debounce),
 };
 #    endif
 
@@ -306,24 +306,24 @@ __attribute__((weak)) void display_handler_mouse_smoothing(char *text_buffer, si
 
 menu_entry_t pointing_entries[] = {
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
-    MENU_ENTRY_MULTI("Mouse Acceleration", "Accel", pointing_acceleration_entries, mouse_accel_toggle),
+    DISPLAY_MENU_ENTRY_MULTI("Mouse Acceleration", "Accel", pointing_acceleration_entries, NULL, mouse_accel_toggle),
 #    endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
 #    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis)
-    MENU_ENTRY_CHILD("DPI Config", "DPI", dpi_config),
+    DISPLAY_MENU_ENTRY_CHILD("DPI Config", "DPI", dpi_config),
 #    endif // KEYBOARD_handwired_tractyl_manuform || KEYBOARD_bastardkb_charybdis
 #    ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-    MENU_ENTRY_CHILD("Auto Mouse", "AutoMouse", auto_mouse_enable),
-    MENU_ENTRY_MULTI("Auto Mouse Options", "AM Opt", pointing_auto_layer_entries, auto_mouse_layer),
+    DISPLAY_MENU_ENTRY_CHILD("Auto Mouse", "AutoMouse", auto_mouse_enable),
+    DISPLAY_MENU_ENTRY_MULTI("Auto Mouse Options", "AM Opt", pointing_auto_layer_entries, NULL, auto_mouse_layer),
 #    endif // POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #    ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
-    MENU_ENTRY_CHILD("Mouse Jiggler", "Jiggler", mouse_jiggler),
-    MENU_ENTRY_CHILD("Mouse Jiggler Timeout", "JiggleTime", mouse_jiggler_timeout),
+    DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler", "Jiggler", mouse_jiggler),
+    DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler Timeout", "JiggleTime", mouse_jiggler_timeout),
 #    endif // POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
 #    ifdef AUDIO_ENABLE
-    MENU_ENTRY_CHILD("Mouse Clicky", "Clicky", audio_mouse_clicky),
+    DISPLAY_MENU_ENTRY_CHILD("Mouse Clicky", "Clicky", audio_mouse_clicky),
 #    endif
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
-    MENU_ENTRY_CHILD("Mouse Smoothing", "Smoothing", mouse_smoothing),
+    DISPLAY_MENU_ENTRY_CHILD("Mouse Smoothing", "Smoothing", mouse_smoothing),
 #    endif // COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
 };
 #endif // POINTING_DEVICE_ENABLE

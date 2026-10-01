@@ -237,12 +237,12 @@ __attribute__((weak)) void display_handler_rgb_lumino(char *text_buffer, size_t 
 #    endif
 
 menu_entry_t rm_mode_list[] = {
-#    define RGB_MATRIX_EFFECT(name, ...) MENU_ENTRY_CHILD("Mode", "Mode", rm_mode_##name),
+#    define RGB_MATRIX_EFFECT(name, ...) DISPLAY_MENU_ENTRY_CHILD("Mode", "Mode", rm_mode_##name),
 #    include "rgb_matrix_effects.inc"
 #    undef RGB_MATRIX_EFFECT
 
 #    ifdef COMMUNITY_MODULES_ENABLE
-#        define RGB_MATRIX_EFFECT(name, ...) MENU_ENTRY_CHILD("Mode", "Mode", rm_mode_community_##name),
+#        define RGB_MATRIX_EFFECT(name, ...) DISPLAY_MENU_ENTRY_CHILD("Mode", "Mode", rm_mode_community_##name),
 #        include "rgb_matrix_community_modules.inc"
 #        undef RGB_MATRIX_EFFECT
 #    endif
@@ -259,17 +259,21 @@ menu_entry_t rm_mode_list[] = {
 #    endif
 };
 
+uint8_t get_selected_rgb_mode_index(void) {
+    return rgb_matrix_get_mode() - 1;
+}
+
 menu_entry_t rgb_matrix_entries[] = {
-    MENU_ENTRY_CHILD("RGB Enabled", "Enabled", rm_enabled),
-    MENU_ENTRY_MULTI("RGB Mode", "Mode", rm_mode_list, rm_mode),
-    MENU_ENTRY_CHILD("RGB Hue", "Hue", rm_hue),
-    MENU_ENTRY_CHILD("RGB Saturation", "Sat", rm_sat),
-    MENU_ENTRY_CHILD("RGB Value", "Val", rm_val),
-    MENU_ENTRY_CHILD("RGB Speed", "Speed", rm_speed),
-    MENU_ENTRY_CHILD("Layer Indication", "Layer", rgb_layer),
-    MENU_ENTRY_CHILD("Idle Animation", "Idle", rgb_idle),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Enabled", "Enabled", rm_enabled),
+    DISPLAY_MENU_ENTRY_MULTI("RGB Mode", "Mode", rm_mode_list, get_selected_rgb_mode_index, rm_mode),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Hue", "Hue", rm_hue),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Saturation", "Sat", rm_sat),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Value", "Val", rm_val),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Speed", "Speed", rm_speed),
+    DISPLAY_MENU_ENTRY_CHILD("Layer Indication", "Layer", rgb_layer),
+    DISPLAY_MENU_ENTRY_CHILD("Idle Animation", "Idle", rgb_idle),
 #    ifdef COMMUNITY_MODULE_LUMINO_ENABLE
-    MENU_ENTRY_CHILD("Lumino State", "Lumino", rgb_lumino),
+    DISPLAY_MENU_ENTRY_CHILD("Lumino State", "Lumino", rgb_lumino),
 #    endif // COMMUNITY_MODULE_LUMINO_ENABLE
 };
 #endif // RGB_MATRIX_ENABLE
@@ -390,12 +394,12 @@ __attribute__((weak)) void display_handler_rgbspeed(char *text_buffer, size_t bu
 }
 
 menu_entry_t rgb_light_entries[] = {
-    MENU_ENTRY_CHILD("RGB Enabled", "Enabled", rgbenabled),
-    MENU_ENTRY_CHILD("RGB Mode", "Mode", rgbmode),
-    MENU_ENTRY_CHILD("RGB Hue", "Hue", rgbhue),
-    MENU_ENTRY_CHILD("RGB Saturation", "Sat", rgbsat),
-    MENU_ENTRY_CHILD("RGB Value", "Val", rgbval),
-    MENU_ENTRY_CHILD("RGB Speed", "Speed", rgbspeed),
-    MENU_ENTRY_CHILD("Layer Indication", "Layer", rgb_layer),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Enabled", "Enabled", rgbenabled),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Mode", "Mode", rgbmode),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Hue", "Hue", rgbhue),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Saturation", "Sat", rgbsat),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Value", "Val", rgbval),
+    DISPLAY_MENU_ENTRY_CHILD("RGB Speed", "Speed", rgbspeed),
+    DISPLAY_MENU_ENTRY_CHILD("Layer Indication", "Layer", rgb_layer),
 };
 #endif // RGBLIGHT_ENABLE

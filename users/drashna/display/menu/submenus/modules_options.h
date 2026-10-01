@@ -167,35 +167,35 @@ __attribute__((weak)) void display_handler_i2c_scanner(char *text_buffer, size_t
 
 menu_entry_t community_modules_settings_option_entries[] = {
 #if defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
-    MENU_ENTRY_CHILD("Autocorrect", "AutoCorr", keycode_autocorrect),
-    MENU_ENTRY_CHILD("Autocorrect Dictionary", "AutoDict", keycode_autocorrect_dict),
+    DISPLAY_MENU_ENTRY_CHILD("Autocorrect", "AutoCorr", keycode_autocorrect),
+    DISPLAY_MENU_ENTRY_CHILD("Autocorrect Dictionary", "AutoDict", keycode_autocorrect_dict),
 #endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
 #ifdef COMMUNITY_MODULE_DYNAMIC_DEBOUNCE_ENABLE
-    MENU_ENTRY_MULTI("Dynamic Debounce", "DYN DB", dynamic_debounce_menu, dynamic_debounce),
+    DISPLAY_MENU_ENTRY_MULTI("Dynamic Debounce", "DYN DB", dynamic_debounce_menu, NULL, dynamic_debounce),
 #endif
 #ifdef COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
-    MENU_ENTRY_CHILD("Console Keylogger", "Keylogger", keylogger),
+    DISPLAY_MENU_ENTRY_CHILD("Console Keylogger", "Keylogger", keylogger),
 #endif // COMMUNITY_MODULE_CONSOLE_KEYLOGGING_ENABLE
 #ifdef COMMUNITY_MODULE_GUARDED_RESET_ENABLE
-    MENU_ENTRY_CHILD("Guarded Reset Timeout", "GReset", guarded_reset),
+    DISPLAY_MENU_ENTRY_CHILD("Guarded Reset Timeout", "GReset", guarded_reset),
 #endif // COMMUNITY_MODULE_GUARDED_RESET_ENABLE
 #ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-    MENU_ENTRY_CHILD("I2C Scanner", "I2C Scan", i2c_scanner),
+    DISPLAY_MENU_ENTRY_CHILD("I2C Scanner", "I2C Scan", i2c_scanner),
 #endif // COMMUNITY_MODULE_I2C_SCANNER_ENABLE
 #ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
-    MENU_ENTRY_MULTI("Mouse Acceleration", "Accel", pointing_acceleration_entries, mouse_accel_toggle),
+    DISPLAY_MENU_ENTRY_MULTI("Mouse Acceleration", "Accel", pointing_acceleration_entries, NULL, mouse_accel_toggle),
 #endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
 #ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
-    MENU_ENTRY_CHILD("Mouse Jiggler", "Jiggler", mouse_jiggler),
-    MENU_ENTRY_CHILD("Mouse Jiggler Timeout", "JiggleTime", mouse_jiggler_timeout),
+    DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler", "Jiggler", mouse_jiggler),
+    DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler Timeout", "JiggleTime", mouse_jiggler_timeout),
 #endif // POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
-    MENU_ENTRY_CHILD("Mouse Smoothing", "Smoothing", mouse_smoothing),
+    DISPLAY_MENU_ENTRY_CHILD("Mouse Smoothing", "Smoothing", mouse_smoothing),
 #    endif // COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
 #if defined(COMMUNITY_MODULE_RTC_ENABLE)
-    MENU_ENTRY_PARENT("RTC Settings", "RTC", rtc_config_entries),
+    DISPLAY_MENU_ENTRY_PARENT("RTC Settings", "RTC", rtc_config_entries, NULL),
 #endif // COMMUNITY_MODULE_RTC_ENABLE
 #    ifdef COMMUNITY_MODULE_UNICODE_TYPING_ENABLE
-    MENU_ENTRY_CHILD("Unicode Typing Mode", "Typing", unicode_typing),
+    DISPLAY_MENU_ENTRY_CHILD("Unicode Typing Mode", "Typing", unicode_typing),
 #    endif
 };
