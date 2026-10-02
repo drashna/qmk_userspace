@@ -176,7 +176,7 @@ bool menu_handler_rtc_hour_format(menu_input_t input) {
 __attribute__((weak)) void display_handler_rtc_am_pm(char *text_buffer, size_t buffer_len) {
     if (rtc_is_connected()) {
         snprintf(text_buffer, buffer_len - 1, "%s",
-                 rtc_read_time_struct().format == RTC_FORMAT_12H ? (rtc_read_time_struct().am_pm ? "AM" : "PM")
+                 rtc_read_time_struct().format == RTC_FORMAT_12H ? (rtc_read_time_struct().am_pm ? "PM" : "AM")
                                                                  : "<<< 24-Hour >>>");
     } else {
         snprintf(text_buffer, buffer_len - 1, "Not Connected");
