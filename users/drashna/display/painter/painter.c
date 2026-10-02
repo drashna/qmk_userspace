@@ -10,6 +10,7 @@
 #include "hardware_id_string.h"
 #include "keyrecords/process_records.h"
 #include <lib/lib8tion/lib8tion.h>
+#include <utf8.h>
 
 #ifdef SPLIT_KEYBOARD
 #    include "split_util.h"
@@ -1149,55 +1150,100 @@ bool painter_render_shutdown(painter_device_t device, bool jump_to_bootloader) {
     return false;
 }
 
+#ifndef TRUNCATE_TEXT_BUFFER_SIZE
+#    define TRUNCATE_TEXT_BUFFER_SIZE 128
+#endif
+
+static inline bool utf8_is_continuation(char c) {
+    return ((uint8_t)c & 0xC0) == 0x80; // 10xxxxxx
+}
+
+// index of the next code point start after idx
+static size_t utf8_next(const char *s, size_t idx) {
+    if (s[idx] == '\0') return idx;
+    do {
+        idx++;
+    } while (utf8_is_continuation(s[idx]));
+    return idx;
+}
+
+// index of the code point start before idx (idx must be > 0)
+static size_t utf8_prev(const char *s, size_t idx) {
+    do {
+        idx--;
+    } while (idx > 0 && utf8_is_continuation(s[idx]));
+    return idx;
+}
+
 /**
- * @brief Truncates text to fit within a certain width
+ * Truncate a UTF-8 encoded text to fit within a specified width.
  *
- * @param text original text
- * @param max_width max width in pixels
- * @param font font being used
- * @param from_start truncate from start or end
- * @param add_ellipses add ellipses to truncated text
- * @return char* truncated text
+ * @param text The input text to truncate.
+ * @param max_width The maximum width in pixels.
+ * @param font The font handle used for measuring text width.
+ * @param from_start If true, truncate from the start; otherwise, truncate from the end.
+ * @param add_ellipses If true, add ellipses ("...") to indicate truncation.
+ * @return A pointer to the truncated text (static buffer).
  */
-char *truncate_text(const char *text, uint16_t max_width, painter_font_handle_t font, bool from_start,
-                    bool add_ellipses) {
-    static char truncated_text[50];
-    strncpy(truncated_text, text, sizeof(truncated_text) - 1);
-    truncated_text[sizeof(truncated_text) - 1] = '\0';
+const char *truncate_text(const char *text, uint16_t max_width, painter_font_handle_t font, bool from_start,
+                          bool add_ellipses) {
+    static char  truncated_text[TRUNCATE_TEXT_BUFFER_SIZE];
+    const char  *ellipses = "...";
+    const size_t ell_len  = strlen(ellipses);
+
+    // Copy without ever splitting a code point if the input exceeds the buffer
+    size_t len = strlen(text);
+    if (len > sizeof(truncated_text) - 1) {
+        len = sizeof(truncated_text) - 1;
+        while (len > 0 && utf8_is_continuation(text[len])) {
+            len--;
+        }
+    }
+    memcpy(truncated_text, text, len);
+    truncated_text[len] = '\0';
 
     uint16_t text_width = qp_textwidth(font, truncated_text);
     if (text_width <= max_width) {
         return truncated_text;
     }
 
-    size_t      len            = strlen(truncated_text);
-    const char *ellipses       = "...";
-    uint16_t    ellipses_width = add_ellipses ? qp_textwidth(font, ellipses) : 0;
+    uint16_t ellipses_width = add_ellipses ? qp_textwidth(font, ellipses) : 0;
+    // avoid unsigned underflow when the ellipses are wider than max_width
+    uint16_t target_width = (max_width > ellipses_width) ? (max_width - ellipses_width) : 0;
 
     if (from_start) {
-        size_t start_index = 0;
-        while (start_index < len && text_width > max_width - ellipses_width) {
-            start_index++;
-            text_width = qp_textwidth(font, truncated_text + start_index);
+        // drop whole code points from the front until it fits
+        size_t start = 0;
+        while (start < len && text_width > target_width) {
+            start      = utf8_next(truncated_text, start);
+            text_width = qp_textwidth(font, truncated_text + start);
         }
 
         if (add_ellipses) {
-            char temp[75];
-            snprintf(temp, sizeof(temp), "%s%s", ellipses, truncated_text + start_index);
-            strncpy(truncated_text, temp, sizeof(truncated_text) - 1);
-            truncated_text[sizeof(truncated_text) - 1] = '\0';
+            // make sure ellipses + remainder fit in the buffer
+            while (start < len && ell_len + (len - start) > sizeof(truncated_text) - 1) {
+                start = utf8_next(truncated_text, start);
+            }
+            size_t remaining = len - start;
+            memmove(truncated_text + ell_len, truncated_text + start, remaining + 1);
+            memcpy(truncated_text, ellipses, ell_len);
         } else {
-            memmove(truncated_text, truncated_text + start_index, len - start_index + 1);
+            memmove(truncated_text, truncated_text + start, len - start + 1);
         }
     } else {
-        while (len > 0 && text_width > max_width - ellipses_width) {
-            len--;
+        // drop whole code points from the end until it fits
+        while (len > 0 && text_width > target_width) {
+            len                 = utf8_prev(truncated_text, len);
             truncated_text[len] = '\0';
             text_width          = qp_textwidth(font, truncated_text);
         }
 
         if (add_ellipses) {
-            snprintf(truncated_text + len, sizeof(truncated_text) - len, "%s", ellipses);
+            while (len > 0 && len + ell_len > sizeof(truncated_text) - 1) {
+                len                 = utf8_prev(truncated_text, len);
+                truncated_text[len] = '\0';
+            }
+            memcpy(truncated_text + len, ellipses, ell_len + 1);
         }
     }
 

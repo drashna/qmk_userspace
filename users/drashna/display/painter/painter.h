@@ -42,7 +42,7 @@ void suspend_power_down_quantum_painter(void);
 void suspend_wakeup_init_quantum_painter(void);
 void shutdown_quantum_painter(bool jump_to_bootloader);
 
-char* truncate_text(const char* text, uint16_t max_width, painter_font_handle_t font, bool from_start,
+const char* truncate_text(const char* text, uint16_t max_width, painter_font_handle_t font, bool from_start,
                     bool add_ellipses);
 void  render_character_set(painter_device_t display, uint16_t* x_offset, uint16_t* max_pos, uint16_t* ypos,
                            painter_font_handle_t font, uint8_t hue_fg, uint8_t sat_fg, uint8_t val_fg, uint8_t hue_bg,
