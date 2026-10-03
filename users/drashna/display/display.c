@@ -9,8 +9,8 @@
 #endif // OLED_ENABLE && CUSTOM_OLED_DRIVER
 #if defined(QUANTUM_PAINTER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
 #    include "qp.h"
-#    if defined(DISPLAY_KEYLOGGER_ENABLE)
-#        include "display/painter/keylogger.h"
+#    if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
+#        include "display_keylogger.h"
 #    endif
 #    ifdef CUSTOM_QUANTUM_PAINTER_ILI9341
 #        include "display/painter/ili9341_display.h"

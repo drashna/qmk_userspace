@@ -40,9 +40,9 @@
 #if defined(RGBLIGHT_ENABLE)
 #    include "rgb/rgb_stuff.h"
 #endif // defined(RGBLIGHT_ENABLE)
-#if defined(DISPLAY_KEYLOGGER_ENABLE)
-#    include "display/painter/keylogger.h"
-#endif // DISPLAY_KEYLOGGER_ENABLE
+#if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
+#    include "display_keylogger.h"
+#endif
 #ifdef COMMUNITY_MODULE_RTC_ENABLE
 #    include "rtc.h"
 #endif // COMMUNITY_MODULE_RTC_ENABLE

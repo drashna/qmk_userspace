@@ -383,12 +383,12 @@ __attribute__((weak)) void ili9341_draw_user(void) {
                     last_user_state.internals.swap_hands ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
             }
 
-#ifdef DISPLAY_KEYLOGGER_ENABLE
+#ifdef COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE
             ypos = 84;
             xpos = 84;
 
             painter_render_keylogger(display, font_oled, xpos, ypos, 150, hue_redraw, &curr_hsv);
-#endif // DISPLAY_KEYLOGGER_ENABLE
+#endif // COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Pointing Device CPI

@@ -21,8 +21,8 @@ char autocorrected_str[2][21]     = {"    automatically\0", "      corrected\0"}
 char autocorrected_str_raw[2][21] = {"automatically\0", "corrected\0"};
 bool autocorrect_str_has_changed  = true;
 
-#    if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
-#        include "users/drashna/display/painter/keylogger.h"
+#    if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
+#        include "display_keylogger.h"
 #        include <send_string.h>
 #        include <ctype.h>
 
@@ -68,12 +68,12 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
         update_wpm(KC_BSPC);
 #    endif // WPM_ENABLE
 
-#    if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
+#    if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
         keylog_shift_right();
 #    endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
     }
 
-#    if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
+#    if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
     if (strncmp("ushould", typo, strlen(typo)) == 0) {
         // If we're correcting "ushould" to "you should", we want to add an extra space to the keylogger string after
         // the correction so that it doesn't look like "youshould" in the keylogger.
@@ -91,7 +91,7 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
         // so that it doesn't look like the autocorrected word is the first word in the sentence.
         add_autocorrect_char_to_keylogger_str(' ');
     }
-#    endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
+#    endif // COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE
 
 #    if defined(AUDIO_ENABLE)
     audio_play_melody(&autocorrect_song, NOTE_ARRAY_SIZE(autocorrect_song), false);

@@ -37,9 +37,6 @@ extern uint8_t wpm_graph_samples[3][WPM_GRAPH_SAMPLES];
 #endif // WPM_ENABLE
 #ifdef DISPLAY_DRIVER_ENABLE
 #    include "display/display.h"
-#    ifdef CUSTOM_QUANTUM_PAINTER_ENABLE
-#        include "display/painter/keylogger.h"
-#    endif // CUSTOM_QUANTUM_PAINTER_ENABLE
 #    ifdef OLED_ENABLE
 #        include "display/oled/oled_stuff.h"
 #    endif // OLED_ENABLE
@@ -53,7 +50,7 @@ bool has_first_run = false;
 typedef enum PACKED extended_id_t {
     RPC_ID_EXTENDED_WPM_GRAPH_DATA = 0,
     RPC_ID_EXTENDED_AUTOCORRECT_STR,
-    RPC_ID_EXTENDED_DISPLAY_KEYLOG_STR,
+    RPC_ID_EXTENDED_RESERVED,
     RPC_ID_EXTENDED_KEYMAP_CONFIG,
     RPC_ID_EXTENDED_DEBUG_CONFIG,
     RPC_ID_EXTENDED_USERSPACE_CONFIG,
@@ -111,17 +108,6 @@ void recv_autocorrect_string(const uint8_t *data, uint8_t size) {
         autocorrect_str_has_changed = true;
     }
 #endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
-}
-
-#if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
-_Static_assert((DISPLAY_KEYLOGGER_LENGTH * sizeof(int32_t)) <= RPC_EXTENDED_TRANSACTION_BUFFER_SIZE,
-               "Display keylogger string larger than buffer size!");
-#endif
-
-void recv_keylogger_string_sync(const uint8_t *data, uint8_t size) {
-#if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
-    split_sync_keylogger_str(data, size);
-#endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE
 }
 
 void recv_keymap_config(const uint8_t *data, uint8_t size) {
@@ -284,7 +270,6 @@ void recv_console_keylogger_data(const uint8_t *data, uint8_t size) {
 static const handler_fn_t handlers[NUM_EXTENDED_IDS] = {
     [RPC_ID_EXTENDED_WPM_GRAPH_DATA]          = recv_wpm_graph_data,
     [RPC_ID_EXTENDED_AUTOCORRECT_STR]         = recv_autocorrect_string,
-    [RPC_ID_EXTENDED_DISPLAY_KEYLOG_STR]      = recv_keylogger_string_sync,
     [RPC_ID_EXTENDED_KEYMAP_CONFIG]           = recv_keymap_config,
     [RPC_ID_EXTENDED_DEBUG_CONFIG]            = recv_debug_config,
     [RPC_ID_EXTENDED_USERSPACE_CONFIG]        = recv_userspace_config,
@@ -469,62 +454,30 @@ void sync_userspace_config(void) {
     }
 }
 
-#if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE)
+#if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE) && defined(OLED_ENABLE)
 /**
- * @brief Synchronizes the keylogger string between split keyboards.
- *
- * This function ensures that the keylogger string is synchronized across split keyboards.
- * It checks if synchronization is needed and performs the synchronization if required.
- *
- * @param needs_sync Pointer to a boolean indicating if synchronization is needed.
- * @param last_sync Pointer to a timestamp of the last synchronization.
- * @param keylog_temp Pointer to the temporary keylogger string to be synchronized.
+ * @brief Synchronizes the OLED keylogger string between split keyboards.
  */
-void sync_keylogger_string(void) {
-#    if defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
-    {
-        bool            needs_sync                                = false;
-        static uint16_t last_sync                                 = 0;
-        static int32_t  keylog_temp[DISPLAY_KEYLOGGER_LENGTH + 1] = {0};
-        const int32_t  *keylogger_str                             = get_keylogger_str_raw();
-        if (memcmp(keylogger_str, keylog_temp, (DISPLAY_KEYLOGGER_LENGTH + 1) * sizeof(int32_t))) {
-            needs_sync = true;
-            memcpy(keylog_temp, keylogger_str, (DISPLAY_KEYLOGGER_LENGTH + 1) * sizeof(int32_t));
-        }
-        if (timer_elapsed(last_sync) > FORCED_SYNC_THROTTLE_MS * 10000) {
-            needs_sync = true;
-        }
-        if (needs_sync) {
-            if (send_extended_message_handler(RPC_ID_EXTENDED_DISPLAY_KEYLOG_STR, keylogger_str,
-                                              (DISPLAY_KEYLOGGER_LENGTH + 1) * sizeof(int32_t))) {
-                last_sync = timer_read();
-            }
+void sync_oled_keylogger_string(void) {
+    bool            needs_sync                             = false;
+    static uint16_t last_sync                              = 0;
+    static char     keylog_temp[OLED_KEYLOGGER_LENGTH + 1] = {0};
+    const char     *keylogger_str                          = get_oled_keylogger_str();
+    if (memcmp(keylogger_str, keylog_temp, (OLED_KEYLOGGER_LENGTH + 1))) {
+        needs_sync = true;
+        memcpy(keylog_temp, keylogger_str, (OLED_KEYLOGGER_LENGTH + 1));
+    }
+    if (timer_elapsed(last_sync) > FORCED_SYNC_THROTTLE_MS) {
+        needs_sync = true;
+    }
+    if (needs_sync) {
+        if (send_extended_message_handler(RPC_ID_EXTENDED_OLED_KEYLOGGER_STR, keylogger_str,
+                                          (OLED_KEYLOGGER_LENGTH + 1))) {
+            last_sync = timer_read();
         }
     }
-#    endif // CUSTOM_QUANTUM_PAINTER_ENABLE
-#    ifdef OLED_ENABLE
-    {
-        bool            needs_sync                             = false;
-        static uint16_t last_sync                              = 0;
-        static char     keylog_temp[OLED_KEYLOGGER_LENGTH + 1] = {0};
-        const char     *keylogger_str                          = get_oled_keylogger_str();
-        if (memcmp(keylogger_str, keylog_temp, (OLED_KEYLOGGER_LENGTH + 1))) {
-            needs_sync = true;
-            memcpy(keylog_temp, keylogger_str, (OLED_KEYLOGGER_LENGTH + 1));
-        }
-        if (timer_elapsed(last_sync) > FORCED_SYNC_THROTTLE_MS) {
-            needs_sync = true;
-        }
-        if (needs_sync) {
-            if (send_extended_message_handler(RPC_ID_EXTENDED_OLED_KEYLOGGER_STR, keylogger_str,
-                                              (OLED_KEYLOGGER_LENGTH + 1))) {
-                last_sync = timer_read();
-            }
-        }
-    }
-#    endif // OLED_ENABLE
 }
-#endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE
+#endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE && OLED_ENABLE
 
 #if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
 static char temp_autocorrected_str[2][21] = {0};
@@ -701,9 +654,9 @@ void housekeeping_task_transport_sync(void) {
 #if defined(AUTOCORRECT_ENABLE) || defined(COMMUNITY_MODULE_AUTOCORRECT_ENABLE)
         sync_autocorrect_string();
 #endif // AUTOCORRECT_ENABLE || COMMUNITY_MODULE_AUTOCORRECT_ENABLE
-#if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE)
-        sync_keylogger_string();
-#endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE
+#if defined(DISPLAY_DRIVER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE) && defined(OLED_ENABLE)
+        sync_oled_keylogger_string();
+#endif // DISPLAY_DRIVER_ENABLE && DISPLAY_KEYLOGGER_ENABLE && OLED_ENABLE
         sync_keymap_config();
         sync_debug_config();
         sync_userspace_runtime_state();

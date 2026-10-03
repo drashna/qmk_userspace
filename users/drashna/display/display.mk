@@ -112,7 +112,6 @@ ifeq ($(strip $(QUANTUM_PAINTER_ENABLE)), yes)
         endif
         ifeq ($(strip $(DISPLAY_KEYLOGGER_ENABLE)), yes)
             OPT_DEFS += -DDISPLAY_KEYLOGGER_ENABLE
-            SRC += $(USER_PATH)/display/painter/keylogger.c
         endif
     endif
 endif

@@ -31,11 +31,14 @@
 #    endif
 float bell_song[][2] = SONG(BELL_SOUND);
 #endif
-#if defined(DISPLAY_KEYLOGGER_ENABLE)
-#    include "display/painter/keylogger.h"
+#if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
+#    include "display_keylogger.h"
+#endif
+#if defined(DISPLAY_KEYLOGGER_ENABLE) && defined(CUSTOM_OLED_DRIVER)
+#    include "display/oled/oled_stuff.h"
 #else
 #    define add_keycode_to_keylogger_str(keycode, mods)
-#endif // DISPLAY_KEYLOGGER_ENABLE
+#endif
 
 // clang-format off
 
