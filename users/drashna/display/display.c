@@ -72,9 +72,6 @@ void housekeeping_task_display(void) {
 bool process_record_display_driver(uint16_t keycode, keyrecord_t* record) {
     userspace_runtime_state.last_keycode   = keycode;
     userspace_runtime_state.last_key_event = record->event;
-#if defined(CUSTOM_QUANTUM_PAINTER_ENABLE) && defined(DISPLAY_KEYLOGGER_ENABLE)
-    keylogger_process(keycode, record);
-#endif // CUSTOM_QUANTUM_PAINTER_ENABLE
     if (record->event.pressed) {
 #ifdef OLED_ENABLE
         if (!process_record_user_oled(keycode, record)) {

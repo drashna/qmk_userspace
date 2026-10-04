@@ -838,7 +838,7 @@ void painter_render_menu_block(painter_device_t device, painter_font_handle_t fo
  */
 void painter_render_keylogger(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                               uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
-#ifdef DISPLAY_KEYLOGGER_ENABLE
+#ifdef COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE
     if (is_keylogger_dirty() || force_redraw) {
         qp_drawtext_recolor(device, x, y, font, "Keylogger: ", curr_hsv->primary.h, curr_hsv->primary.s,
                             curr_hsv->primary.v, 0, 0, 0);
@@ -1078,7 +1078,7 @@ void painter_render_qmk_info(painter_device_t device, painter_font_handle_t font
  */
 void painter_render_layer_map(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                               uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
-#ifdef COMMUNITY_MODULE_LAYER_MAP_ENABLE
+#if defined(COMMUNITY_MODULE_LAYER_MAP_ENABLE) && defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
     if (force_redraw || get_layer_map_has_updated()) {
         // y += font->line_height + 4;
         uint16_t xpos = x, ypos = y;
@@ -1092,7 +1092,7 @@ void painter_render_layer_map(painter_device_t device, painter_font_handle_t fon
                 keypos_t key = {.row = lm_y, .col = lm_x};
 #    endif // LAYER_MAP_REMAPPING
 
-                xpos += MAX(qp_drawtext_recolor(device, xpos, ypos, font, get_keyode_character(keycode, &key),
+                xpos += MAX(qp_drawtext_recolor(device, xpos, ypos, font, get_keycode_character(keycode, &key),
                                                 curr_hsv->primary.h, curr_hsv->primary.s,
                                                 peek_matrix_layer_map(lm_y, lm_x) ? 0 : curr_hsv->primary.v,
                                                 curr_hsv->secondary.h, curr_hsv->secondary.s,
