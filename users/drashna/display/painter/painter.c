@@ -1062,6 +1062,10 @@ void painter_render_qmk_info(painter_device_t device, painter_font_handle_t font
     }
 }
 
+#if defined(COMMUNITY_MODULE_LAYER_MAP_ENABLE) && !defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
+#    include "keystring.h"
+#endif
+
 /**
  * @brief Renders the layer map on the display.
  *
@@ -1078,7 +1082,7 @@ void painter_render_qmk_info(painter_device_t device, painter_font_handle_t font
  */
 void painter_render_layer_map(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                               uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
-#if defined(COMMUNITY_MODULE_LAYER_MAP_ENABLE) && defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
+#if defined(COMMUNITY_MODULE_LAYER_MAP_ENABLE)
     if (force_redraw || get_layer_map_has_updated()) {
         // y += font->line_height + 4;
         uint16_t xpos = x, ypos = y;
