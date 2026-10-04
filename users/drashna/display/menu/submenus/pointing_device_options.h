@@ -315,10 +315,10 @@ menu_entry_t pointing_entries[] = {
     DISPLAY_MENU_ENTRY_CHILD("Auto Mouse", "AutoMouse", auto_mouse_enable),
     DISPLAY_MENU_ENTRY_MULTI("Auto Mouse Options", "AM Opt", pointing_auto_layer_entries, NULL, auto_mouse_layer),
 #    endif // POINTING_DEVICE_AUTO_MOUSE_ENABLE
-#    ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
+#    ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler", "Jiggler", mouse_jiggler),
     DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler Timeout", "JiggleTime", mouse_jiggler_timeout),
-#    endif // POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
+#    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
 #    ifdef AUDIO_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Mouse Clicky", "Clicky", audio_mouse_clicky),
 #    endif

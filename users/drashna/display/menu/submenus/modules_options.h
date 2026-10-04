@@ -148,6 +148,7 @@ __attribute__((weak)) void display_handler_guarded_reset(char *text_buffer, size
 }
 #endif // COMMUNITY_MODULE_GUARDED_RESET_ENABLE
 
+
 #ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
 #    include "i2c_scanner.h"
 
@@ -169,6 +170,44 @@ __attribute__((weak)) void display_handler_i2c_scanner(char *text_buffer, size_t
 #endif
 
 
+#ifdef COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
+#include "keyboard_lock.h"
+bool menu_handler_keyboard_lock(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+        case menu_input_right:
+        case menu_input_enter:
+            toggle_keyboard_lock();
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_keyboard_lock(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%s", get_keyboard_lock() ? "on" : "off");
+}
+#endif // COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
+
+#ifdef COMMUNITY_MODULE_SENTENCE_CASE_ENABLE
+#include "sentence_case.h"
+bool menu_handler_sentence_case(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+        case menu_input_right:
+        case menu_input_enter:
+            sentence_case_toggle();
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_sentence_case(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%s", is_sentence_case_on() ? "on" : "off");
+}
+
+#endif // COMMUNITY_MODULE_SENTENCE_CASE_ENABLE
 
 menu_entry_t community_modules_settings_option_entries[] = {
 #ifdef COMMUNITY_MODULE_DYNAMIC_DEBOUNCE_ENABLE
@@ -193,14 +232,20 @@ menu_entry_t community_modules_settings_option_entries[] = {
 #ifdef COMMUNITY_MODULE_I2C_SCANNER_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("I2C Scanner", "I2C Scan", i2c_scanner),
 #endif // COMMUNITY_MODULE_I2C_SCANNER_ENABLE
-#ifdef POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
+#ifdef COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
+    DISPLAY_MENU_ENTRY_CHILD("Keyboard Lock", "KLock", keyboard_lock),
+#endif // COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
+#ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler", "Jiggler", mouse_jiggler),
     DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler Timeout", "JiggleTime", mouse_jiggler_timeout),
-#endif // POINTING_DEVICE_MOUSE_JIGGLER_ENABLE
-#    ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
+#endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
+#ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Mouse Smoothing", "Smoothing", mouse_smoothing),
-#    endif // COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
-#    ifdef COMMUNITY_MODULE_UNICODE_TYPING_ENABLE
+#endif // COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
+#ifdef COMMUNITY_MODULE_SENTENCE_CASE_ENABLE
+    DISPLAY_MENU_ENTRY_CHILD("Sentence Case", "SentCase", sentence_case),
+#endif // COMMUNITY_MODULE_SENTENCE_CASE_ENABLE
+#ifdef COMMUNITY_MODULE_UNICODE_TYPING_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Unicode Typing Mode", "Typing", unicode_typing),
-#    endif
+#endif // COMMUNITY_MODULE_UNICODE_TYPING_ENABLE
 };
