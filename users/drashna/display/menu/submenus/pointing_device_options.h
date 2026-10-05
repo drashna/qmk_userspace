@@ -135,19 +135,99 @@ bool menu_handler_mouse_jiggler_timeout(menu_input_t input) {
 __attribute__((weak)) void display_handler_mouse_jiggler_timeout(char *text_buffer, size_t buffer_len) {
     snprintf(text_buffer, buffer_len - 1, "%d", (uint16_t)jiggler_get_backoff());
 }
+
+bool menu_handler_mouse_jiggler_pattern(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+            jiggler_pattern_prev();
+            return false;
+        case menu_input_right:
+        case menu_input_enter:
+            jiggler_pattern_next();
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_mouse_jiggler_pattern(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%s", mouse_jiggler_get_name(jiggler_get_pattern()));
+}
+
+bool menu_handler_mouse_jiggler_intro(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+            jiggler_pattern_intro_prev();
+            return false;
+        case menu_input_right:
+        case menu_input_enter:
+            jiggler_pattern_intro_next();
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_mouse_jiggler_intro(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%s", mouse_jiggler_get_name(jiggler_get_pattern_intro()));
+}
+
+bool menu_handler_mouse_jiggler_autostop(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+        case menu_input_right:
+        case menu_input_enter:
+            jiggler_set_autostop(!jiggler_get_autostop());
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_mouse_jiggler_autostop(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%s", jiggler_get_autostop() ? "on" : "off");
+}
+
+bool menu_handler_mouse_jiggler_ending(menu_input_t input) {
+    switch (input) {
+        case menu_input_left:
+            jiggler_pattern_ending_prev();
+            return false;
+        case menu_input_right:
+        case menu_input_enter:
+            jiggler_pattern_ending_next();
+            return false;
+        default:
+            return true;
+    }
+}
+
+__attribute__((weak)) void display_handler_mouse_jiggler_ending(char *text_buffer, size_t buffer_len) {
+    snprintf(text_buffer, buffer_len - 1, "%s", mouse_jiggler_get_name(jiggler_get_pattern_ending()));
+}
+
 #    endif
 
-#    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis)
+#    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis) || \
+        defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
 #        include QMK_KEYBOARD_H
 
 bool menu_handler_dpi_config(menu_input_t input) {
     switch (input) {
         case menu_input_left:
+#        if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
+            tractyl_cycle_pointer_default_dpi(false);
+#        else
             charybdis_cycle_pointer_default_dpi(false);
+#        endif // defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
             return false;
         case menu_input_right:
         case menu_input_enter:
+#        if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
+            tractyl_cycle_pointer_default_dpi(true);
+#        else
             charybdis_cycle_pointer_default_dpi(true);
+#        endif // defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
             return false;
         default:
             return true;
@@ -155,9 +235,14 @@ bool menu_handler_dpi_config(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_dpi_config(char *text_buffer, size_t buffer_len) {
+#        if defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
+    snprintf(text_buffer, buffer_len - 1, "%d", tractyl_get_pointer_default_dpi());
+#        else
     snprintf(text_buffer, buffer_len - 1, "%d", charybdis_get_pointer_default_dpi());
+#        endif // defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
 }
-#    endif
+#    endif // defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis) ||
+           // defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
 
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
 #        include "pointing_device_accel.h"
@@ -294,21 +379,32 @@ __attribute__((weak)) void display_handler_mouse_smoothing(char *text_buffer, si
 }
 #    endif
 
+#    ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
+menu_entry_t pointing_mouse_jiggler[] = {
+    DISPLAY_MENU_ENTRY_CHILD("Enabled:", "Jiggler", mouse_jiggler),
+    DISPLAY_MENU_ENTRY_CHILD("Pattern", "Pattern", mouse_jiggler_pattern),
+    DISPLAY_MENU_ENTRY_CHILD("Timeout", "Timeout", mouse_jiggler_timeout),
+    DISPLAY_MENU_ENTRY_CHILD("Autostop", "Autostop", mouse_jiggler_autostop),
+    DISPLAY_MENU_ENTRY_CHILD("Intro Pattern", "Intro", mouse_jiggler_intro),
+    DISPLAY_MENU_ENTRY_CHILD("Ending Pattern", "Ending", mouse_jiggler_ending),
+};
+#    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
+
 menu_entry_t pointing_entries[] = {
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
     DISPLAY_MENU_ENTRY_MULTI("Mouse Acceleration", "Accel", pointing_acceleration_entries, NULL, mouse_accel_toggle),
 #    endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
-#    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis)
+#    ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
+    DISPLAY_MENU_ENTRY_MULTI("Mouse Jiggler", "Jiggler", pointing_mouse_jiggler, NULL, mouse_jiggler),
+#    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
+#    if defined(KEYBOARD_handwired_tractyl_manuform) || defined(KEYBOARD_bastardkb_charybdis) || \
+        defined(COMMUNITY_MODULE_TRACTYL_ENABLE)
     DISPLAY_MENU_ENTRY_CHILD("DPI Config", "DPI", dpi_config),
 #    endif // KEYBOARD_handwired_tractyl_manuform || KEYBOARD_bastardkb_charybdis
 #    ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Auto Mouse", "AutoMouse", auto_mouse_enable),
     DISPLAY_MENU_ENTRY_MULTI("Auto Mouse Options", "AM Opt", pointing_auto_layer_entries, NULL, auto_mouse_layer),
 #    endif // POINTING_DEVICE_AUTO_MOUSE_ENABLE
-#    ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
-    DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler", "Jiggler", mouse_jiggler),
-    DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler Timeout", "JiggleTime", mouse_jiggler_timeout),
-#    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
 #    ifdef AUDIO_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Mouse Clicky", "Clicky", audio_mouse_clicky),
 #    endif

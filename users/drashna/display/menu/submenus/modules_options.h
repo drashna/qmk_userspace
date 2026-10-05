@@ -216,6 +216,9 @@ menu_entry_t community_modules_settings_option_entries[] = {
 #ifdef COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
     DISPLAY_MENU_ENTRY_MULTI("Mouse Acceleration", "Accel", pointing_acceleration_entries, NULL, mouse_accel_toggle),
 #endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
+#ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
+    DISPLAY_MENU_ENTRY_MULTI("Mouse Jiggler", "Jiggler", pointing_mouse_jiggler, NULL, mouse_jiggler),
+#endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
 #if defined(COMMUNITY_MODULE_RTC_ENABLE)
     DISPLAY_MENU_ENTRY_PARENT("RTC Settings", "RTC", rtc_config_entries, NULL),
 #endif // COMMUNITY_MODULE_RTC_ENABLE
@@ -235,10 +238,6 @@ menu_entry_t community_modules_settings_option_entries[] = {
 #ifdef COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Keyboard Lock", "KLock", keyboard_lock),
 #endif // COMMUNITY_MODULE_KEYBOARD_LOCK_ENABLE
-#ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
-    DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler", "Jiggler", mouse_jiggler),
-    DISPLAY_MENU_ENTRY_CHILD("Mouse Jiggler Timeout", "JiggleTime", mouse_jiggler_timeout),
-#endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
 #ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
     DISPLAY_MENU_ENTRY_CHILD("Mouse Smoothing", "Smoothing", mouse_smoothing),
 #endif // COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
