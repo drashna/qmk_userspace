@@ -277,8 +277,6 @@ void                       eeconfig_init_user(void) {
     userspace_config.pointing.auto_mouse_layer.layer    = _MOUSE;
     userspace_config.pointing.auto_mouse_layer.timeout  = AUTO_MOUSE_TIME;
     userspace_config.pointing.auto_mouse_layer.debounce = AUTO_MOUSE_DEBOUNCE;
-    userspace_config.pointing.mouse_jiggler.enable      = false;
-    userspace_config.pointing.mouse_jiggler.timeout     = 30;
     // ensure that nkro is enabled
     eeconfig_read_keymap(&keymap_config);
     keymap_config.nkro = true;

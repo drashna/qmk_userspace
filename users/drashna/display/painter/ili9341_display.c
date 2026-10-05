@@ -520,6 +520,9 @@ __attribute__((weak)) void ili9341_draw_user(void) {
 #    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
 
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
+#        if !(defined(COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE) &&     \
+              defined(COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE) && \
+              defined(COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE))
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Pointing Device Sniping mode
             bool pointing_device_smoothing_get_enabled(void);
@@ -535,6 +538,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
                                             last_smoothing_state ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
             }
             ypos += font_oled->line_height + 4;
+#        endif
 #    endif
 #endif // POINTING_DEVICE_ENABLE
 

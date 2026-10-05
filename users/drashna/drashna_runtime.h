@@ -78,10 +78,6 @@ typedef union PACKED {
                 uint16_t timeout  : 16;
                 uint8_t  debounce : 8;
             } auto_mouse_layer;
-            struct {
-                bool    enable  : 1;
-                uint8_t timeout : 8;
-            } mouse_jiggler;
         } pointing;
         bool    nuke_switch   : 1;
         uint8_t sizeof_config : 8;

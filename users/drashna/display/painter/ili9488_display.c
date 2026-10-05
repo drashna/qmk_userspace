@@ -35,6 +35,9 @@
 #ifdef COMMUNITY_MODULE_UNICODE_TYPING_ENABLE
 #    include "unicode_typing.h"
 #endif // COMMUNITY_MODULE_UNICODE_TYPING_ENABLE
+#ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
+#    include "mouse_jiggler.h"
+#endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
 
 static painter_device_t display;
 
@@ -525,8 +528,8 @@ __attribute__((weak)) void ili9488_draw_user(void) {
 #    endif // COMMUNITY_MODULE_POINTING_DEVICE_ACCEL_ENABLE
 
         static bool last_jiggle_enabled = false;
-        if (hue_redraw || last_jiggle_enabled != userspace_config.pointing.mouse_jiggler.enable) {
-            last_jiggle_enabled = userspace_config.pointing.mouse_jiggler.enable;
+        if (hue_redraw || last_jiggle_enabled != jiggler_get_enabled()) {
+            last_jiggle_enabled = jiggler_get_enabled();
             xpos                = 5;
             xpos += qp_drawtext_recolor(pre_display, xpos, ypos, font_oled, "Jiggler",
                                         last_jiggle_enabled ? curr_hsv.secondary.h : curr_hsv.primary.h,

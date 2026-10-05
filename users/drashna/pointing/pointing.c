@@ -71,14 +71,6 @@ void pointing_device_init_user(void) {
     set_auto_mouse_timeout(userspace_config.pointing.auto_mouse_layer.timeout);
     set_auto_mouse_debounce(userspace_config.pointing.auto_mouse_layer.debounce);
 
-#ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
-    if (userspace_config.pointing.mouse_jiggler.enable) {
-        jiggler_enable();
-    } else {
-        jiggler_disable();
-    }
-    jiggler_set_backoff(userspace_config.pointing.mouse_jiggler.timeout);
-#endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
     pointing_device_init_keymap();
 }
 
@@ -92,6 +84,9 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         mouse_report.y = 0;
     }
 
+#ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
+    mouse_report = pointing_device_task_mouse_jiggler(mouse_report);
+#endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
     return pointing_device_task_keymap(mouse_report);
 }
 
@@ -149,7 +144,7 @@ bool is_mouse_record_user(uint16_t keycode, keyrecord_t *record) {
         case QK_KB ... QK_KB_MAX:
 #    endif
 #    ifdef COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
-        case COMMUNITY_MODULE_MOUSE_JIGGLER_TOGGLE ... COMMUNITY_MODULE_MOUSE_JIGGLER_AUTOSTOP:
+        case COMMUNITY_MODULE_MOUSE_JIGGLER_TOGGLE ... COMMUNITY_MODULE_MOUSE_JIGGLER_TIMEOUT_DOWN:
 #    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
             return true;
     }

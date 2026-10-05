@@ -108,8 +108,6 @@ bool menu_handler_mouse_jiggler(menu_input_t input) {
         case menu_input_right:
         case menu_input_enter:
             jiggler_toggle();
-            userspace_config.pointing.mouse_jiggler.enable = jiggler_get_state() != 0;
-            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
             return false;
         default:
             return true;
@@ -117,25 +115,17 @@ bool menu_handler_mouse_jiggler(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_mouse_jiggler(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%s", userspace_config.pointing.mouse_jiggler.enable ? "on" : "off");
+    snprintf(text_buffer, buffer_len - 1, "%s", jiggler_get_enabled() ? "on" : "off");
 }
 
 bool menu_handler_mouse_jiggler_timeout(menu_input_t input) {
     switch (input) {
         case menu_input_left:
-            if (userspace_config.pointing.mouse_jiggler.timeout != 0) {
-                userspace_config.pointing.mouse_jiggler.timeout--;
-            }
-            jiggler_set_backoff(userspace_config.pointing.mouse_jiggler.timeout);
-            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
+            jiggler_backoff_decrease();
             return false;
         case menu_input_right:
         case menu_input_enter:
-            if (userspace_config.pointing.mouse_jiggler.timeout != 255) {
-                userspace_config.pointing.mouse_jiggler.timeout++;
-            }
-            jiggler_set_backoff(userspace_config.pointing.mouse_jiggler.timeout);
-            eeconfig_update_user_datablock(&userspace_config, 0, EECONFIG_USER_DATA_SIZE);
+            jiggler_backoff_increase();
             return false;
         default:
             return true;
@@ -143,7 +133,7 @@ bool menu_handler_mouse_jiggler_timeout(menu_input_t input) {
 }
 
 __attribute__((weak)) void display_handler_mouse_jiggler_timeout(char *text_buffer, size_t buffer_len) {
-    snprintf(text_buffer, buffer_len - 1, "%d", (uint8_t)jiggler_get_backoff());
+    snprintf(text_buffer, buffer_len - 1, "%d", (uint16_t)jiggler_get_backoff());
 }
 #    endif
 
