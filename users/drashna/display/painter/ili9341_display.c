@@ -475,7 +475,21 @@ __attribute__((weak)) void ili9341_draw_user(void) {
                                             last_accel_state ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
             }
             ypos += font_oled->line_height + 4;
+#    endif
+#    ifdef COMMUNITY_MODULE_TRACTYL_ENABLE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Pointing Device Sniping mode
+            static uint8_t last_sp_state = 0xFF;
 
+            if (hue_redraw || last_sp_state != tractyl_get_pointer_sniping_enabled()) {
+                last_sp_state = tractyl_get_pointer_sniping_enabled();
+                xpos          = 5;
+                xpos += qp_drawtext_recolor(
+                    display, xpos, ypos, font_oled, "Sniping",
+                    tractyl_get_pointer_sniping_enabled() ? curr_hsv.secondary.h : curr_hsv.primary.h,
+                    tractyl_get_pointer_sniping_enabled() ? curr_hsv.secondary.s : curr_hsv.primary.s,
+                    tractyl_get_pointer_sniping_enabled() ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
+            }
+            ypos += font_oled->line_height + 4;
 #    elif defined(KEYBOARD_bastardkb_charybdis) || defined(KEYBOARD_handwired_tractyl_manuform)
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Pointing Device Sniping mode
@@ -502,6 +516,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
                                             last_jiggle_enabled ? curr_hsv.secondary.s : curr_hsv.primary.s,
                                             last_jiggle_enabled ? curr_hsv.primary.v : disabled_val, 0, 0, 0);
             }
+            ypos += font_oled->line_height + 4;
 #    endif // COMMUNITY_MODULE_MOUSE_JIGGLER_ENABLE
 
 #    ifdef COMMUNITY_MODULE_POINTING_DEVICE_SMOOTHING_ENABLE
