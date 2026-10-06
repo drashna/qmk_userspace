@@ -713,9 +713,6 @@ menu_entry_t display_option_entries[] = {
     DISPLAY_MENU_ENTRY_MULTI("Pet Animation", "Pet", oled_pets_entries, oled_pet_animation),
 #endif // OLED_ENABLE && CUSTOM_OLED_DRIVER
 #if defined(QUANTUM_PAINTER_ENABLE) && defined(CUSTOM_QUANTUM_PAINTER_ENABLE)
-#    ifdef BACKLIGHT_ENABLE
-    DISPLAY_MENU_ENTRY_MULTI("Backlight Settings", "Backlight", backlight_entries, NULL, bl_level),
-#    endif // BACKLIGHT_ENABLE
 #    ifdef SPLIT_KEYBOARD
     DISPLAY_MENU_ENTRY_MULTI("Left Display Options", "Options(L)", display_options_left, NULL, display_mode_left),
     DISPLAY_MENU_ENTRY_MULTI("Right Display Options", "Options(R)", display_options_right, NULL, display_mode_right),

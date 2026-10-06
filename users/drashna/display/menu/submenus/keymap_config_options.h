@@ -221,4 +221,7 @@ menu_entry_t keymap_config_entries[] = {
     DISPLAY_MENU_ENTRY_CHILD("Autocorrect", "AutoCorr", keycode_autocorrect),
     DISPLAY_MENU_ENTRY_CHILD("Autocorrect Dictionary", "AutoDict", keycode_autocorrect_dict),
 #endif // AUTOCORRECT_ENABLE && ! COMMUNITY_MODULE_AUTOCORRECT_ENABLE
+#ifdef UNICODE_COMMON_ENABLE
+    DISPLAY_MENU_ENTRY_CHILD("Unicode mode", "Mode", unicode),
+#endif // UNICODE_COMMON_ENABLE
 };
