@@ -5,6 +5,7 @@
         "drashna/console_keylogging",
         "drashna/display_keylogger",
         "drashna/display_menu",
+        "drashna/dynamic_debounce",
         "drashna/guarded_reset",
         "drashna/i2c_scanner",
         "drashna/layer_map",
