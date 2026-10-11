@@ -231,3 +231,25 @@ uint16_t extract_non_basic_keycode(uint16_t keycode, keyrecord_t *record, bool c
 
     return keycode;
 }
+
+uint8_t mods_5bit_to_8bit(uint8_t mods) {
+    uint8_t modifier_bits = mods & 0x0F;
+    return (mods & 0x10) ? (modifier_bits << 4) : modifier_bits;
+}
+
+mod_t get_mods_state_from_keycode(uint16_t keycode) {
+    return (mod_t){.raw = get_mods_from_keycode(keycode)};
+}
+
+uint8_t get_mods_from_keycode(uint16_t keycode) {
+    if (IS_QK_MODS(keycode)) {
+        return mods_5bit_to_8bit(QK_MODS_GET_MODS(keycode));
+    } else if (IS_QK_ONE_SHOT_MOD(keycode)) {
+        return mods_5bit_to_8bit(QK_ONE_SHOT_MOD_GET_MODS(keycode));
+    } else if (IS_QK_MOD_TAP(keycode)) {
+        return mods_5bit_to_8bit(QK_MOD_TAP_GET_MODS(keycode));
+    } else if (IS_QK_LAYER_MOD(keycode)) {
+        return mods_5bit_to_8bit(QK_LAYER_MOD_GET_MODS(keycode));
+    }
+    return 0;
+}

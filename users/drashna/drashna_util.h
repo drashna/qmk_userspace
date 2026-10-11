@@ -4,6 +4,7 @@
 #pragma once
 
 #include "action.h"
+#include "action_util.h"
 
 bool     mod_key_press_timer(uint16_t code, uint16_t mod_code, bool pressed);
 bool     mod_key_press(uint16_t code, uint16_t mod_code, bool pressed, uint16_t *this_timer);
@@ -15,3 +16,5 @@ bool     is_device_suspended(void);
 void     set_is_device_suspended(bool status);
 uint16_t extract_basic_keycode(uint16_t keycode, keyrecord_t *record, bool check_hold);
 uint16_t extract_non_basic_keycode(uint16_t keycode, keyrecord_t *record, bool check_hold);
+mod_t    get_mods_state_from_keycode(uint16_t keycode);
+uint8_t  get_mods_from_keycode(uint16_t keycode);
