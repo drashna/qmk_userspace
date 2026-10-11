@@ -180,6 +180,55 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         return false;
     }
     rgb_matrix_indicators_render_layer(led_min, led_max);
+
+    for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
+        for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
+            uint8_t index = g_led_config.matrix_co[row][col];
+
+            if (index != NO_LED && index >= led_min && index < led_max) {
+                keypos_t key = {.col = col, .row = row};
+#ifdef SWAP_HANDS_ENABLE
+                if (is_swap_hands_on()) {
+                    key.row = pgm_read_byte(&hand_swap_config[row][col].row);
+                    key.col = pgm_read_byte(&hand_swap_config[row][col].col);
+                }
+#endif
+                uint8_t  layer   = get_highest_layer(layer_state | default_layer_state);
+                uint16_t keycode = keymap_key_to_keycode(layer, key);
+
+                mod_t mods         = get_mod_state();
+                mod_t keycode_mods = get_mods_state_from_keycode(keycode);
+#ifndef NO_ACTION_ONESHOT
+                mods.raw |= get_oneshot_mods();
+#endif
+                if (keycode_mods.left_shift && mods.left_shift) {
+                    rgb_matrix_set_color(index, 0, 0, 255);
+                }
+                if (keycode_mods.left_alt && mods.left_alt) {
+                    rgb_matrix_set_color(index, 255, 255, 0);
+                }
+                if (keycode_mods.left_ctrl && mods.left_ctrl) {
+                    rgb_matrix_set_color(index, 255, 0, 0);
+                }
+                if (keycode_mods.left_gui && mods.left_gui) {
+                    rgb_matrix_set_color(index, 0, 255, 0);
+                }
+                if ((keycode_mods.right_shift) && mods.right_shift) {
+                    rgb_matrix_set_color(index, 0, 0, 255);
+                }
+                if ((keycode_mods.right_alt) && mods.right_alt) {
+                    rgb_matrix_set_color(index, 255, 255, 0);
+                }
+                if (keycode_mods.right_ctrl && mods.right_ctrl) {
+                    rgb_matrix_set_color(index, 255, 0, 0);
+                }
+                if (keycode_mods.right_gui && mods.right_gui) {
+                    rgb_matrix_set_color(index, 0, 255, 0);
+                }
+            }
+        }
+    }
+
     return false;
 }
 
