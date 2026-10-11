@@ -14,7 +14,9 @@ void     tap_code16_nomods(uint16_t kc);
 void     center_text(const char *text, char *output, uint8_t width);
 bool     is_device_suspended(void);
 void     set_is_device_suspended(bool status);
+
 uint16_t extract_basic_keycode(uint16_t keycode, keyrecord_t *record, bool check_hold);
 uint16_t extract_non_basic_keycode(uint16_t keycode, keyrecord_t *record, bool check_hold);
 mod_t    get_mods_state_from_keycode(uint16_t keycode);
 uint8_t  get_mods_from_keycode(uint16_t keycode);
+uint8_t  mods_5bit_to_8bit(uint8_t mods);

@@ -209,6 +209,15 @@ uint16_t extract_basic_keycode(uint16_t keycode, keyrecord_t *record, bool check
     return keycode;
 }
 
+/**
+ * @brief Extracts the non-basic keycode (eg, keycode with modifiers) from a quantum keycode.
+ *
+ * @param keycode extended keycode to extract from
+ * @param record keyrecord used for checking tap count/hold
+ * @param check_hold do we check for hold keycode status
+ * @return uint16_t returns the non-basic keycode
+ */
+
 uint16_t extract_non_basic_keycode(uint16_t keycode, keyrecord_t *record, bool check_hold) {
     if (IS_QK_MOD_TAP(keycode)) {
         if (record->tap.count || !check_hold) {
@@ -231,15 +240,39 @@ uint16_t extract_non_basic_keycode(uint16_t keycode, keyrecord_t *record, bool c
 
     return keycode;
 }
-
+/**
+ * @brief Converts 5-bit modifier representation to 8-bit.
+ *
+ * This function takes a 5-bit modifier value, where the lower 4 bits represent the standard  modifiers (Ctrl, Shift,
+ * Alt, GUI) and the 5th bit represents that it's the right modifier. Since we are unable to differentiate between left
+ * and right modifiers in this context, we assume that if the 5th bit is set, then all of the modifiers are right side.
+ * It converts this 5-bit representation into an 8-bit modifier value suitable for use in the rest of the system.
+ *
+ * @param mods 5-bit modifier value
+ * @return uint8_t 8-bit modifier value
+ */
 uint8_t mods_5bit_to_8bit(uint8_t mods) {
     uint8_t modifier_bits = mods & 0x0F;
     return (mods & 0x10) ? (modifier_bits << 4) : modifier_bits;
 }
 
+/**
+ * @brief Retrieves the current modifier state from a given keycode.
+ *
+ * @param keycode the keycode to extract the modifier state from
+ * @return mod_t the current modifier state
+ */
+
 mod_t get_mods_state_from_keycode(uint16_t keycode) {
     return (mod_t){.raw = get_mods_from_keycode(keycode)};
 }
+
+/**
+ * @brief Retrieves the 8-bit modifier value from a given keycode.
+ *
+ * @param keycode the keycode to extract the modifier value from
+ * @return uint8_t the 8-bit modifier value
+ */
 
 uint8_t get_mods_from_keycode(uint16_t keycode) {
     if (IS_QK_MODS(keycode)) {
