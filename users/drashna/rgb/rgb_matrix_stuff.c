@@ -172,21 +172,21 @@ const rgblight_driver_t rgblight_driver = {
 };
 #endif // RGBLIGHT_ENABLE && RGBLIGHT_CUSTOM
 
-__attribute__((weak)) bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
-    return true;
-}
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    if (!rgb_matrix_indicators_advanced_keymap(led_min, led_max)) {
-        return false;
-    }
-    rgb_matrix_indicators_render_layer(led_min, led_max);
-
+/**
+ * @brief Renders the RGB matrix indicators for active modifier keys.
+ *
+ * @param led_min The minimum LED index to consider.
+ * @param led_max The maximum LED index to consider.
+ */
+void rgb_matrix_indicators_render_mods(uint8_t led_min, uint8_t led_max) {
     for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
         for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
             uint8_t index = g_led_config.matrix_co[row][col];
 
             if (index != NO_LED && index >= led_min && index < led_max) {
                 keypos_t key = {.col = col, .row = row};
+                hsv_t    hsv = rgb_matrix_get_hsv();
+                rgb_t    rgb = {0, 0, 0};
 #ifdef SWAP_HANDS_ENABLE
                 if (is_swap_hands_on()) {
                     key.row = pgm_read_byte(&hand_swap_config[row][col].row);
@@ -201,21 +201,42 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 #ifndef NO_ACTION_ONESHOT
                 mods.raw |= get_oneshot_mods();
 #endif
-                if (keycode_mods.left_shift && mods.left_shift || keycode_mods.right_shift && mods.right_shift) {
-                    rgb_matrix_set_color(index, 0, 0, 255);
+                bool mod_active = false;
+                if ((keycode_mods.left_shift && mods.left_shift) || (keycode_mods.right_shift && mods.right_shift)) {
+                    hsv.h      = 170; // blue
+                    mod_active = true;
                 }
-                if (keycode_mods.left_alt && mods.left_alt || keycode_mods.right_alt && mods.right_alt) {
-                    rgb_matrix_set_color(index, 255, 255, 0);
+                if ((keycode_mods.left_alt && mods.left_alt) || (keycode_mods.right_alt && mods.right_alt)) {
+                    hsv.h      = 43; // yellow
+                    mod_active = true;
                 }
-                if (keycode_mods.left_ctrl && mods.left_ctrl || keycode_mods.right_ctrl && mods.right_ctrl) {
-                    rgb_matrix_set_color(index, 255, 0, 0);
+                if ((keycode_mods.left_ctrl && mods.left_ctrl) || (keycode_mods.right_ctrl && mods.right_ctrl)) {
+                    hsv.h      = 0; // red
+                    mod_active = true;
                 }
-                if (keycode_mods.left_gui && mods.left_gui || keycode_mods.right_gui && mods.right_gui) {
-                    rgb_matrix_set_color(index, 0, 255, 0);
+                if ((keycode_mods.left_gui && mods.left_gui) || (keycode_mods.right_gui && mods.right_gui)) {
+                    hsv.h      = 85; // green
+                    mod_active = true;
+                }
+                if (mod_active) {
+                    // heavier math, leave out if we can avoid
+                    rgb = rgb_matrix_hsv_to_rgb(hsv);
+                    rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
                 }
             }
         }
     }
+}
+
+__attribute__((weak)) bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
+    return true;
+}
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    if (!rgb_matrix_indicators_advanced_keymap(led_min, led_max)) {
+        return false;
+    }
+    rgb_matrix_indicators_render_layer(led_min, led_max);
+    rgb_matrix_indicators_render_mods(led_min, led_max);
 
     return false;
 }
