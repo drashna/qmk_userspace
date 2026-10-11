@@ -201,28 +201,16 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 #ifndef NO_ACTION_ONESHOT
                 mods.raw |= get_oneshot_mods();
 #endif
-                if (keycode_mods.left_shift && mods.left_shift) {
+                if (keycode_mods.left_shift && mods.left_shift || keycode_mods.right_shift && mods.right_shift) {
                     rgb_matrix_set_color(index, 0, 0, 255);
                 }
-                if (keycode_mods.left_alt && mods.left_alt) {
+                if (keycode_mods.left_alt && mods.left_alt || keycode_mods.right_alt && mods.right_alt) {
                     rgb_matrix_set_color(index, 255, 255, 0);
                 }
-                if (keycode_mods.left_ctrl && mods.left_ctrl) {
+                if (keycode_mods.left_ctrl && mods.left_ctrl || keycode_mods.right_ctrl && mods.right_ctrl) {
                     rgb_matrix_set_color(index, 255, 0, 0);
                 }
-                if (keycode_mods.left_gui && mods.left_gui) {
-                    rgb_matrix_set_color(index, 0, 255, 0);
-                }
-                if ((keycode_mods.right_shift) && mods.right_shift) {
-                    rgb_matrix_set_color(index, 0, 0, 255);
-                }
-                if ((keycode_mods.right_alt) && mods.right_alt) {
-                    rgb_matrix_set_color(index, 255, 255, 0);
-                }
-                if (keycode_mods.right_ctrl && mods.right_ctrl) {
-                    rgb_matrix_set_color(index, 255, 0, 0);
-                }
-                if (keycode_mods.right_gui && mods.right_gui) {
+                if (keycode_mods.left_gui && mods.left_gui || keycode_mods.right_gui && mods.right_gui) {
                     rgb_matrix_set_color(index, 0, 255, 0);
                 }
             }
