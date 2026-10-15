@@ -276,13 +276,13 @@ mod_t get_mods_state_from_keycode(uint16_t keycode) {
 
 uint8_t get_mods_from_keycode(uint16_t keycode) {
     if (IS_QK_MODS(keycode)) {
-        return mods_5bit_to_8bit(QK_MODS_GET_MODS(keycode));
+        return mods_5bit_to_8bit(mod_config(QK_MODS_GET_MODS(keycode)));
     } else if (IS_QK_ONE_SHOT_MOD(keycode)) {
-        return mods_5bit_to_8bit(QK_ONE_SHOT_MOD_GET_MODS(keycode));
+        return mods_5bit_to_8bit(mod_config(QK_ONE_SHOT_MOD_GET_MODS(keycode)));
     } else if (IS_QK_MOD_TAP(keycode)) {
-        return mods_5bit_to_8bit(QK_MOD_TAP_GET_MODS(keycode));
+        return mods_5bit_to_8bit(mod_config(QK_MOD_TAP_GET_MODS(keycode)));
     } else if (IS_QK_LAYER_MOD(keycode)) {
-        return mods_5bit_to_8bit(QK_LAYER_MOD_GET_MODS(keycode));
+        return mods_5bit_to_8bit(mod_config(QK_LAYER_MOD_GET_MODS(keycode)));
     }
     return 0;
 }
