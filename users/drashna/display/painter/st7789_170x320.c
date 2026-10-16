@@ -46,7 +46,7 @@
 static painter_device_t st7789_170x320_display;
 #ifdef QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
 static painter_device_t st7789_170x320_surface_display;
-static uint8_t          display_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(170, 320, 16)];
+static __attribute__((aligned(4))) uint8_t display_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(170, 320, 16)];
 #else
 #    define st7789_170x320_surface_display st7789_170x320_display
 #endif // QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE

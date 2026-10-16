@@ -73,11 +73,12 @@ extern painter_image_handle_t akira_explosion;
 #ifdef QUANTUM_PAINTER_DRIVERS_ILI9341_SURFACE
 #    define SURFACE_MENU_WIDTH  236
 #    define SURFACE_MENU_HEIGHT 120
-static uint8_t          menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 16)];
+static __attribute__((
+    aligned(4))) uint8_t menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 16)];
 static painter_device_t menu_surface;
 
 #    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
-static uint8_t
+static __attribute__((aligned(4))) uint8_t
     wpm_graph_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT, 16)] = {0};
 static painter_device_t wpm_graph_surface;
 #    endif // WPM_ENABLE && !WPM_NO_SURFACE

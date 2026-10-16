@@ -48,7 +48,7 @@ static painter_device_t st7789_76x284_surface_display;
 #    if HAL_USE_SDRAM == TRUE
 __attribute__((section(".ram7")))
 #    endif
-static uint8_t display_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(76, 284, 16)];
+static __attribute__((aligned(4))) uint8_t display_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(76, 284, 16)];
 #else
 #    define st7789_76x284_surface_display st7789_76x284_display
 #endif // QUANTUM_PAINTER_DRIVERS_ST7789_76X284_SURFACE

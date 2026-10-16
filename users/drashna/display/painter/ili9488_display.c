@@ -79,7 +79,7 @@ extern painter_image_handle_t akira_explosion;
 #        define SURFACE_MENU_HEIGHT 480
 #        define WPM_NO_SURFACE
 
-__attribute__((section(".ram7"))) static uint8_t
+__attribute__((section(".ram7"), aligned(4))) static uint8_t
     menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
 #    else
 #        if SURFACE_NUM_DEVICES < 2
@@ -88,12 +88,13 @@ __attribute__((section(".ram7"))) static uint8_t
 #        pragma message("ILI9488 Surface enabled")
 #        define SURFACE_MENU_WIDTH  316
 #        define SURFACE_MENU_HEIGHT 146
-static uint8_t menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
+static __attribute__((
+    aligned(4))) uint8_t menu_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(SURFACE_MENU_WIDTH, SURFACE_MENU_HEIGHT, 24)];
 #    endif
 painter_device_t menu_surface;
 
 #    if defined(WPM_ENABLE) && !defined(WPM_NO_SURFACE)
-static uint8_t
+static __attribute__((aligned(4))) uint8_t
     wpm_graph_buffer[SURFACE_REQUIRED_BUFFER_BYTE_SIZE(WPM_PAINTER_GRAPH_WIDTH, WPM_PAINTER_GRAPH_HEIGHT, 24)] = {0};
 static painter_device_t wpm_graph_surface;
 #    endif // WPM_ENABLE && !WPM_NO_SURFACE
