@@ -47,7 +47,7 @@ void add_autocorrect_char_to_keylogger_str(char ascii_code) {
         mods |= MOD_BIT(KC_RIGHT_ALT);
     }
 
-    add_keycode_to_keylogger_str(keycode, mods);
+    add_keycode_to_display_keylogger_str(keycode, mods);
 }
 #    endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
 
@@ -69,7 +69,7 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
 #    endif // WPM_ENABLE
 
 #    if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
-        keylog_shift_right();
+        display_keylogger_shift_right();
 #    endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
     }
 
@@ -80,7 +80,7 @@ bool apply_autocorrect(uint8_t backspaces, const char *str, char *typo, char *co
         add_autocorrect_char_to_keylogger_str('u');
         add_autocorrect_char_to_keylogger_str(' ');
     } else if (strncmp("eexist", typo, strlen(typo)) == 0) {
-        keylog_shift_right();
+        display_keylogger_shift_right();
         add_autocorrect_char_to_keylogger_str('e');
         add_autocorrect_char_to_keylogger_str(' ');
         add_autocorrect_char_to_keylogger_str('e');

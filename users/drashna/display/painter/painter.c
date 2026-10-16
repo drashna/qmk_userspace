@@ -839,14 +839,14 @@ void painter_render_menu_block(painter_device_t device, painter_font_handle_t fo
 void painter_render_keylogger(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                               uint16_t width, bool force_redraw, dual_hsv_t *curr_hsv) {
 #ifdef COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE
-    if (is_keylogger_dirty() || force_redraw) {
+    if (is_display_keylogger_dirty() || force_redraw) {
         qp_drawtext_recolor(device, x, y, font, "Keylogger: ", curr_hsv->primary.h, curr_hsv->primary.s,
                             curr_hsv->primary.v, 0, 0, 0);
         y += font->line_height + 4;
         qp_rect(device, x, y, x + width - 1, y + font->line_height + 2, 0, 0, 0, true);
-        qp_drawtext_recolor(device, x, y, font, truncate_text(get_keylogger_str(), width, font, true, false),
+        qp_drawtext_recolor(device, x, y, font, truncate_text(get_display_keylogger_str(), width, font, true, false),
                             curr_hsv->primary.h, curr_hsv->primary.s, curr_hsv->primary.v, 0, 255, 0);
-        keylogger_set_dirty(false);
+        display_keylogger_set_dirty(false);
     }
 #endif
 }
