@@ -53,9 +53,15 @@ bool process_record_unicode(uint16_t keycode, keyrecord_t *record) {
 
         case UC_IRNY: // ⸮
             register_unicode(0x2E2E);
+#if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
+            display_keylogger_append("⸮");
+#endif // COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE
             return true;
         case UC_CLUE: // ‽
             register_unicode(0x203D);
+#if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
+            display_keylogger_append("‽");
+#endif // COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE
             return true;
     }
 
@@ -82,9 +88,9 @@ bool process_record_unicode(uint16_t keycode, keyrecord_t *record) {
         register_unicode(0x203D);
 #if defined(COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE)
         display_keylogger_shift_right();
+        display_keylogger_shift_right();
         display_keylogger_append("‽");
-#endif // DISPLAY_KEYLOGGER_ENABLE && CUSTOM_QUANTUM_PAINTER_ENABLE
-
+#endif // COMMUNITY_MODULE_DISPLAY_KEYLOGGER_ENABLE
         return false;
     }
 
