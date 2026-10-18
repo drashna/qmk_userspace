@@ -112,16 +112,18 @@ void painter_render_menu_block_console(painter_device_t device, painter_font_han
 
 void painter_render_menu_block_fonts(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
                                      uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
-    static uint16_t              max_font_xpos[3][4] = {0};
-    extern painter_font_handle_t font_thintel, font_mono, font_oled;
-    x += 3;
-    y += 2;
-    render_character_set(device, &x, max_font_xpos[0], &y, font_thintel, curr_hsv->primary.h, curr_hsv->primary.s,
-                         curr_hsv->primary.v, 0, 0, 0);
-    render_character_set(device, &x, max_font_xpos[1], &y, font_mono, curr_hsv->primary.h, curr_hsv->primary.s,
-                         curr_hsv->primary.v, 0, 0, 0);
-    render_character_set(device, &x, max_font_xpos[2], &y, font_oled, curr_hsv->primary.h, curr_hsv->primary.s,
-                         curr_hsv->primary.v, 0, 0, 0);
+    if (force_redraw) {
+        static uint16_t              max_font_xpos[3][4] = {0};
+        extern painter_font_handle_t font_thintel, font_mono, font_oled;
+        x += 3;
+        y += 2;
+        render_character_set(device, &x, max_font_xpos[0], &y, font_thintel, curr_hsv->primary.h, curr_hsv->primary.s,
+                             curr_hsv->primary.v, 0, 0, 0);
+        render_character_set(device, &x, max_font_xpos[1], &y, font_mono, curr_hsv->primary.h, curr_hsv->primary.s,
+                             curr_hsv->primary.v, 0, 0, 0);
+        render_character_set(device, &x, max_font_xpos[2], &y, font_oled, curr_hsv->primary.h, curr_hsv->primary.s,
+                             curr_hsv->primary.v, 0, 0, 0);
+    }
 }
 
 void painter_render_menu_block_qmk_info(painter_device_t device, painter_font_handle_t font, uint16_t x, uint16_t y,
