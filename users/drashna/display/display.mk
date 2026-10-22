@@ -101,8 +101,7 @@ ifeq ($(strip $(QUANTUM_PAINTER_ENABLE)), yes)
         # Todo: make more moduler
         SRC += $(USER_PATH)/display/painter/fonts/font_oled.qff.c \
             $(USER_PATH)/display/painter/fonts/font_proggy_clean.qff.c \
-            $(USER_PATH)/display/painter/fonts/font_proggy_tiny.qff.c \
-            $(USER_PATH)/display/painter/fonts/font_thintel15.qff.c
+            $(USER_PATH)/display/painter/fonts/font_proggy_tiny.qff.c
 
         SRC += $(USER_PATH)/display/painter/painter.c \
                 $(USER_PATH)/display/painter/graphics.qgf.c

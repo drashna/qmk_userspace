@@ -114,7 +114,7 @@ void init_display_ili9341_rotation(void) {
     init_display_ili9341_inversion();
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initial render of frame/logo
-    painter_render_frame(display, font_thintel, painter_render_side(), 0, true);
+    painter_render_frame(display, font_oled, painter_render_side(), 0, true);
 
     qp_power(display, true);
     qp_flush(display);
@@ -259,7 +259,7 @@ __attribute__((weak)) void ili9341_draw_user(void) {
             qp_rect(display, 0, 0, width - 1, height - 1, 0, 0, 0, true);
         }
         if (hue_redraw) {
-            painter_render_frame(display, font_thintel, painter_render_side(), 0, true);
+            painter_render_frame(display, font_oled, painter_render_side(), 0, true);
         }
         bool transport_icon_redraw = false;
 #ifdef SPLIT_KEYBOARD
@@ -762,11 +762,11 @@ __attribute__((weak)) void ili9341_draw_user(void) {
         // Footer
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        ypos = height - (font_mono->line_height + 2);
+        ypos = height - (font_proggy_tiny->line_height + 2);
         xpos = 27;
         if (hue_redraw) {
             snprintf(buf, sizeof(buf), "SN: %s BD: %10.10s", get_hardware_id_string(), QMK_BUILDDATE);
-            xpos += qp_drawtext_recolor(display, xpos, ypos, font_mono, buf, 0, 0, 0, curr_hsv.primary.h,
+            xpos += qp_drawtext_recolor(display, xpos, ypos, font_proggy_tiny, buf, 0, 0, 0, curr_hsv.primary.h,
                                         curr_hsv.primary.s, curr_hsv.primary.v);
         }
 

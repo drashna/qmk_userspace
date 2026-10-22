@@ -6,4 +6,4 @@
 #include <qp.h>
 
 extern const uint32_t font_proggy_clean_15_length;
-extern const uint8_t  font_proggy_clean_15[1427];
+extern const uint8_t  font_proggy_clean_15[2831];

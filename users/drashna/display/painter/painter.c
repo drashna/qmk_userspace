@@ -64,7 +64,7 @@ void display_menu_set_dirty(bool state) {}
 #    include "qp_helpers.h"
 #endif // COMMUNITY_MODULE_QP_HELPERS_ENABLE
 
-painter_font_handle_t font_thintel, font_mono, font_oled;
+painter_font_handle_t font_proggy_tiny, font_oled;
 
 painter_image_handle_t lock_caps_on, lock_caps_off;
 painter_image_handle_t lock_num_on, lock_num_off;
@@ -114,15 +114,13 @@ void painter_render_menu_block_fonts(painter_device_t device, painter_font_handl
                                      uint16_t width, uint16_t height, bool force_redraw, dual_hsv_t *curr_hsv) {
     if (force_redraw) {
         static uint16_t              max_font_xpos[3][4] = {0};
-        extern painter_font_handle_t font_thintel, font_mono, font_oled;
+        extern painter_font_handle_t font_proggy_tiny, font_oled;
         x += 3;
         y += 2;
-        render_character_set(device, &x, max_font_xpos[0], &y, font_thintel, curr_hsv->primary.h, curr_hsv->primary.s,
-                             curr_hsv->primary.v, 0, 0, 0);
-        render_character_set(device, &x, max_font_xpos[1], &y, font_mono, curr_hsv->primary.h, curr_hsv->primary.s,
-                             curr_hsv->primary.v, 0, 0, 0);
-        render_character_set(device, &x, max_font_xpos[2], &y, font_oled, curr_hsv->primary.h, curr_hsv->primary.s,
-                             curr_hsv->primary.v, 0, 0, 0);
+        render_character_set(device, &x, max_font_xpos[0], &y, font_oled, curr_hsv->primary.h, curr_hsv->primary.s,
+                             curr_hsv->primary.v, 0, 0, 0, true);
+        render_character_set(device, &x, max_font_xpos[1], &y, font_proggy_tiny, curr_hsv->primary.h,
+                             curr_hsv->primary.s, curr_hsv->primary.v, 0, 0, 0, true);
     }
 }
 
@@ -190,9 +188,8 @@ __attribute__((weak)) bool painter_render_side(void) {
  *
  */
 void painter_init_assets(void) {
-    font_thintel = qp_load_font_mem(font_thintel15);
-    font_mono    = qp_load_font_mem(font_ProggyTiny15);
     font_oled    = qp_load_font_mem(font_oled_font);
+    font_proggy_tiny = qp_load_font_mem(font_ProggyTiny15);
 
     windows_logo = qp_load_image_mem(gfx_windows_logo);
     apple_logo   = qp_load_image_mem(gfx_apple_logo);
@@ -1278,16 +1275,19 @@ const char *truncate_text(const char *text, uint16_t max_width, painter_font_han
  * @param val_bg background value
  */
 static const char *test_text[] = {
-    // did intentionally skip PROGMEM here :)
+    // clang-format off
     "abcdefghijklmnopqrstuvwxyz  1234567890",
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ  !@#$%^&*()",
-    "__+-=[]{}\\|;:'\",.<>/?¶‽⸮«»˚‣⇤↕↓↲←▼→⇥▲♪",
+    "_+-=[]{}\\|;:'\",.<>/?¶‽⸮«»˚‣⇤↕↓↲←▼→⇥▲♪",
+    "¿¡ß àèìòùÀÈÌÒÙ áéíóúýÁÉÍÓÚÝ âêîôûÂÊÎÔÛ",
+    "ãñõÃÑÕ äëïöüÿÄËÏÖÜŸ åÅ æÆ œŒ çÇ ðÐ øØ",
+    // clang-format on
 };
 
 void render_character_set(painter_device_t display, uint16_t *x_offset, uint16_t *max_pos, uint16_t *ypos,
                           painter_font_handle_t font, uint8_t hue_fg, uint8_t sat_fg, uint8_t val_fg, uint8_t hue_bg,
-                          uint8_t sat_bg, uint8_t val_bg) {
-    for (uint8_t i = 0; i < ARRAY_SIZE(test_text); ++i) {
+                          uint8_t sat_bg, uint8_t val_bg, bool unicode) {
+    for (uint8_t i = 0; i < ARRAY_SIZE(test_text) - (unicode ? 0 : 2); ++i) {
         uint16_t width = qp_drawtext_recolor(display, *x_offset, *ypos, font, test_text[i], hue_fg, sat_fg, val_fg,
                                              hue_bg, sat_bg, val_bg);
 

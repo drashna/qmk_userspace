@@ -8,7 +8,6 @@
 #include "display/painter/fonts/font_oled.qff.h"
 #include "display/painter/fonts/font_proggy_clean.qff.h"
 #include "display/painter/fonts/font_proggy_tiny.qff.h"
-#include "display/painter/fonts/font_thintel15.qff.h"
 #include "display/painter/graphics.qgf.h"
 #include "display/painter/graphics/assets.h"
 #include "display/display.h"
@@ -34,7 +33,7 @@ typedef struct {
 } painter_display_menu_block_mode_t;
 extern const uint8_t painter_display_menu_block_modes_count;
 
-extern painter_font_handle_t font_thintel, font_mono, font_oled;
+extern painter_font_handle_t font_proggy_tiny, font_oled;
 
 void housekeeping_task_display_menu_user(void);
 void keyboard_post_init_quantum_painter(void);
@@ -46,7 +45,7 @@ const char* truncate_text(const char* text, uint16_t max_width, painter_font_han
                     bool add_ellipses);
 void  render_character_set(painter_device_t display, uint16_t* x_offset, uint16_t* max_pos, uint16_t* ypos,
                            painter_font_handle_t font, uint8_t hue_fg, uint8_t sat_fg, uint8_t val_fg, uint8_t hue_bg,
-                           uint8_t sat_bg, uint8_t val_bg);
+                           uint8_t sat_bg, uint8_t val_bg, bool unicode);
 
 bool painter_render_side(void);
 void painter_render_frame_box(painter_device_t device, hsv_t hsv, uint16_t x_buffer, uint16_t y_buffer,

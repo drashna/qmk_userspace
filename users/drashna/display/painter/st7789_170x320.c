@@ -107,7 +107,7 @@ __attribute__((weak)) void st7789_170x320_draw_user(void) {
     uint16_t height;
 
     qp_get_geometry(st7789_170x320_display, &width, &height, NULL, NULL, NULL);
-    // painter_render_frame(st7789_170x320_surface_display, font_thintel, painter_render_side(), 0, true);
+    // painter_render_frame(st7789_170x320_surface_display, font_proggy_tiny, painter_render_side(), 0, true);
     painter_render_frame_box(st7789_170x320_display, (hsv_t){.h = 128, .s = 255, .v = 255}, 0, 0, 0, 0, true, false);
 
 #ifdef QUANTUM_PAINTER_DRIVERS_ST7789_170X320_SURFACE
