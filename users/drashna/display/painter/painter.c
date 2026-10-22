@@ -681,10 +681,10 @@ void painter_render_frame(painter_device_t device, painter_font_handle_t font_ti
     snprintf(title, sizeof(title), "%s", PRODUCT);
     uint16_t title_width = qp_textwidth(font_title, title);
     if (title_width > (max_width - 55)) {
-        title_width = max_width;
+        title_width = max_width - 55;
     }
     uint16_t title_xpos = (max_width - title_width) / 2;
-    qp_drawtext_recolor(device, xpos + title_xpos, 4, font_title,
+    qp_drawtext_recolor(device, xpos + title_xpos, 6, font_title,
                         truncate_text(title, title_width, font_title, false, false), 0, 0, 0, hsv.h, hsv.s, hsv.v);
 }
 
