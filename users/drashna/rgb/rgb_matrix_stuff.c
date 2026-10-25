@@ -19,11 +19,11 @@ extern led_config_t g_led_config;
 static uint32_t hypno_timer;
 rgb_t           rgb_matrix_hsv_to_rgb(hsv_t hsv);
 
-void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode, uint8_t speed, uint8_t led_type,
-                             uint8_t led_min, uint8_t led_max) {
+void rgb_matrix_layer_helper(uint8_t hue, uint8_t sat, uint8_t val, uint8_t mode, uint8_t led_type, led_index_t led_min,
+                             led_index_t led_max) {
     hsv_t   hsv  = {hue, sat, val};
     rgb_t   rgb  = {0};
-    uint8_t time = scale16by8(g_rgb_timer, qadd8(speed / 4, 1));
+    uint8_t time = scale16by8(g_rgb_timer, qadd8(rgb_matrix_get_speed() / 4, 1));
     if (hsv.v > rgb_matrix_get_val()) {
         hsv.v = rgb_matrix_get_val();
     }
@@ -267,41 +267,36 @@ void rgb_matrix_indicators_render_layer(uint8_t led_min, uint8_t led_max) {
 #else  // RGBLIGHT_ENABLE && RGBLIGHT_CUSTOM
         switch (get_highest_layer(layer_state & ~((layer_state_t)1 << _MOUSE))) {
             case _GAMEPAD:
-                rgb_matrix_layer_helper(HSV_ORANGE, 4, rgb_matrix_config.speed, LED_FLAG_MODIFIER, led_min, led_max);
+                rgb_matrix_layer_helper(HSV_ORANGE, 4, LED_FLAG_MODIFIER, led_min, led_max);
                 break;
             case _DIABLO:
-                rgb_matrix_layer_helper(HSV_RED, 1, rgb_matrix_config.speed * 8, LED_FLAG_MODIFIER, led_min, led_max);
+                rgb_matrix_layer_helper(HSV_RED, 1, LED_FLAG_MODIFIER, led_min, led_max);
                 break;
             case _RAISE:
-                rgb_matrix_layer_helper(HSV_YELLOW, 1, rgb_matrix_config.speed, LED_FLAG_MODIFIER, led_min, led_max);
+                rgb_matrix_layer_helper(HSV_YELLOW, 1, LED_FLAG_MODIFIER, led_min, led_max);
                 break;
             case _LOWER:
-                rgb_matrix_layer_helper(HSV_GREEN, 1, rgb_matrix_config.speed, LED_FLAG_MODIFIER, led_min, led_max);
+                rgb_matrix_layer_helper(HSV_GREEN, 1, LED_FLAG_MODIFIER, led_min, led_max);
                 break;
             case _ADJUST:
-                rgb_matrix_layer_helper(HSV_RED, 1, rgb_matrix_config.speed, LED_FLAG_MODIFIER, led_min, led_max);
+                rgb_matrix_layer_helper(HSV_RED, 1, LED_FLAG_MODIFIER, led_min, led_max);
                 break;
             default:
                 if (layer_state_is(_MOUSE)) {
-                    rgb_matrix_layer_helper(HSV_PURPLE, 1, rgb_matrix_config.speed, LED_FLAG_MODIFIER, led_min,
-                                            led_max);
+                    rgb_matrix_layer_helper(HSV_PURPLE, 1, LED_FLAG_MODIFIER, led_min, led_max);
                 } else {
                     switch (get_highest_layer(default_layer_state)) {
                         case _DEFAULT_LAYER_1:
-                            rgb_matrix_layer_helper(DEFAULT_LAYER_1_HSV, 0, rgb_matrix_config.speed, LED_FLAG_MODIFIER,
-                                                    led_min, led_max);
+                            rgb_matrix_layer_helper(DEFAULT_LAYER_1_HSV, 0, LED_FLAG_MODIFIER, led_min, led_max);
                             break;
                         case _DEFAULT_LAYER_2:
-                            rgb_matrix_layer_helper(DEFAULT_LAYER_2_HSV, 0, rgb_matrix_config.speed, LED_FLAG_MODIFIER,
-                                                    led_min, led_max);
+                            rgb_matrix_layer_helper(DEFAULT_LAYER_2_HSV, 0, LED_FLAG_MODIFIER, led_min, led_max);
                             break;
                         case _DEFAULT_LAYER_3:
-                            rgb_matrix_layer_helper(DEFAULT_LAYER_3_HSV, 0, rgb_matrix_config.speed, LED_FLAG_MODIFIER,
-                                                    led_min, led_max);
+                            rgb_matrix_layer_helper(DEFAULT_LAYER_3_HSV, 0, LED_FLAG_MODIFIER, led_min, led_max);
                             break;
                         case _DEFAULT_LAYER_4:
-                            rgb_matrix_layer_helper(DEFAULT_LAYER_4_HSV, 0, rgb_matrix_config.speed, LED_FLAG_MODIFIER,
-                                                    led_min, led_max);
+                            rgb_matrix_layer_helper(DEFAULT_LAYER_4_HSV, 0, LED_FLAG_MODIFIER, led_min, led_max);
                             break;
                     }
                 }

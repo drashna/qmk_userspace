@@ -11,6 +11,12 @@
 #include "drashna_runtime.h"
 #include "drashna_layers.h"
 #include "drashna_util.h"
+#if defined(RGB_MATRIX_ENABLE) && defined(CUSTOM_RGB_MATRIX)
+#    include "rgb/rgb_matrix_stuff.h"
+#endif // RGB_MATRIX_ENABLE && CUSTOM_RGB_MATRIX
+#if defined(RGBLIGHT_ENABLE) && defined(CUSTOM_RGBLIGHT)
+#    include "rgb/rgb_stuff.h"
+#endif // RGBLIGHT_ENABLE && CUSTOM_RGBLIGHT
 #ifdef CUSTOM_TAP_DANCE_ENABLE
 #    include "keyrecords/custom_tap_dance.h"
 #endif // CUSTOM_TAP_DANCE_ENABLE
